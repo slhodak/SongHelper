@@ -8,7 +8,6 @@
 import SwiftUI
 import AudioKit
 import AVFoundation
-import SwiftUI
 
 
 @main
