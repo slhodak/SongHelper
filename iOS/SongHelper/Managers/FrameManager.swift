@@ -8,8 +8,10 @@
 import AVFoundation
 
 class FrameManager: NSObject, ObservableObject {
+    let handTracker = HandTracker()
+    
     static let shared = FrameManager()
-    @Published var current: CVPixelBuffer?
+
     let videoOutputQueue = DispatchQueue(label: "com.samhodak.videoOutputQ",
                                          qos: .userInitiated,
                                          attributes: [],
@@ -17,6 +19,7 @@ class FrameManager: NSObject, ObservableObject {
     
     private override init() {
         super.init()
+        print("setting camera sample buffer delegate")
         CameraManager.shared.set(self, queue: videoOutputQueue)
     }
 }
@@ -27,10 +30,35 @@ extension FrameManager: AVCaptureVideoDataOutputSampleBufferDelegate {
         didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection
     ) {
-        if let buffer = sampleBuffer.imageBuffer {
-            DispatchQueue.main.async {
-                self.current = buffer
-            }
+        handTracker.detectHands(sampleBuffer: sampleBuffer)
+    }
+}
+
+
+// HandTracker.swift
+import Vision
+
+class HandTracker: NSObject, ObservableObject {
+    var framesChecked = 0
+    let vnSequenceHandler = VNSequenceRequestHandler()
+    
+    func detectHands(sampleBuffer: CMSampleBuffer) {
+        let humanHandPoseRequest = VNDetectHumanHandPoseRequest(completionHandler: detectedHandPose)
+        humanHandPoseRequest.maximumHandCount = 2
+        do {
+            try vnSequenceHandler.perform(
+                [humanHandPoseRequest],
+                on: sampleBuffer,
+                orientation: .right)
+            framesChecked += 1
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func detectedHandPose(request: VNRequest, error: Error?) {
+        if framesChecked % 1000 == 0 {
+            print("Detected a hand")
         }
     }
 }

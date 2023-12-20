@@ -15,7 +15,6 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-//            Text("hi")
             AVCameraView()
         }
     }
@@ -26,3 +25,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
