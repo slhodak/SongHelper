@@ -14,7 +14,6 @@ struct ContentView: View {
     var root = 60 // Middle C
     @ObservedObject var handTracker = HandTracker.shared
     
-    
     private let size: CGSize = CGSize(
         width: UIScreen.main.bounds.width,
         height: UIScreen.main.bounds.width * 1920 / 1080
