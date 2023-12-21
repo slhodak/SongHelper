@@ -15,6 +15,8 @@
 		170EFF842B24AE1600790708 /* SongHelperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EFF832B24AE1600790708 /* SongHelperUITests.swift */; };
 		170EFF862B24AE1600790708 /* SongHelperUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EFF852B24AE1600790708 /* SongHelperUITestsLaunchTests.swift */; };
 		170EFF942B24B7C300790708 /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 170EFF932B24B7C300790708 /* AudioKit */; };
+		173393AA2B33C2BA00A8DE98 /* HandPointsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393A92B33C2BA00A8DE98 /* HandPointsView.swift */; };
+		173393AD2B33C2FE00A8DE98 /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AC2B33C2FE00A8DE98 /* Shapes.swift */; };
 		17713D2B2B334D5700E515C0 /* PolyphonicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D2A2B334D5700E515C0 /* PolyphonicPlayer.swift */; };
 		17713D2D2B334D9300E515C0 /* MusicUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D2C2B334D9300E515C0 /* MusicUtils.swift */; };
 		17713D302B33661700E515C0 /* AVCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D2F2B33661700E515C0 /* AVCameraView.swift */; };
@@ -53,6 +55,8 @@
 		170EFF7F2B24AE1600790708 /* SongHelperUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SongHelperUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		170EFF832B24AE1600790708 /* SongHelperUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongHelperUITests.swift; sourceTree = "<group>"; };
 		170EFF852B24AE1600790708 /* SongHelperUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongHelperUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		173393A92B33C2BA00A8DE98 /* HandPointsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandPointsView.swift; sourceTree = "<group>"; };
+		173393AC2B33C2FE00A8DE98 /* Shapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shapes.swift; sourceTree = "<group>"; };
 		17713D2A2B334D5700E515C0 /* PolyphonicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolyphonicPlayer.swift; sourceTree = "<group>"; };
 		17713D2C2B334D9300E515C0 /* MusicUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicUtils.swift; sourceTree = "<group>"; };
 		17713D2F2B33661700E515C0 /* AVCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCameraView.swift; sourceTree = "<group>"; };
@@ -154,6 +158,7 @@
 			children = (
 				17713D332B33662900E515C0 /* CameraManager.swift */,
 				17713D352B33662F00E515C0 /* HandTracker.swift */,
+				173393AC2B33C2FE00A8DE98 /* Shapes.swift */,
 			);
 			path = Vision;
 			sourceTree = "<group>";
@@ -163,6 +168,7 @@
 			children = (
 				17713D2F2B33661700E515C0 /* AVCameraView.swift */,
 				17713D312B33662100E515C0 /* AVVideoPlayerView.swift */,
+				173393A92B33C2BA00A8DE98 /* HandPointsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -322,6 +328,8 @@
 				17713D3B2B3369DB00E515C0 /* Chords.swift in Sources */,
 				17713D302B33661700E515C0 /* AVCameraView.swift in Sources */,
 				170EFF6B2B24AE1300790708 /* ContentView.swift in Sources */,
+				173393AD2B33C2FE00A8DE98 /* Shapes.swift in Sources */,
+				173393AA2B33C2BA00A8DE98 /* HandPointsView.swift in Sources */,
 				170EFF692B24AE1300790708 /* SongHelperApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

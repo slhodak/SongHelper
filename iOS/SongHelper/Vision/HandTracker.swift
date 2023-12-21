@@ -11,8 +11,10 @@ import Vision
 
 class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ObservableObject {
     static let shared = HandTracker()
+
+    @Published var handLandmarksA: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint] = [:]
+    @Published var handLandmarksB: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint] = [:]
     
-    var framesChecked = 0
     let vnSequenceHandler = VNSequenceRequestHandler()
     let videoOutputQueue = DispatchQueue(label: "com.samhodak.videoOutputQ",
                                          qos: .userInitiated,
@@ -37,16 +39,40 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
             try vnSequenceHandler.perform(
                 [humanHandPoseRequest],
                 on: sampleBuffer,
-                orientation: .right)
-            framesChecked += 1
+                orientation: .up)
         } catch {
             print(error.localizedDescription)
         }
     }
     
     func detectedHandPose(request: VNRequest, error: Error?) {
-        if framesChecked % 1000 == 0 {
-            print("Detected a hand")
+        resetHands()
+        guard let handPoseResults = request.results as? [VNHumanHandPoseObservation ], handPoseResults.first != nil else {
+            return
+        }
+        
+        DispatchQueue.main.async {
+            for handObservation in handPoseResults {
+                guard let landmarks = try? handObservation.recognizedPoints(.all) else { continue }
+                
+                let handLandmarks = Dictionary(uniqueKeysWithValues: landmarks.filter {
+                    jointName, recognizedPoint in
+                    return recognizedPoint.confidence > 0.5
+                })
+                
+                if self.handLandmarksA.isEmpty {
+                    self.handLandmarksA = handLandmarks
+                } else {
+                    self.handLandmarksB = handLandmarks
+                }
+            }
+        }
+    }
+    
+    func resetHands() {
+        DispatchQueue.main.async {
+            self.handLandmarksA = [:]
+            self.handLandmarksB = [:]
         }
     }
 }

@@ -119,7 +119,7 @@ class CameraManager: ObservableObject {
             videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
             // Force landscape video orientation
             let videoConnection = videoOutput.connection(with: .video)
-            videoConnection?.videoOrientation = .landscapeRight
+            videoConnection?.videoOrientation = .portrait
         } else {
             setError(.cannotAddOutput)
             status = .failed

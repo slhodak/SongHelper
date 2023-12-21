@@ -9,8 +9,6 @@ import Foundation
 import SwiftUI
 
 struct AVCameraView: View {
-    let frameManager = FrameManager.shared
-    
     var body: some View {
         ZStack {
             CameraPreviewHolder(captureSession: CameraManager.shared.session)

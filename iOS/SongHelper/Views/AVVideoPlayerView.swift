@@ -35,7 +35,7 @@ class CameraPreviewView: UIView {
             self.videoPreviewLayer.session = self.captureSession
             self.videoPreviewLayer.videoGravity = .resizeAspectFill
             // Setting the videoOrientation if needed
-            self.videoPreviewLayer.connection?.videoOrientation = .landscapeRight
+            self.videoPreviewLayer.connection?.videoOrientation = .portrait
         } else {
             self.videoPreviewLayer.session = nil
             self.videoPreviewLayer.removeFromSuperlayer()
