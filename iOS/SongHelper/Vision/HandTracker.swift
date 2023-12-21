@@ -6,41 +6,29 @@
 //
 
 import AVFoundation
+import Vision
 
-class FrameManager: NSObject, ObservableObject {
-    let handTracker = HandTracker()
+
+class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ObservableObject {
+    static let shared = HandTracker()
     
-    static let shared = FrameManager()
-
+    var framesChecked = 0
+    let vnSequenceHandler = VNSequenceRequestHandler()
     let videoOutputQueue = DispatchQueue(label: "com.samhodak.videoOutputQ",
                                          qos: .userInitiated,
                                          attributes: [],
                                          autoreleaseFrequency: .workItem)
     
+    // Having FrameManager set itself as the buffer delegate seems like an antipattern
     private override init() {
         super.init()
         print("setting camera sample buffer delegate")
         CameraManager.shared.set(self, queue: videoOutputQueue)
     }
-}
-
-extension FrameManager: AVCaptureVideoDataOutputSampleBufferDelegate {
-    func captureOutput(
-        _ output: AVCaptureOutput,
-        didOutput sampleBuffer: CMSampleBuffer,
-        from connection: AVCaptureConnection
-    ) {
-        handTracker.detectHands(sampleBuffer: sampleBuffer)
+    
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        detectHands(sampleBuffer: sampleBuffer)
     }
-}
-
-
-// HandTracker.swift
-import Vision
-
-class HandTracker: NSObject, ObservableObject {
-    var framesChecked = 0
-    let vnSequenceHandler = VNSequenceRequestHandler()
     
     func detectHands(sampleBuffer: CMSampleBuffer) {
         let humanHandPoseRequest = VNDetectHumanHandPoseRequest(completionHandler: detectedHandPose)
