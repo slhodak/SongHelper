@@ -83,7 +83,7 @@ class CameraManager: ObservableObject {
         }
         
         // Set session preset
-        session.sessionPreset = .hd1280x720
+        session.sessionPreset = .hd1920x1080
         
         // Prepare device as input
         let device = AVCaptureDevice.default(.builtInWideAngleCamera,

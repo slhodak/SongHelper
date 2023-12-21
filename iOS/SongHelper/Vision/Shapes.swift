@@ -17,10 +17,18 @@ struct Dot: Shape {
         var path = Path()
         
         for point in points {
-            let dotRect = CGRect(x: point.x - dotRadius/2, y: point.y - dotRadius/2, width: dotRadius, height: dotRadius)
-            path.addEllipse(in: dotRect)
+//            print(point.x)
+//            print(point.y)
+            path.addEllipse(in: CGRect(
+                x: point.x,
+                y: point.y,
+                width: dotRadius,
+                height: dotRadius)
+            )
         }
         
+//        return path
+
         return transformed(path: path)
     }
     

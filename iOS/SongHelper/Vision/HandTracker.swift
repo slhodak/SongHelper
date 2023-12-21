@@ -11,6 +11,11 @@ import Vision
 
 class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ObservableObject {
     static let shared = HandTracker()
+    
+    let confidenceThreshold: Float = 0.5
+    let fingerTips: [VNHumanHandPoseObservation.JointName] = [
+        .thumbTip, .indexTip, .middleTip, .ringTip, .littleTip
+    ]
 
     @Published var handLandmarksA: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint] = [:]
     @Published var handLandmarksB: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint] = [:]
@@ -47,7 +52,7 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
     
     func detectedHandPose(request: VNRequest, error: Error?) {
         resetHands()
-        guard let handPoseResults = request.results as? [VNHumanHandPoseObservation ], handPoseResults.first != nil else {
+        guard let handPoseResults = request.results as? [VNHumanHandPoseObservation], handPoseResults.first != nil else {
             return
         }
         
@@ -55,18 +60,22 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
             for handObservation in handPoseResults {
                 guard let landmarks = try? handObservation.recognizedPoints(.all) else { continue }
                 
-                let handLandmarks = Dictionary(uniqueKeysWithValues: landmarks.filter {
-                    jointName, recognizedPoint in
-                    return recognizedPoint.confidence > 0.5
-                })
+                let filteredLandmarks = self.getFilteredHandLandmarks(landmarks: landmarks)
                 
                 if self.handLandmarksA.isEmpty {
-                    self.handLandmarksA = handLandmarks
+                    self.handLandmarksA = filteredLandmarks
                 } else {
-                    self.handLandmarksB = handLandmarks
+                    self.handLandmarksB = filteredLandmarks
                 }
             }
         }
+    }
+    
+    func getFilteredHandLandmarks(landmarks: [VNHumanHandPoseObservation.JointName : VNRecognizedPoint]) -> [VNHumanHandPoseObservation.JointName : VNRecognizedPoint] {
+        return Dictionary(uniqueKeysWithValues: landmarks.filter {
+            jointName, recognizedPoint in
+            return recognizedPoint.confidence > self.confidenceThreshold && self.fingerTips.contains(jointName)
+        })
     }
     
     func resetHands() {
