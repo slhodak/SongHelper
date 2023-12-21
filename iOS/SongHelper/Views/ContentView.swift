@@ -23,7 +23,7 @@ struct ContentView: View {
         ZStack {
             AVCameraView()
             HandPointsView(handTracker: handTracker, size: size)
-            OverlayView(size: size)
+            InterfaceOverlayView(size: size)
         }
     }
 }
@@ -31,21 +31,5 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-    }
-}
-
-struct OverlayView: View {
-    var size: CGSize
-    
-    var body: some View {
-        VStack {
-            Rectangle()
-                .fill(Color.purple.opacity(0.2))
-                .frame(width: size.width, height: size.height / 2)
-            
-            Rectangle()
-                .fill(Color.green.opacity(0.2))
-                .frame(width: size.width, height: size.height / 2)
-        }
     }
 }

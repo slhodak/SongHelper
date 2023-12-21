@@ -17,6 +17,7 @@
 		170EFF942B24B7C300790708 /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 170EFF932B24B7C300790708 /* AudioKit */; };
 		173393AA2B33C2BA00A8DE98 /* HandPointsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393A92B33C2BA00A8DE98 /* HandPointsView.swift */; };
 		173393AD2B33C2FE00A8DE98 /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AC2B33C2FE00A8DE98 /* Shapes.swift */; };
+		173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */; };
 		17713D2B2B334D5700E515C0 /* PolyphonicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D2A2B334D5700E515C0 /* PolyphonicPlayer.swift */; };
 		17713D2D2B334D9300E515C0 /* MusicUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D2C2B334D9300E515C0 /* MusicUtils.swift */; };
 		17713D302B33661700E515C0 /* AVCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D2F2B33661700E515C0 /* AVCameraView.swift */; };
@@ -57,6 +58,7 @@
 		170EFF852B24AE1600790708 /* SongHelperUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongHelperUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		173393A92B33C2BA00A8DE98 /* HandPointsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandPointsView.swift; sourceTree = "<group>"; };
 		173393AC2B33C2FE00A8DE98 /* Shapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shapes.swift; sourceTree = "<group>"; };
+		173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceOverlayView.swift; sourceTree = "<group>"; };
 		17713D2A2B334D5700E515C0 /* PolyphonicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolyphonicPlayer.swift; sourceTree = "<group>"; };
 		17713D2C2B334D9300E515C0 /* MusicUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicUtils.swift; sourceTree = "<group>"; };
 		17713D2F2B33661700E515C0 /* AVCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCameraView.swift; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				170EFF6A2B24AE1300790708 /* ContentView.swift */,
+				173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */,
 				17713D2F2B33661700E515C0 /* AVCameraView.swift */,
 				17713D312B33662100E515C0 /* AVVideoPlayerView.swift */,
 				173393A92B33C2BA00A8DE98 /* HandPointsView.swift */,
@@ -323,6 +326,7 @@
 				17713D322B33662100E515C0 /* AVVideoPlayerView.swift in Sources */,
 				17713D342B33662900E515C0 /* CameraManager.swift in Sources */,
 				17713D2B2B334D5700E515C0 /* PolyphonicPlayer.swift in Sources */,
+				173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */,
 				17713D362B33662F00E515C0 /* HandTracker.swift in Sources */,
 				17713D2D2B334D9300E515C0 /* MusicUtils.swift in Sources */,
 				17713D3B2B3369DB00E515C0 /* Chords.swift in Sources */,
