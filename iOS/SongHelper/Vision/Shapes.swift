@@ -1,4 +1,4 @@
-//
+
 //  Shapes.swift
 //
 //  Created by Sam Hodak
@@ -12,7 +12,7 @@ struct Dot: Shape {
     var points: [CGPoint]
     var size: CGSize
     var dotRadius: CGFloat = 5 // Adjust the dot size as needed
-
+    
     func path(in rect: CGRect) -> Path {
         var path = Path()
         

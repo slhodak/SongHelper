@@ -34,11 +34,11 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        detectHands(sampleBuffer: sampleBuffer)
+        makeHandPoseRequest(sampleBuffer: sampleBuffer)
     }
     
-    func detectHands(sampleBuffer: CMSampleBuffer) {
-        let humanHandPoseRequest = VNDetectHumanHandPoseRequest(completionHandler: detectedHandPose)
+    func makeHandPoseRequest(sampleBuffer: CMSampleBuffer) {
+        let humanHandPoseRequest = VNDetectHumanHandPoseRequest(completionHandler: handleHandPoseObservation)
         humanHandPoseRequest.maximumHandCount = 2
         do {
             try vnSequenceHandler.perform(
@@ -50,7 +50,7 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
         }
     }
     
-    func detectedHandPose(request: VNRequest, error: Error?) {
+    func handleHandPoseObservation(request: VNRequest, error: Error?) {
         resetHands()
         guard let handPoseResults = request.results as? [VNHumanHandPoseObservation], handPoseResults.first != nil else {
             return
