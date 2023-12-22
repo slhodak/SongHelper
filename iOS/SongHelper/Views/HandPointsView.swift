@@ -20,7 +20,10 @@ struct HandPointsView: View {
             if !handTracker.handLandmarksB.isEmpty {
                 drawHand(landmarks: handTracker.handLandmarksB, color: .red)
             }
-
+            
+            Rectangle()
+                .stroke(Color.yellow.opacity(0.5), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [2, 14]))
+                .frame(width: size.width - 1, height: size.height - 1)
         }
     }
     

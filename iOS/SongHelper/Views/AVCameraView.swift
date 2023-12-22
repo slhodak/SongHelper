@@ -9,16 +9,21 @@ import Foundation
 import SwiftUI
 
 struct AVCameraView: View {
+    var size: CGSize
+    
     var body: some View {
         ZStack {
             CameraPreviewHolder(captureSession: CameraManager.shared.session)
-                .ignoresSafeArea()
+            
+            Rectangle()
+                .stroke(Color.red.opacity(0.5), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [2, 10]))
+                .frame(width: size.width - 1, height: size.height - 1)
         }
     }
 }
-
-struct AVCameraView_Previews: PreviewProvider {
-    static var previews: some View {
-        AVCameraView()
-    }
-}
+//
+//struct AVCameraView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AVCameraView()
+//    }
+//}

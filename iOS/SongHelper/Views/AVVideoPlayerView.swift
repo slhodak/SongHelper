@@ -33,7 +33,7 @@ class CameraPreviewView: UIView {
         
         if nil != self.superview {
             self.videoPreviewLayer.session = self.captureSession
-            self.videoPreviewLayer.videoGravity = .resizeAspectFill
+            self.videoPreviewLayer.videoGravity = .resizeAspect
             // Setting the videoOrientation if needed
             self.videoPreviewLayer.connection?.videoOrientation = .portrait
         } else {

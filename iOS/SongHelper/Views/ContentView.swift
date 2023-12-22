@@ -20,10 +20,18 @@ struct ContentView: View {
     )
     
     var body: some View {
-        ZStack {
-            AVCameraView()
-            HandPointsView(handTracker: handTracker, size: size)
-            InterfaceOverlayView(size: size)
+        GeometryReader { geometry in
+            let geoSize = geometry.size
+            let videoSize = CGSize(
+                width: geoSize.width,
+                height: geoSize.width * (1920/1080))
+            
+            ZStack {
+                AVCameraView(size: videoSize)
+                HandPointsView(handTracker: handTracker, size: videoSize)
+                InterfaceOverlayView(size: videoSize)
+            }
+            .frame(width: videoSize.width, height: videoSize.height, alignment: .center)
         }
     }
 }
