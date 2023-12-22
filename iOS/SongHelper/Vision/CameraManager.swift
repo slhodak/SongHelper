@@ -25,6 +25,9 @@ class CameraManager: ObservableObject {
     
     private let sessionQueue = DispatchQueue(label: "com.samhodak.cameraSessionQ")
     private let videoOutput = AVCaptureVideoDataOutput()
+    private let device: AVCaptureDevice? = AVCaptureDevice.default(.builtInWideAngleCamera,
+                                                                   for: .video,
+                                                                   position: .front)
     private var status: Status = .unconfigured
     
     private init() {
@@ -36,6 +39,16 @@ class CameraManager: ObservableObject {
         sessionQueue.async {
             self.configCaptureSession()
             self.session.startRunning()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                print("Removing video output")
+                // Will stop sending frames to HandTracker, but still show video preview
+                self.session.removeOutput(self.videoOutput)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    print("Stopping capture session")
+                    // Will no longer show video preview
+                    self.session.stopRunning()
+                }
+            }
         }
     }
     
@@ -86,10 +99,6 @@ class CameraManager: ObservableObject {
         session.sessionPreset = .hd1920x1080
         
         // Prepare device as input
-        let device = AVCaptureDevice.default(.builtInWideAngleCamera,
-                                             for: .video,
-                                             position: .front)
-        
         guard let camera = device else {
             setError(.cameraUnavailable)
             status = .failed
@@ -99,13 +108,13 @@ class CameraManager: ObservableObject {
         // Add input device to session
         do {
             let cameraInput = try AVCaptureDeviceInput(device: camera)
-            if session.canAddInput(cameraInput) {
-                session.addInput(cameraInput)
-            } else {
+            if !session.canAddInput(cameraInput) {
                 setError(.cannotAddInput)
                 status = .failed
                 return
             }
+            session.addInput(cameraInput)
+            
         } catch {
             setError(.createCaptureInput(error))
             status = .failed
@@ -113,18 +122,18 @@ class CameraManager: ObservableObject {
         }
         
         // Add output to session
-        if session.canAddOutput(videoOutput) {
-            session.addOutput(videoOutput)
-            // Set video output format type
-            videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
-            // Force landscape video orientation
-            let videoConnection = videoOutput.connection(with: .video)
-            videoConnection?.videoOrientation = .portrait
-        } else {
+        if !session.canAddOutput(videoOutput) {
             setError(.cannotAddOutput)
             status = .failed
             return
         }
+        
+        session.addOutput(videoOutput)
+        // Set video output format type
+        videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange]
+        // Set video orientation
+        let videoConnection = videoOutput.connection(with: .video)
+        videoConnection?.videoOrientation = .portrait
         
         status = .configured
     }

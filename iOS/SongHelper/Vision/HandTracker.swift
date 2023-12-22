@@ -16,7 +16,7 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
     let fingerTips: [VNHumanHandPoseObservation.JointName] = [
         .thumbTip, .indexTip, .middleTip, .ringTip, .littleTip
     ]
-
+    
     @Published var handLandmarksA: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint] = [:]
     @Published var handLandmarksB: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint] = [:]
     
@@ -26,7 +26,7 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
                                          attributes: [],
                                          autoreleaseFrequency: .workItem)
     
-    // Having FrameManager set itself as the buffer delegate seems like an antipattern
+    // Having HandTracker set itself as the data output buffer delegate seems like an antipattern
     private override init() {
         super.init()
         print("setting camera sample buffer delegate")

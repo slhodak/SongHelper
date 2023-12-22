@@ -18,7 +18,7 @@ struct ContentView: View {
         width: UIScreen.main.bounds.width,
         height: UIScreen.main.bounds.height
     )
-    
+     
     var body: some View {
         GeometryReader { geometry in
             let geoSize = geometry.size
@@ -30,14 +30,9 @@ struct ContentView: View {
                 AVCameraView(size: videoSize)
                 HandPointsView(handTracker: handTracker, size: videoSize)
                 InterfaceOverlayView(size: videoSize)
+                Text("This way up")
             }
             .frame(width: videoSize.width, height: videoSize.height, alignment: .center)
         }
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }

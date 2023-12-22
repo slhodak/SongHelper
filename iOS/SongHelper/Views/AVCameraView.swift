@@ -21,9 +21,3 @@ struct AVCameraView: View {
         }
     }
 }
-//
-//struct AVCameraView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AVCameraView()
-//    }
-//}
