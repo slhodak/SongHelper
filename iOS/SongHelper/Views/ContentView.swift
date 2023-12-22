@@ -18,7 +18,7 @@ struct ContentView: View {
         width: UIScreen.main.bounds.width,
         height: UIScreen.main.bounds.height
     )
-     
+    
     var body: some View {
         GeometryReader { geometry in
             let geoSize = geometry.size
