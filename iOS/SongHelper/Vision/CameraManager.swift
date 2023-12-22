@@ -39,16 +39,6 @@ class CameraManager: ObservableObject {
         sessionQueue.async {
             self.configCaptureSession()
             self.session.startRunning()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                print("Removing video output")
-                // Will stop sending frames to HandTracker, but still show video preview
-                self.session.removeOutput(self.videoOutput)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                    print("Stopping capture session")
-                    // Will no longer show video preview
-                    self.session.stopRunning()
-                }
-            }
         }
     }
     
