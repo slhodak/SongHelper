@@ -34,7 +34,7 @@ struct Dot: Shape {
                 CGAffineTransform.identity
                     .scaledBy(x: size.width, y: size.height))
             .applying(
-                CGAffineTransform(scaleX: -1, y: -1)
-                    .translatedBy(x: -size.width, y: -size.height))
+                CGAffineTransform(scaleX: 1, y: -1)
+                    .translatedBy(x: 0, y: -size.height))
     }
 }

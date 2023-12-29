@@ -25,6 +25,9 @@ struct ContentView: View {
             let videoSize = CGSize(
                 width: geoSize.width,
                 height: geoSize.width * (1920/1080))
+//                width: geoSize.width * (1920/1080),
+//                height: geoSize.width)
+
             
             ZStack {
                 AVCameraView(size: videoSize)
