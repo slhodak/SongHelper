@@ -14,20 +14,12 @@ struct ContentView: View {
     var root = 60 // Middle C
     @ObservedObject var handTracker = HandTracker.shared
     
-    private let size: CGSize = CGSize(
-        width: UIScreen.main.bounds.width,
-        height: UIScreen.main.bounds.height
-    )
-    
     var body: some View {
         GeometryReader { geometry in
             let geoSize = geometry.size
             let videoSize = CGSize(
-                width: geoSize.width,
-                height: geoSize.width * (1920/1080))
-//                width: geoSize.width * (1920/1080),
-//                height: geoSize.width)
-
+                width: geoSize.height,
+                height: geoSize.height * (1920/1080))
             
             ZStack {
                 AVCameraView(size: videoSize)
@@ -36,6 +28,8 @@ struct ContentView: View {
                 Text("This way up")
             }
             .frame(width: videoSize.width, height: videoSize.height, alignment: .center)
+            .rotationEffect(.degrees(90))
+            .offset(x: videoSize.width / 2, y: -(videoSize.height / 5))
         }
     }
 }
