@@ -44,7 +44,7 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
             try vnSequenceHandler.perform(
                 [humanHandPoseRequest],
                 on: sampleBuffer,
-                orientation: .leftMirrored)
+                orientation: .left)
         } catch {
             print(error.localizedDescription)
         }
