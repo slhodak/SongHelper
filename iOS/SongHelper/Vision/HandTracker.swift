@@ -9,13 +9,18 @@ import AVFoundation
 import Vision
 
 
+let FingerTips: [VNHumanHandPoseObservation.JointName] = [
+    .thumbTip, .indexTip, .middleTip, .ringTip, .littleTip
+]
+
+let ConfidenceThreshold: Float = 0.5
+
+
 class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ObservableObject {
     static let shared = HandTracker()
     
-    let confidenceThreshold: Float = 0.5
-    let fingerTips: [VNHumanHandPoseObservation.JointName] = [
-        .thumbTip, .indexTip, .middleTip, .ringTip, .littleTip
-    ]
+    @Published var handA: HandPose = HandPose()
+    @Published var handB: HandPose = HandPose()
     
     @Published var handLandmarksA: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint] = [:]
     @Published var handLandmarksB: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint] = [:]
@@ -67,6 +72,12 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
                 } else {
                     self.handLandmarksB = filteredLandmarks
                 }
+                
+                if !self.handA.isDetected {
+                    self.handA.setDetected(fingerTips: filteredLandmarks)
+                } else {
+                    self.handB.setDetected(fingerTips: filteredLandmarks)
+                }
             }
         }
     }
@@ -74,7 +85,7 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
     func getFilteredHandLandmarks(landmarks: [VNHumanHandPoseObservation.JointName : VNRecognizedPoint]) -> [VNHumanHandPoseObservation.JointName : VNRecognizedPoint] {
         return Dictionary(uniqueKeysWithValues: landmarks.filter {
             jointName, recognizedPoint in
-            return recognizedPoint.confidence > self.confidenceThreshold && self.fingerTips.contains(jointName)
+            return recognizedPoint.confidence > ConfidenceThreshold && FingerTips.contains(jointName)
         })
     }
     
@@ -82,6 +93,56 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
         DispatchQueue.main.async {
             self.handLandmarksA = [:]
             self.handLandmarksB = [:]
+            self.handA.reset()
+            self.handB.reset()
         }
     }
+}
+
+
+class HandPose {
+    var isDetected: Bool = false
+    var isInQuadrant: Quadrant?
+    var fingerTips: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint?] = [
+        .thumbTip: nil,
+        .indexTip: nil,
+        .middleTip: nil,
+        .ringTip: nil,
+        .littleTip: nil
+    ]
+    
+    func reset() {
+        self.isDetected = false
+        self.fingerTips = [
+            .thumbTip: nil,
+            .indexTip: nil,
+            .middleTip: nil,
+            .ringTip: nil,
+            .littleTip: nil
+        ]
+    }
+    
+    func setDetected(fingerTips: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]) {
+        self.isDetected = true
+        
+        for (jointName, point) in fingerTips {
+            if point.confidence > ConfidenceThreshold && FingerTips.contains(jointName) {
+                self.fingerTips[jointName] = point
+            }
+        }
+    }
+    
+    func proximity(of fingerTip1: VNHumanHandPoseObservation.JointName, to fingerTip2: VNHumanHandPoseObservation.JointName) -> CGPoint? {
+        guard let location1 = fingerTips[fingerTip1]??.location,
+              let location2 = fingerTips[fingerTip1]??.location else {
+            return nil
+        }
+        
+        return CGPoint(x: location1.x - location2.x, y: location1.y - location2.y)
+    }
+}
+
+enum Quadrant {
+    case left
+    case right
 }
