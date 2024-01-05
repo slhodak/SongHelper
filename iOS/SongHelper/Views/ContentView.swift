@@ -16,20 +16,25 @@ struct ContentView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            let geoSize = geometry.size
-            let videoSize = CGSize(
-                width: geoSize.height,
-                height: geoSize.height * (1920/1080))
+            let frameSize = CGSize(
+                width: geometry.size.height,
+                height: geometry.size.height * (1920/1080))
+            
+            EmptyView()
+                .onAppear {
+                    print("Width: \(frameSize.width)")
+                    print("Height: \(frameSize.height)")
+                }
             
             ZStack {
-                AVCameraView(size: videoSize)
-                HandPointsView(handTracker: handTracker, size: videoSize)
-                InterfaceOverlayView(size: videoSize)
+                AVCameraView(size: frameSize)
+                HandPointsView(handTracker: handTracker, size: frameSize)
+                InterfaceOverlayView(size: frameSize)
                 Text("This way up")
             }
-            .frame(width: videoSize.width, height: videoSize.height, alignment: .center)
+            .frame(width: frameSize.width, height: frameSize.height, alignment: .center)
             .rotationEffect(.degrees(90))
-            .offset(x: videoSize.width / 2, y: -(videoSize.height / 5))
+            .offset(x: frameSize.width / 2, y: -(frameSize.height / 5))
         }
     }
 }
