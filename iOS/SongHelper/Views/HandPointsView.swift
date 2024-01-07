@@ -14,11 +14,11 @@ struct HandPointsView: View {
     
     var body: some View {
         ZStack {
-            if !handTracker.handLandmarksA.isEmpty {
-                drawHand(landmarks: handTracker.handLandmarksA, color: .orange)
+            if handTracker.handA.isDetected {
+                drawHand(from: handTracker.handA.fingerTips, color: .orange)
             }
-            if !handTracker.handLandmarksB.isEmpty {
-                drawHand(landmarks: handTracker.handLandmarksB, color: .red)
+            if handTracker.handB.isDetected {
+                drawHand(from: handTracker.handB.fingerTips, color: .red)
             }
             
             Rectangle()
@@ -28,15 +28,17 @@ struct HandPointsView: View {
     }
     
     // For hand landmarks
-    private func drawHand(landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint], color: Color) -> some View {
+    private func drawHand(from landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint?], color: Color) -> some View {
         let points = pointsForHand(landmarks: landmarks)
         return Dot(points: points, size: size, dotRadius: 0.02)
             .fill(color)
     }
     
-    private func pointsForHand(landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]) -> [CGPoint] {
+    private func pointsForHand(landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint?]) -> [CGPoint] {
         var points = [CGPoint]()
         for (_, point) in landmarks {
+            guard let point = point else { continue }
+            
             points.append(point.location)
         }
         return points

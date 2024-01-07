@@ -19,11 +19,8 @@ let ConfidenceThreshold: Float = 0.5
 class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ObservableObject {
     static let shared = HandTracker()
     
-    @Published var handA: HandPose = HandPose()
-    @Published var handB: HandPose = HandPose()
-    
-    @Published var handLandmarksA: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint] = [:]
-    @Published var handLandmarksB: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint] = [:]
+    @Published var leftHand: HandPose = HandPose()
+    @Published var rightHand: HandPose = HandPose()
     
     let vnSequenceHandler = VNSequenceRequestHandler()
     let videoOutputQueue = DispatchQueue(label: "com.samhodak.videoOutputQ",
@@ -65,36 +62,19 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
             for handObservation in handPoseResults {
                 guard let landmarks = try? handObservation.recognizedPoints(.all) else { continue }
                 
-                let filteredLandmarks = self.getFilteredHandLandmarks(landmarks: landmarks)
-                
-                if self.handLandmarksA.isEmpty {
-                    self.handLandmarksA = filteredLandmarks
-                } else {
-                    self.handLandmarksB = filteredLandmarks
-                }
-                
-                if !self.handA.isDetected {
-                    self.handA.setDetected(fingerTips: filteredLandmarks)
-                } else {
-                    self.handB.setDetected(fingerTips: filteredLandmarks)
+                if handObservation.chirality == .left {
+                    self.leftHand.setDetected(landmarks: landmarks, chirality: .left)
+                } else if handObservation.chirality == .right {
+                    self.rightHand.setDetected(landmarks: landmarks, chirality: .right)
                 }
             }
         }
     }
     
-    func getFilteredHandLandmarks(landmarks: [VNHumanHandPoseObservation.JointName : VNRecognizedPoint]) -> [VNHumanHandPoseObservation.JointName : VNRecognizedPoint] {
-        return Dictionary(uniqueKeysWithValues: landmarks.filter {
-            jointName, recognizedPoint in
-            return recognizedPoint.confidence > ConfidenceThreshold && FingerTips.contains(jointName)
-        })
-    }
-    
     func resetHands() {
         DispatchQueue.main.async {
-            self.handLandmarksA = [:]
-            self.handLandmarksB = [:]
-            self.handA.reset()
-            self.handB.reset()
+            self.leftHand.reset()
+            self.rightHand.reset()
         }
     }
 }
@@ -102,7 +82,7 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
 
 class HandPose {
     var isDetected: Bool = false
-    var isInQuadrant: Quadrant?
+    var chirality: VNChirality = .unknown
     var fingerTips: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint?] = [
         .thumbTip: nil,
         .indexTip: nil,
@@ -122,12 +102,13 @@ class HandPose {
         ]
     }
     
-    func setDetected(fingerTips: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]) {
+    func setDetected(landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint], chirality: VNChirality) {
         self.isDetected = true
         
-        for (jointName, point) in fingerTips {
+        for (jointName, point) in landmarks {
             if point.confidence > ConfidenceThreshold && FingerTips.contains(jointName) {
                 self.fingerTips[jointName] = point
+                self.chirality = chirality
             }
         }
     }
@@ -140,9 +121,4 @@ class HandPose {
         
         return CGPoint(x: location1.x - location2.x, y: location1.y - location2.y)
     }
-}
-
-enum Quadrant {
-    case left
-    case right
 }
