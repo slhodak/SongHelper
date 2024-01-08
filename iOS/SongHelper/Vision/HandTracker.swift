@@ -18,9 +18,10 @@ let ConfidenceThreshold: Float = 0.5
 
 class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ObservableObject {
     static let shared = HandTracker()
+    var requests = 0
     
-    @Published var leftHand: HandPose = HandPose()
-    @Published var rightHand: HandPose = HandPose()
+    @Published var leftHand: HandPose = HandPose(chirality: .left)
+    @Published var rightHand: HandPose = HandPose(chirality: .right)
     
     let vnSequenceHandler = VNSequenceRequestHandler()
     let videoOutputQueue = DispatchQueue(label: "com.samhodak.videoOutputQ",
@@ -42,6 +43,9 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
     func makeHandPoseRequest(sampleBuffer: CMSampleBuffer) {
         let humanHandPoseRequest = VNDetectHumanHandPoseRequest(completionHandler: handleHandPoseObservation)
         humanHandPoseRequest.maximumHandCount = 2
+//        if requests % 100 == 0 {
+//            print(sampleBuffer)
+//        }
         do {
             try vnSequenceHandler.perform(
                 [humanHandPoseRequest],
@@ -53,8 +57,15 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
     }
     
     func handleHandPoseObservation(request: VNRequest, error: Error?) {
+        requests += 1
+//        if requests % 100 == 0 {
+//            print(request)
+//        }
         resetHands()
         guard let handPoseResults = request.results as? [VNHumanHandPoseObservation], handPoseResults.first != nil else {
+            if requests % 100 == 0 {
+                print(request.results!)
+            }
             return
         }
         
@@ -63,9 +74,9 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
                 guard let landmarks = try? handObservation.recognizedPoints(.all) else { continue }
                 
                 if handObservation.chirality == .left {
-                    self.leftHand.setDetected(landmarks: landmarks, chirality: .left)
+                    self.leftHand.setDetected(landmarks: landmarks)
                 } else if handObservation.chirality == .right {
-                    self.rightHand.setDetected(landmarks: landmarks, chirality: .right)
+                    self.rightHand.setDetected(landmarks: landmarks)
                 }
             }
         }
@@ -76,49 +87,5 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
             self.leftHand.reset()
             self.rightHand.reset()
         }
-    }
-}
-
-
-class HandPose {
-    var isDetected: Bool = false
-    var chirality: VNChirality = .unknown
-    var fingerTips: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint?] = [
-        .thumbTip: nil,
-        .indexTip: nil,
-        .middleTip: nil,
-        .ringTip: nil,
-        .littleTip: nil
-    ]
-    
-    func reset() {
-        self.isDetected = false
-        self.fingerTips = [
-            .thumbTip: nil,
-            .indexTip: nil,
-            .middleTip: nil,
-            .ringTip: nil,
-            .littleTip: nil
-        ]
-    }
-    
-    func setDetected(landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint], chirality: VNChirality) {
-        self.isDetected = true
-        
-        for (jointName, point) in landmarks {
-            if point.confidence > ConfidenceThreshold && FingerTips.contains(jointName) {
-                self.fingerTips[jointName] = point
-                self.chirality = chirality
-            }
-        }
-    }
-    
-    func proximity(of fingerTip1: VNHumanHandPoseObservation.JointName, to fingerTip2: VNHumanHandPoseObservation.JointName) -> CGPoint? {
-        guard let location1 = fingerTips[fingerTip1]??.location,
-              let location2 = fingerTips[fingerTip1]??.location else {
-            return nil
-        }
-        
-        return CGPoint(x: location1.x - location2.x, y: location1.y - location2.y)
     }
 }

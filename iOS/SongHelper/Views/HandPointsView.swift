@@ -13,16 +13,23 @@ struct HandPointsView: View {
     var size: CGSize
     
     var body: some View {
+        let rightHandDetected = handTracker.rightHand.isDetected
+        let leftHandDetected = handTracker.leftHand.isDetected
         ZStack {
-            if handTracker.handA.isDetected {
-                drawHand(from: handTracker.handA.fingerTips, color: .orange)
+            VStack {
+                Text("Left hand is detected: \(String(rightHandDetected))")
+                Text("Right hand is detected: \(String(leftHandDetected))")
             }
-            if handTracker.handB.isDetected {
-                drawHand(from: handTracker.handB.fingerTips, color: .red)
+            if leftHandDetected {
+                drawHand(from: handTracker.leftHand.fingerTips, color: .orange)
+            }
+            if rightHandDetected {
+                drawHand(from: handTracker.rightHand.fingerTips, color: .red)
             }
             
             Rectangle()
-                .stroke(Color.yellow.opacity(0.5), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [2, 14]))
+                .stroke(Color.yellow.opacity(0.5),
+                        style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [2, 14]))
                 .frame(width: size.width - 1, height: size.height - 1)
         }
     }

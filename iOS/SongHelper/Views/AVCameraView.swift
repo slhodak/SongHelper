@@ -16,7 +16,8 @@ struct AVCameraView: View {
             CameraPreviewHolder(captureSession: CameraManager.shared.session)
             
             Rectangle()
-                .stroke(Color.red.opacity(0.5), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [2, 10]))
+                .stroke(Color.red.opacity(0.5),
+                        style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [2, 10]))
                 .frame(width: size.width - 1, height: size.height - 1)
         }
     }

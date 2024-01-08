@@ -30,7 +30,7 @@ struct ContentView: View {
                 AVCameraView(size: videoSize)
                 HandPointsView(handTracker: handTracker, size: videoSize)
                 InterfaceOverlayView(size: videoSize)
-                Text("This way up")
+//                Text("This way up")
             }
             .frame(width: videoSize.width, height: videoSize.height, alignment: .center)
         }
