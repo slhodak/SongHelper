@@ -19,7 +19,6 @@ import Combine
 
 
 class HandPose: ObservableObject {
-    var requests = 0
     var chirality: VNChirality = .unknown
     private var cancellable: AnyCancellable?
     

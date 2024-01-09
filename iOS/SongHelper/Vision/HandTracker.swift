@@ -11,8 +11,6 @@ import Combine
 
 
 class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ObservableObject {
-    var requests = 0
-    
     var handPosePublisher = PassthroughSubject<HandPoseMessage, Never>()
     
     let vnSequenceHandler = VNSequenceRequestHandler()
@@ -45,21 +43,14 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
     }
     
     func handleHandPoseObservation(request: VNRequest, error: Error?) {
-        requests += 1
         resetHands()
         guard let handPoseResults = request.results as? [VNHumanHandPoseObservation], handPoseResults.first != nil else {
-            if requests % 50 == 0 {
-                print("Did not detect anything in hand pose results")
-            }
             return
         }
         
         for handObservation in handPoseResults {
             guard let landmarks = try? handObservation.recognizedPoints(.all) else { continue }
-
-            if requests % 50 == 0 {
-                print("Sending hand pose message")
-            }
+            
             let message = HandPoseMessage(chirality: handObservation.chirality, landmarks: landmarks)
             self.handPosePublisher.send(message)
         }
