@@ -7,6 +7,7 @@
 
 import Foundation
 import Vision
+import Combine
 
 
 let FingerTips: [VNHumanHandPoseObservation.JointName] = [
@@ -14,9 +15,6 @@ let FingerTips: [VNHumanHandPoseObservation.JointName] = [
 ]
 
 let ConfidenceThreshold: Float = 0.5
-
-import Combine
-
 
 class HandPose: ObservableObject {
     var chirality: VNChirality = .unknown
