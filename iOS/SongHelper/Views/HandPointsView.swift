@@ -16,23 +16,10 @@ struct HandPointsView: View {
     
     var size: CGSize
     
-    init(size: CGSize) {
-        self.size = size
-        
-        let handTracker = HandTracker()
-        self.handTracker = handTracker
-        self.leftHand = HandPose(chirality: .left, handTracker: handTracker)
-        self.rightHand = HandPose(chirality: .right, handTracker: handTracker)
-    }
-    
     var body: some View {
         let rightHandDetected = rightHand.isDetected
         let leftHandDetected = leftHand.isDetected
         ZStack {
-            VStack {
-                Text("Left hand is detected: \(String(rightHandDetected))")
-                Text("Right hand is detected: \(String(leftHandDetected))")
-            }
             if leftHandDetected {
                 drawHand(from: leftHand.fingerTips, color: .orange)
             }

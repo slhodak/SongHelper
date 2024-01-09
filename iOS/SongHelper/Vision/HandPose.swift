@@ -7,6 +7,7 @@
 
 import Foundation
 import Vision
+import Combine
 
 
 let FingerTips: [VNHumanHandPoseObservation.JointName] = [
@@ -14,9 +15,6 @@ let FingerTips: [VNHumanHandPoseObservation.JointName] = [
 ]
 
 let ConfidenceThreshold: Float = 0.5
-
-import Combine
-
 
 class HandPose: ObservableObject {
     var chirality: VNChirality = .unknown
@@ -30,6 +28,7 @@ class HandPose: ObservableObject {
         .ringTip: nil,
         .littleTip: nil
     ]
+    @Published var fingerTipsNearThumbGroup: Int = 0
     
     init(chirality: VNChirality, handTracker: HandTracker) {
         self.chirality = chirality
@@ -51,6 +50,7 @@ class HandPose: ObservableObject {
        // the message is for this hand, so apply the fingertips
        DispatchQueue.main.async {
            self.setDetected(landmarks: message.landmarks)
+           self.findFingertipsNearThumb()
        }
     }
     
@@ -75,12 +75,39 @@ class HandPose: ObservableObject {
         }
     }
     
-    func proximity(of fingerTip1: VNHumanHandPoseObservation.JointName, to fingerTip2: VNHumanHandPoseObservation.JointName) -> CGPoint? {
+    func findFingertipsNearThumb() {
+        fingerTipsNearThumbGroup = 0
+        for (joint, _) in self.fingerTips {
+            if joint == .thumbTip { continue }
+            
+            guard let distanceToThumb = self.proximity(of: joint, to: .thumbTip) else { continue }
+            
+            if distanceToThumb < 0.125 {
+                switch joint {
+                    case .indexTip:
+                        fingerTipsNearThumbGroup += 1000
+                    case .middleTip:
+                        fingerTipsNearThumbGroup += 100
+                    case .ringTip:
+                        fingerTipsNearThumbGroup += 10
+                    case .littleTip:
+                        fingerTipsNearThumbGroup += 1
+                    default:
+                        break
+                }
+            }
+        }
+    }
+    
+    func proximity(of fingerTip1: VNHumanHandPoseObservation.JointName, to fingerTip2: VNHumanHandPoseObservation.JointName) -> Double? {
         guard let location1 = fingerTips[fingerTip1]??.location,
-              let location2 = fingerTips[fingerTip1]??.location else {
+              let location2 = fingerTips[fingerTip2]??.location else {
             return nil
         }
         
-        return CGPoint(x: location1.x - location2.x, y: location1.y - location2.y)
+        let distanceX = location1.x - location2.x
+        let distanceY = location1.y - location2.y
+        
+        return sqrt(pow(distanceX, 2) + pow(distanceY, 2))
     }
 }
