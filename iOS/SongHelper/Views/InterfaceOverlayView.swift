@@ -29,7 +29,8 @@ struct InterfaceOverlayView: View {
 //                    .fill(Color.green.opacity(0.2))
 //                    .frame(width: rectSize.width, height: rectSize.height)
                 Rectangle()
-                    .stroke(Color.blue.opacity(0.5), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [2, 12]))
+                    .stroke(Color.blue.opacity(0.5),
+                            style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [2, 12]))
                     .frame(width: size.width - 1, height: size.height - 1)
                 
             }

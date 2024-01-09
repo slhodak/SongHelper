@@ -15,6 +15,7 @@
 		170EFF842B24AE1600790708 /* SongHelperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EFF832B24AE1600790708 /* SongHelperUITests.swift */; };
 		170EFF862B24AE1600790708 /* SongHelperUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EFF852B24AE1600790708 /* SongHelperUITestsLaunchTests.swift */; };
 		170EFF942B24B7C300790708 /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 170EFF932B24B7C300790708 /* AudioKit */; };
+		171405AD2B4CA45D00A4985B /* HandPose.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171405AC2B4CA45D00A4985B /* HandPose.swift */; };
 		173393AA2B33C2BA00A8DE98 /* HandPointsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393A92B33C2BA00A8DE98 /* HandPointsView.swift */; };
 		173393AD2B33C2FE00A8DE98 /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AC2B33C2FE00A8DE98 /* Shapes.swift */; };
 		173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */; };
@@ -56,6 +57,7 @@
 		170EFF7F2B24AE1600790708 /* SongHelperUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SongHelperUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		170EFF832B24AE1600790708 /* SongHelperUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongHelperUITests.swift; sourceTree = "<group>"; };
 		170EFF852B24AE1600790708 /* SongHelperUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongHelperUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		171405AC2B4CA45D00A4985B /* HandPose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandPose.swift; sourceTree = "<group>"; };
 		173393A92B33C2BA00A8DE98 /* HandPointsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandPointsView.swift; sourceTree = "<group>"; };
 		173393AC2B33C2FE00A8DE98 /* Shapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shapes.swift; sourceTree = "<group>"; };
 		173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceOverlayView.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 			children = (
 				17713D332B33662900E515C0 /* CameraManager.swift */,
 				17713D352B33662F00E515C0 /* HandTracker.swift */,
+				171405AC2B4CA45D00A4985B /* HandPose.swift */,
 				173393AC2B33C2FE00A8DE98 /* Shapes.swift */,
 			);
 			path = Vision;
@@ -334,6 +337,7 @@
 				170EFF6B2B24AE1300790708 /* ContentView.swift in Sources */,
 				173393AD2B33C2FE00A8DE98 /* Shapes.swift in Sources */,
 				173393AA2B33C2BA00A8DE98 /* HandPointsView.swift in Sources */,
+				171405AD2B4CA45D00A4985B /* HandPose.swift in Sources */,
 				170EFF692B24AE1300790708 /* SongHelperApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -506,6 +510,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -535,6 +540,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

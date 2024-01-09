@@ -1,0 +1,87 @@
+//
+//  HandPose.swift
+//  SongHelper
+//
+//  Created by Sam Hodak on 1/8/24.
+//
+
+import Foundation
+import Vision
+
+
+let FingerTips: [VNHumanHandPoseObservation.JointName] = [
+    .thumbTip, .indexTip, .middleTip, .ringTip, .littleTip
+]
+
+let ConfidenceThreshold: Float = 0.5
+
+import Combine
+
+
+class HandPose: ObservableObject {
+    var requests = 0
+    var chirality: VNChirality = .unknown
+    private var cancellable: AnyCancellable?
+    
+    @Published var isDetected: Bool = false
+    @Published var fingerTips: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint?] = [
+        .thumbTip: nil,
+        .indexTip: nil,
+        .middleTip: nil,
+        .ringTip: nil,
+        .littleTip: nil
+    ]
+    
+    init(chirality: VNChirality, handTracker: HandTracker) {
+        self.chirality = chirality
+        self.cancellable = handTracker.handPosePublisher.sink(receiveValue: self.handleHandPoseMessage)
+    }
+    
+    func handleHandPoseMessage(_ message: HandPoseMessage) {
+       // discard a message for the other hand
+       guard message.chirality == self.chirality else { return }
+       
+       // erase the hand data if the update is empty
+       if message.landmarks.isEmpty {
+           DispatchQueue.main.async {
+               self.reset()
+           }
+           return
+       }
+       
+       // the message is for this hand, so apply the fingertips
+       DispatchQueue.main.async {
+           self.setDetected(landmarks: message.landmarks)
+       }
+    }
+    
+    func reset() {
+        self.isDetected = false
+        self.fingerTips = [
+            .thumbTip: nil,
+            .indexTip: nil,
+            .middleTip: nil,
+            .ringTip: nil,
+            .littleTip: nil
+        ]
+    }
+    
+    func setDetected(landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]) {
+        self.isDetected = true
+        
+        for (jointName, point) in landmarks {
+            if point.confidence > ConfidenceThreshold && FingerTips.contains(jointName) {
+                self.fingerTips[jointName] = point
+            }
+        }
+    }
+    
+    func proximity(of fingerTip1: VNHumanHandPoseObservation.JointName, to fingerTip2: VNHumanHandPoseObservation.JointName) -> CGPoint? {
+        guard let location1 = fingerTips[fingerTip1]??.location,
+              let location2 = fingerTips[fingerTip1]??.location else {
+            return nil
+        }
+        
+        return CGPoint(x: location1.x - location2.x, y: location1.y - location2.y)
+    }
+}

@@ -12,7 +12,6 @@ import AVKit
 struct ContentView: View {
     private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
     var root = 60 // Middle C
-    @ObservedObject var handTracker = HandTracker.shared
     
     private let size: CGSize = CGSize(
         width: UIScreen.main.bounds.width,
@@ -28,9 +27,9 @@ struct ContentView: View {
             
             ZStack {
                 AVCameraView(size: videoSize)
-                HandPointsView(handTracker: handTracker, size: videoSize)
+                HandPointsView(size: videoSize)
                 InterfaceOverlayView(size: videoSize)
-                Text("This way up")
+//                Text("This way up")
             }
             .frame(width: videoSize.width, height: videoSize.height, alignment: .center)
         }
