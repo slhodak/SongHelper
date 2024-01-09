@@ -8,23 +8,36 @@
 import SwiftUI
 import Vision
 
+
 struct HandPointsView: View {
-    @ObservedObject var handTracker: HandTracker
+    var handTracker: HandTracker
+    @ObservedObject var leftHand: HandPose
+    @ObservedObject var rightHand: HandPose
+    
     var size: CGSize
     
+    init(size: CGSize) {
+        self.size = size
+        
+        let handTracker = HandTracker()
+        self.handTracker = handTracker
+        self.leftHand = HandPose(chirality: .left, handTracker: handTracker)
+        self.rightHand = HandPose(chirality: .right, handTracker: handTracker)
+    }
+    
     var body: some View {
-        let rightHandDetected = handTracker.rightHand.isDetected
-        let leftHandDetected = handTracker.leftHand.isDetected
+        let rightHandDetected = rightHand.isDetected
+        let leftHandDetected = leftHand.isDetected
         ZStack {
             VStack {
                 Text("Left hand is detected: \(String(rightHandDetected))")
                 Text("Right hand is detected: \(String(leftHandDetected))")
             }
             if leftHandDetected {
-                drawHand(from: handTracker.leftHand.fingerTips, color: .orange)
+                drawHand(from: leftHand.fingerTips, color: .orange)
             }
             if rightHandDetected {
-                drawHand(from: handTracker.rightHand.fingerTips, color: .red)
+                drawHand(from: rightHand.fingerTips, color: .red)
             }
             
             Rectangle()

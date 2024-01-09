@@ -7,21 +7,13 @@
 
 import AVFoundation
 import Vision
-
-
-let FingerTips: [VNHumanHandPoseObservation.JointName] = [
-    .thumbTip, .indexTip, .middleTip, .ringTip, .littleTip
-]
-
-let ConfidenceThreshold: Float = 0.5
+import Combine
 
 
 class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ObservableObject {
-    static let shared = HandTracker()
     var requests = 0
     
-    @Published var leftHand: HandPose = HandPose(chirality: .left)
-    @Published var rightHand: HandPose = HandPose(chirality: .right)
+    var handPosePublisher = PassthroughSubject<HandPoseMessage, Never>()
     
     let vnSequenceHandler = VNSequenceRequestHandler()
     let videoOutputQueue = DispatchQueue(label: "com.samhodak.videoOutputQ",
@@ -30,9 +22,8 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
                                          autoreleaseFrequency: .workItem)
     
     // Having HandTracker set itself as the data output buffer delegate seems like an antipattern
-    private override init() {
+    override init() {
         super.init()
-        print("setting camera sample buffer delegate")
         CameraManager.shared.set(self, queue: videoOutputQueue)
     }
     
@@ -43,9 +34,6 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
     func makeHandPoseRequest(sampleBuffer: CMSampleBuffer) {
         let humanHandPoseRequest = VNDetectHumanHandPoseRequest(completionHandler: handleHandPoseObservation)
         humanHandPoseRequest.maximumHandCount = 2
-//        if requests % 100 == 0 {
-//            print(sampleBuffer)
-//        }
         do {
             try vnSequenceHandler.perform(
                 [humanHandPoseRequest],
@@ -58,34 +46,34 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
     
     func handleHandPoseObservation(request: VNRequest, error: Error?) {
         requests += 1
-//        if requests % 100 == 0 {
-//            print(request)
-//        }
         resetHands()
         guard let handPoseResults = request.results as? [VNHumanHandPoseObservation], handPoseResults.first != nil else {
-            if requests % 100 == 0 {
-                print(request.results!)
+            if requests % 50 == 0 {
+                print("Did not detect anything in hand pose results")
             }
             return
         }
         
-        DispatchQueue.main.async {
-            for handObservation in handPoseResults {
-                guard let landmarks = try? handObservation.recognizedPoints(.all) else { continue }
-                
-                if handObservation.chirality == .left {
-                    self.leftHand.setDetected(landmarks: landmarks)
-                } else if handObservation.chirality == .right {
-                    self.rightHand.setDetected(landmarks: landmarks)
-                }
+        for handObservation in handPoseResults {
+            guard let landmarks = try? handObservation.recognizedPoints(.all) else { continue }
+
+            if requests % 50 == 0 {
+                print("Sending hand pose message")
             }
+            let message = HandPoseMessage(chirality: handObservation.chirality, landmarks: landmarks)
+            self.handPosePublisher.send(message)
         }
     }
     
     func resetHands() {
-        DispatchQueue.main.async {
-            self.leftHand.reset()
-            self.rightHand.reset()
-        }
+        self.handPosePublisher.send(HandPoseMessage(chirality: .left, landmarks: [:]))
+        self.handPosePublisher.send(HandPoseMessage(chirality: .right, landmarks: [:]))
     }
 }
+
+
+struct HandPoseMessage {
+    var chirality: VNChirality
+    var landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]
+}
+

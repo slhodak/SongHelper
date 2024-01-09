@@ -9,10 +9,22 @@ import Foundation
 import Vision
 
 
-class HandPose {
-    var isDetected: Bool = false
+let FingerTips: [VNHumanHandPoseObservation.JointName] = [
+    .thumbTip, .indexTip, .middleTip, .ringTip, .littleTip
+]
+
+let ConfidenceThreshold: Float = 0.5
+
+import Combine
+
+
+class HandPose: ObservableObject {
+    var requests = 0
     var chirality: VNChirality = .unknown
-    var fingerTips: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint?] = [
+    private var cancellable: AnyCancellable?
+    
+    @Published var isDetected: Bool = false
+    @Published var fingerTips: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint?] = [
         .thumbTip: nil,
         .indexTip: nil,
         .middleTip: nil,
@@ -20,8 +32,27 @@ class HandPose {
         .littleTip: nil
     ]
     
-    init(chirality: VNChirality) {
+    init(chirality: VNChirality, handTracker: HandTracker) {
         self.chirality = chirality
+        self.cancellable = handTracker.handPosePublisher.sink(receiveValue: self.handleHandPoseMessage)
+    }
+    
+    func handleHandPoseMessage(_ message: HandPoseMessage) {
+       // discard a message for the other hand
+       guard message.chirality == self.chirality else { return }
+       
+       // erase the hand data if the update is empty
+       if message.landmarks.isEmpty {
+           DispatchQueue.main.async {
+               self.reset()
+           }
+           return
+       }
+       
+       // the message is for this hand, so apply the fingertips
+       DispatchQueue.main.async {
+           self.setDetected(landmarks: message.landmarks)
+       }
     }
     
     func reset() {
