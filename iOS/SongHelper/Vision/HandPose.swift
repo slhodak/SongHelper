@@ -72,7 +72,17 @@ class HandPose: ObservableObject {
             }
         }
     }
-    
+    // detect groups of fingers
+    // track location of all fingertips -- done (in self.fingerTips)
+    // basically all that matters is proximity to thumbTip
+    // "who is near the thumb"?
+    // isNearThumb = [VNHumanHandPoseObservation.JointName]
+    // based on collection of joints, trigger a different chord
+    //      but lookup by array composition seems suboptimal (is the array hashable? even if so that's expensive?)
+    // can encode like: 0000, 1000, 1100, etc
+    //      if indexTip is present, add 1000. if middleTip, add 100, then 10, then 1... too complex?
+    //      then number corresponds to chord
+
     func proximity(of fingerTip1: VNHumanHandPoseObservation.JointName, to fingerTip2: VNHumanHandPoseObservation.JointName) -> CGPoint? {
         guard let location1 = fingerTips[fingerTip1]??.location,
               let location2 = fingerTips[fingerTip1]??.location else {
