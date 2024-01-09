@@ -28,6 +28,7 @@ class HandPose: ObservableObject {
         .ringTip: nil,
         .littleTip: nil
     ]
+    @Published var fingerTipsNearThumbGroup: Int = 0
     
     init(chirality: VNChirality, handTracker: HandTracker) {
         self.chirality = chirality
@@ -75,7 +76,6 @@ class HandPose: ObservableObject {
     }
     
     func findFingertipsNearThumb() {
-        var fingertipsNearThumbGroup = 0
         for (joint, _) in self.fingerTips {
             if joint == .thumbTip { continue }
             
@@ -85,13 +85,13 @@ class HandPose: ObservableObject {
             if distanceToThumb < 0.15 {
                 switch joint {
                     case .indexTip:
-                        fingertipsNearThumbGroup += 1000
+                        fingerTipsNearThumbGroup += 1000
                     case .middleTip:
-                        fingertipsNearThumbGroup += 100
+                        fingerTipsNearThumbGroup += 100
                     case .ringTip:
-                        fingertipsNearThumbGroup += 10
+                        fingerTipsNearThumbGroup += 10
                     case .littleTip:
-                        fingertipsNearThumbGroup += 1
+                        fingerTipsNearThumbGroup += 1
                     default:
                         break
                 }
