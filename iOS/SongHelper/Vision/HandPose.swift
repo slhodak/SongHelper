@@ -49,6 +49,7 @@ class HandPose: ObservableObject {
        // the message is for this hand, so apply the fingertips
        DispatchQueue.main.async {
            self.setDetected(landmarks: message.landmarks)
+           self.findFingertipsNearThumb()
        }
     }
     
@@ -72,23 +73,42 @@ class HandPose: ObservableObject {
             }
         }
     }
-    // detect groups of fingers
-    // track location of all fingertips -- done (in self.fingerTips)
-    // basically all that matters is proximity to thumbTip
-    // "who is near the thumb"?
-    // isNearThumb = [VNHumanHandPoseObservation.JointName]
-    // based on collection of joints, trigger a different chord
-    //      but lookup by array composition seems suboptimal (is the array hashable? even if so that's expensive?)
-    // can encode like: 0000, 1000, 1100, etc
-    //      if indexTip is present, add 1000. if middleTip, add 100, then 10, then 1... too complex?
-    //      then number corresponds to chord
-
-    func proximity(of fingerTip1: VNHumanHandPoseObservation.JointName, to fingerTip2: VNHumanHandPoseObservation.JointName) -> CGPoint? {
+    
+    func findFingertipsNearThumb() {
+        var fingertipsNearThumbGroup = 0
+        for (joint, _) in self.fingerTips {
+            if joint == .thumbTip { continue }
+            
+            guard let distanceToThumb = self.proximity(of: joint, to: .thumbTip) else { continue }
+            
+//            print("distanceToThumb: \(distanceToThumb)")
+            if distanceToThumb < 0.15 {
+                switch joint {
+                    case .indexTip:
+                        fingertipsNearThumbGroup += 1000
+                    case .middleTip:
+                        fingertipsNearThumbGroup += 100
+                    case .ringTip:
+                        fingertipsNearThumbGroup += 10
+                    case .littleTip:
+                        fingertipsNearThumbGroup += 1
+                    default:
+                        break
+                }
+            }
+        }
+//        print("fingerTipsNearThumbGroup: \(fingertipsNearThumbGroup)")
+    }
+    
+    func proximity(of fingerTip1: VNHumanHandPoseObservation.JointName, to fingerTip2: VNHumanHandPoseObservation.JointName) -> Double? {
         guard let location1 = fingerTips[fingerTip1]??.location,
-              let location2 = fingerTips[fingerTip1]??.location else {
+              let location2 = fingerTips[fingerTip2]??.location else {
             return nil
         }
         
-        return CGPoint(x: location1.x - location2.x, y: location1.y - location2.y)
+        let distanceX = location1.x - location2.x
+        let distanceY = location1.y - location2.y
+        
+        return sqrt(pow(distanceX, 2) + pow(distanceY, 2))
     }
 }
