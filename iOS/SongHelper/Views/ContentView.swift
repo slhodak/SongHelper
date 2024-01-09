@@ -8,6 +8,13 @@
 import SwiftUI
 import AVKit
 
+let chordsByFingerTipGroup: [Int: String] = [
+    0: "None",
+    1000: "C",
+    1100: "D",
+    1110: "E",
+    1111: "F"
+]
 
 struct ContentView: View {
     private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
@@ -41,6 +48,10 @@ struct ContentView: View {
                 HandPointsView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand, size: videoSize)
                 InterfaceOverlayView(size: videoSize)
 //                Text("This way up")
+                VStack {
+                    Text(chordsByFingerTipGroup[leftHand.fingerTipsNearThumbGroup] ?? "")
+                    Text(String(leftHand.fingerTipsNearThumbGroup))
+                }
             }
             .frame(width: videoSize.width, height: videoSize.height, alignment: .center)
         }

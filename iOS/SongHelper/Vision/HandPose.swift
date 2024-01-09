@@ -76,13 +76,13 @@ class HandPose: ObservableObject {
     }
     
     func findFingertipsNearThumb() {
+        fingerTipsNearThumbGroup = 0
         for (joint, _) in self.fingerTips {
             if joint == .thumbTip { continue }
             
             guard let distanceToThumb = self.proximity(of: joint, to: .thumbTip) else { continue }
             
-//            print("distanceToThumb: \(distanceToThumb)")
-            if distanceToThumb < 0.15 {
+            if distanceToThumb < 0.125 {
                 switch joint {
                     case .indexTip:
                         fingerTipsNearThumbGroup += 1000
@@ -97,7 +97,6 @@ class HandPose: ObservableObject {
                 }
             }
         }
-//        print("fingerTipsNearThumbGroup: \(fingertipsNearThumbGroup)")
     }
     
     func proximity(of fingerTip1: VNHumanHandPoseObservation.JointName, to fingerTip2: VNHumanHandPoseObservation.JointName) -> Double? {
