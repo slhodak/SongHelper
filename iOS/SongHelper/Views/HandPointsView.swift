@@ -16,15 +16,6 @@ struct HandPointsView: View {
     
     var size: CGSize
     
-    init(size: CGSize) {
-        self.size = size
-        
-        let handTracker = HandTracker()
-        self.handTracker = handTracker
-        self.leftHand = HandPose(chirality: .left, handTracker: handTracker)
-        self.rightHand = HandPose(chirality: .right, handTracker: handTracker)
-    }
-    
     var body: some View {
         let rightHandDetected = rightHand.isDetected
         let leftHandDetected = leftHand.isDetected
