@@ -61,10 +61,3 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
         self.handPosePublisher.send(HandPoseMessage(chirality: .right, landmarks: [:]))
     }
 }
-
-
-struct HandPoseMessage {
-    var chirality: VNChirality
-    var landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]
-}
-
