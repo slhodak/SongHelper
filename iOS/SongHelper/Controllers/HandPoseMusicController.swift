@@ -97,7 +97,7 @@ class HandPoseMusicController: ObservableObject {
     
     func playMusic() {
         guard let notes = getNotesToPlay() else {
-            print("Could not determine notes to play")
+//            print("Could not determine notes to play")
             return
         }
         
