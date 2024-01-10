@@ -20,6 +20,9 @@
 		173393AD2B33C2FE00A8DE98 /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AC2B33C2FE00A8DE98 /* Shapes.swift */; };
 		173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */; };
 		176865D12B4F001F0054D276 /* HandPoseMusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176865D02B4F001F0054D276 /* HandPoseMusicController.swift */; };
+		176865D42B4F288B0054D276 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 176865D32B4F288B0054D276 /* Collections */; };
+		176865D62B4F288B0054D276 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 176865D52B4F288B0054D276 /* DequeModule */; };
+		176865D82B4F288B0054D276 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 176865D72B4F288B0054D276 /* OrderedCollections */; };
 		17713D2B2B334D5700E515C0 /* PolyphonicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D2A2B334D5700E515C0 /* PolyphonicPlayer.swift */; };
 		17713D2D2B334D9300E515C0 /* MusicUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D2C2B334D9300E515C0 /* MusicUtils.swift */; };
 		17713D302B33661700E515C0 /* AVCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D2F2B33661700E515C0 /* AVCameraView.swift */; };
@@ -28,6 +31,7 @@
 		17713D362B33662F00E515C0 /* HandTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D352B33662F00E515C0 /* HandTracker.swift */; };
 		17713D3B2B3369DB00E515C0 /* Chord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D3A2B3369DB00E515C0 /* Chord.swift */; };
 		17735C132B24C4AD00EA59E3 /* SoundpipeAudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 17735C122B24C4AD00EA59E3 /* SoundpipeAudioKit */; };
+		17B3F9B22B4F535600DD716B /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3F9B12B4F535600DD716B /* DebugView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +74,7 @@
 		17713D332B33662900E515C0 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
 		17713D352B33662F00E515C0 /* HandTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandTracker.swift; sourceTree = "<group>"; };
 		17713D3A2B3369DB00E515C0 /* Chord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chord.swift; sourceTree = "<group>"; };
+		17B3F9B12B4F535600DD716B /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +82,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				176865D82B4F288B0054D276 /* OrderedCollections in Frameworks */,
+				176865D42B4F288B0054D276 /* Collections in Frameworks */,
+				176865D62B4F288B0054D276 /* DequeModule in Frameworks */,
 				17735C132B24C4AD00EA59E3 /* SoundpipeAudioKit in Frameworks */,
 				170EFF942B24B7C300790708 /* AudioKit in Frameworks */,
 			);
@@ -180,6 +188,7 @@
 		17713D382B33686D00E515C0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				17B3F9B12B4F535600DD716B /* DebugView.swift */,
 				170EFF6A2B24AE1300790708 /* ContentView.swift */,
 				173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */,
 				17713D2F2B33661700E515C0 /* AVCameraView.swift */,
@@ -218,6 +227,9 @@
 			packageProductDependencies = (
 				170EFF932B24B7C300790708 /* AudioKit */,
 				17735C122B24C4AD00EA59E3 /* SoundpipeAudioKit */,
+				176865D32B4F288B0054D276 /* Collections */,
+				176865D52B4F288B0054D276 /* DequeModule */,
+				176865D72B4F288B0054D276 /* OrderedCollections */,
 			);
 			productName = SongHelper;
 			productReference = 170EFF652B24AE1300790708 /* SongHelper.app */;
@@ -294,6 +306,7 @@
 			packageReferences = (
 				170EFF922B24B7C300790708 /* XCRemoteSwiftPackageReference "AudioKit" */,
 				17735C112B24C4AD00EA59E3 /* XCRemoteSwiftPackageReference "SoundpipeAudioKit" */,
+				176865D22B4F288B0054D276 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = 170EFF662B24AE1300790708 /* Products */;
 			projectDirPath = "";
@@ -343,6 +356,7 @@
 				173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */,
 				17713D362B33662F00E515C0 /* HandTracker.swift in Sources */,
 				176865D12B4F001F0054D276 /* HandPoseMusicController.swift in Sources */,
+				17B3F9B22B4F535600DD716B /* DebugView.swift in Sources */,
 				17713D2D2B334D9300E515C0 /* MusicUtils.swift in Sources */,
 				17713D3B2B3369DB00E515C0 /* Chord.swift in Sources */,
 				17713D302B33661700E515C0 /* AVCameraView.swift in Sources */,
@@ -692,6 +706,14 @@
 				minimumVersion = 5.6.2;
 			};
 		};
+		176865D22B4F288B0054D276 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.6;
+			};
+		};
 		17735C112B24C4AD00EA59E3 /* XCRemoteSwiftPackageReference "SoundpipeAudioKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AudioKit/SoundpipeAudioKit.git";
@@ -707,6 +729,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 170EFF922B24B7C300790708 /* XCRemoteSwiftPackageReference "AudioKit" */;
 			productName = AudioKit;
+		};
+		176865D32B4F288B0054D276 /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 176865D22B4F288B0054D276 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		176865D52B4F288B0054D276 /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 176865D22B4F288B0054D276 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+		176865D72B4F288B0054D276 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 176865D22B4F288B0054D276 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
 		};
 		17735C122B24C4AD00EA59E3 /* SoundpipeAudioKit */ = {
 			isa = XCSwiftPackageProductDependency;

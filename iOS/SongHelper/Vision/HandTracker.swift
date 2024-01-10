@@ -43,21 +43,31 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
     }
     
     func handleHandPoseObservation(request: VNRequest, error: Error?) {
-        resetHands()
         guard let handPoseResults = request.results as? [VNHumanHandPoseObservation], handPoseResults.first != nil else {
+            self.resetHand(.left)
+            self.resetHand(.right)
             return
         }
+        
+        var handsSet: [VNChirality] = []
         
         for handObservation in handPoseResults {
             guard let landmarks = try? handObservation.recognizedPoints(.all) else { continue }
             
+            handsSet.append(handObservation.chirality)
             let message = HandPoseMessage(chirality: handObservation.chirality, landmarks: landmarks)
             self.handPosePublisher.send(message)
         }
+        
+        if !handsSet.contains(.left) {
+            self.resetHand(.left)
+        }
+        if !handsSet.contains(.right) {
+            self.resetHand(.right)
+        }
     }
     
-    func resetHands() {
-        self.handPosePublisher.send(HandPoseMessage(chirality: .left, landmarks: [:]))
-        self.handPosePublisher.send(HandPoseMessage(chirality: .right, landmarks: [:]))
+    func resetHand(_ chirality: VNChirality) {
+        self.handPosePublisher.send(HandPoseMessage(chirality: chirality, landmarks: [:]))
     }
 }

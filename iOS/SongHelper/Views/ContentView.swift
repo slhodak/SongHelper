@@ -46,12 +46,7 @@ struct ContentView: View {
                 HandPointsView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand, size: videoSize)
                 InterfaceOverlayView(size: videoSize)
 //                Text("This way up")
-                VStack {
-                    Text(String(handPoseMusicController.currentRoot))
-                    Text(String(handPoseMusicController.leftHandFingerTipGroup, radix: 2))
-                    Text(String(handPoseMusicController.rightHandFingerTipGroup, radix: 2))
-                    Text(String(leftHand.fingerTipsNearThumbGroup))
-                }
+//                DebugView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand, handPoseMusicController: handPoseMusicController)
             }
             .frame(width: videoSize.width, height: videoSize.height, alignment: .center)
         }

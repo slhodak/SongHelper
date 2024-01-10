@@ -35,17 +35,17 @@ struct HandPointsView: View {
     }
     
     // For hand landmarks
-    private func drawHand(from landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint?], color: Color) -> some View {
+    private func drawHand(from landmarks: [VNHumanHandPoseObservation.JointName: CGPoint?], color: Color) -> some View {
         let points = pointsForHand(landmarks: landmarks)
         return Dot(points: points, size: size).fill(color)
     }
     
-    private func pointsForHand(landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint?]) -> [CGPoint] {
+    private func pointsForHand(landmarks: [VNHumanHandPoseObservation.JointName: CGPoint?]) -> [CGPoint] {
         var points = [CGPoint]()
         for (_, point) in landmarks {
             guard let point = point else { continue }
             
-            points.append(point.location)
+            points.append(point)
         }
         return points
     }
