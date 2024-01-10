@@ -97,7 +97,13 @@ class HandPoseMusicController: ObservableObject {
     }
     
     func updateCombinedFingerTipGroup() {
-        self.combinedFingerTipGroup = (self.leftHandFingerTipGroup << 4) | self.rightHandFingerTipGroup
+        combinedFingerTipGroup = (leftHandFingerTipGroup << 4) | rightHandFingerTipGroup
+        guard combinedFingerTipGroup != 0b0 else {
+            polyphonicPlayer.noteOff()
+            return
+        }
+        
+        playMusic(for: combinedFingerTipGroup)
     }
     
     func playMusic(for fingerTipsNearThumbGroup: Int) {
