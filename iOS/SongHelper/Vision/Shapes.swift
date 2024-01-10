@@ -32,7 +32,7 @@ struct Dot: Shape {
         return path
             .applying(
                 CGAffineTransform.identity
-                    .scaledBy(x: size.width, y: size.height))
+                    .scaledBy(x: size.width, y: size.width))
             .applying(
                 CGAffineTransform(scaleX: -1, y: -1)
                     .translatedBy(x: -size.width, y: -size.height))
