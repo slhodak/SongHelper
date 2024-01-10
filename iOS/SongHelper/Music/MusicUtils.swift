@@ -8,6 +8,6 @@
 import Foundation
 
 
-func getChord(root: Int, offset: Int, tones: [Int]) -> [Int] {
-    return tones.map { root + offset + $0 }
+func getChord(root: Int, tones: [Int]) -> [Int] {
+    return tones.map { root + $0 }
 }

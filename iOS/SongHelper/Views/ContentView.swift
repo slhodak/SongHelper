@@ -8,19 +8,12 @@
 import SwiftUI
 import AVKit
 
-let chordsByFingerTipGroup: [Int: String] = [
-    0: "None",
-    1000: "C",
-    1100: "D",
-    1110: "E",
-    1111: "F"
-]
 
 struct ContentView: View {
-    private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
-    var root = 60 // Middle C
+    private var root = 60 // Middle C
 
-    var handTracker: HandTracker
+    private var handPoseMusicController: HandPoseMusicController
+    private var handTracker: HandTracker
     @ObservedObject var leftHand: HandPose
     @ObservedObject var rightHand: HandPose
     
@@ -32,8 +25,13 @@ struct ContentView: View {
     init() {
         let handTracker = HandTracker()
         self.handTracker = handTracker
-        self.leftHand = HandPose(chirality: .left, handTracker: handTracker)
-        self.rightHand = HandPose(chirality: .right, handTracker: handTracker)
+        
+        let leftHand = HandPose(chirality: .left, handTracker: handTracker)
+        let rightHand = HandPose(chirality: .right, handTracker: handTracker)
+        
+        self.leftHand = leftHand
+        self.rightHand = rightHand
+        self.handPoseMusicController = HandPoseMusicController(leftHand: leftHand, rightHand: rightHand)
     }
     
     var body: some View {
@@ -49,11 +47,66 @@ struct ContentView: View {
                 InterfaceOverlayView(size: videoSize)
 //                Text("This way up")
                 VStack {
-                    Text(chordsByFingerTipGroup[leftHand.fingerTipsNearThumbGroup] ?? "")
+                    Text(String(handPoseMusicController.currentRoot))
+                    Text(String(handPoseMusicController.combinedFingerTipGroup, radix: 2))
                     Text(String(leftHand.fingerTipsNearThumbGroup))
                 }
             }
             .frame(width: videoSize.width, height: videoSize.height, alignment: .center)
         }
+    }
+}
+
+import Vision
+import Combine
+
+
+struct FingerTipGroupMessage {
+    var fingerTipGroup: Int
+}
+
+class HandPoseMusicController: ObservableObject {
+    let noteForFingerTipGroup: [Int: Int] = [
+        0b00010000: 60, // middle C
+        0b00100000: 62,
+        0b00110000: 64,
+        0b01000000: 65,
+        0b01010000: 67,
+        0b01100000: 69,
+        0b01110000: 71,
+    ]
+    @Published var currentRoot: Int = 0
+    
+    var leftHandFingerTipGroup: Int = 0b0 // 0000
+    var rightHandFingerTipGroup: Int = 0b0 // 0000
+    @Published var combinedFingerTipGroup: Int = 0b0 // 0000 0000
+    
+    private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
+    private var rightHandSubscriber: AnyCancellable?
+    private var leftHandSubscriber: AnyCancellable?
+    
+    init(leftHand: HandPose, rightHand: HandPose) {
+        self.leftHandSubscriber = leftHand.fingerTipGroupPublisher.sink { message in
+            self.leftHandFingerTipGroup = message.fingerTipGroup
+            self.updateCombinedFingerTipGroup()
+        }
+        self.rightHandSubscriber = rightHand.fingerTipGroupPublisher.sink { message in
+            self.rightHandFingerTipGroup = message.fingerTipGroup
+            self.updateCombinedFingerTipGroup()
+        }
+    }
+    
+    func updateCombinedFingerTipGroup() {
+        self.combinedFingerTipGroup = (self.leftHandFingerTipGroup << 4) | self.rightHandFingerTipGroup
+    }
+    
+    func playMusic(for fingerTipsNearThumbGroup: Int) {
+        guard let root = noteForFingerTipGroup[fingerTipsNearThumbGroup] else {
+            polyphonicPlayer.noteOff()
+            return
+        }
+        
+        let notes = getChord(root: root, tones: Chord.majorTriad.values)
+        polyphonicPlayer.noteOn(notes: notes)
     }
 }

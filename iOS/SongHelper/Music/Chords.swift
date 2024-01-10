@@ -8,7 +8,7 @@
 import Foundation
 
 
-enum Chords {
+enum Chord {
     case minorTriad
     case majorTriad
     case halfDim

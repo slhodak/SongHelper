@@ -16,9 +16,17 @@ let FingerTips: [VNHumanHandPoseObservation.JointName] = [
 
 let ConfidenceThreshold: Float = 0.5
 
+
+struct HandPoseMessage {
+    var chirality: VNChirality
+    var landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]
+}
+
+
 class HandPose: ObservableObject {
     var chirality: VNChirality = .unknown
     private var cancellable: AnyCancellable?
+    var fingerTipGroupPublisher = PassthroughSubject<FingerTipGroupMessage, Never>()
     
     @Published var isDetected: Bool = false
     @Published var fingerTips: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint?] = [
@@ -28,7 +36,7 @@ class HandPose: ObservableObject {
         .ringTip: nil,
         .littleTip: nil
     ]
-    @Published var fingerTipsNearThumbGroup: Int = 0
+    @Published var fingerTipsNearThumbGroup: Int = 0b0
     
     init(chirality: VNChirality, handTracker: HandTracker) {
         self.chirality = chirality
@@ -43,6 +51,9 @@ class HandPose: ObservableObject {
        if message.landmarks.isEmpty {
            DispatchQueue.main.async {
                self.reset()
+               
+               let message = FingerTipGroupMessage(fingerTipGroup: self.fingerTipsNearThumbGroup)
+               self.fingerTipGroupPublisher.send(message)
            }
            return
        }
@@ -51,6 +62,9 @@ class HandPose: ObservableObject {
        DispatchQueue.main.async {
            self.setDetected(landmarks: message.landmarks)
            self.findFingertipsNearThumb()
+           
+           let message = FingerTipGroupMessage(fingerTipGroup: self.fingerTipsNearThumbGroup)
+           self.fingerTipGroupPublisher.send(message)
        }
     }
     
@@ -63,6 +77,7 @@ class HandPose: ObservableObject {
             .ringTip: nil,
             .littleTip: nil
         ]
+        self.fingerTipsNearThumbGroup = 0b0
     }
     
     func setDetected(landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]) {
@@ -85,13 +100,13 @@ class HandPose: ObservableObject {
             if distanceToThumb < 0.125 {
                 switch joint {
                     case .indexTip:
-                        fingerTipsNearThumbGroup += 1000
+                        fingerTipsNearThumbGroup += 0b1
                     case .middleTip:
-                        fingerTipsNearThumbGroup += 100
+                        fingerTipsNearThumbGroup += 0b10
                     case .ringTip:
-                        fingerTipsNearThumbGroup += 10
+                        fingerTipsNearThumbGroup += 0b100
                     case .littleTip:
-                        fingerTipsNearThumbGroup += 1
+                        fingerTipsNearThumbGroup += 0b1000
                     default:
                         break
                 }
