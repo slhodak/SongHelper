@@ -44,7 +44,6 @@ class PolyphonicPlayer {
     func noteOn(notes: [Int]) {
         guard !isPlaying else { return }
         
-        print("Playing notes: \(notes.map { String($0) }))")
         isPlaying = true
         for (i, note) in notes.enumerated() {
             let osc = oscillators[i]
