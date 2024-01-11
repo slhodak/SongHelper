@@ -10,7 +10,6 @@
 		170EFF692B24AE1300790708 /* SongHelperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EFF682B24AE1300790708 /* SongHelperApp.swift */; };
 		170EFF6B2B24AE1300790708 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EFF6A2B24AE1300790708 /* ContentView.swift */; };
 		170EFF6D2B24AE1500790708 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 170EFF6C2B24AE1500790708 /* Assets.xcassets */; };
-		170EFF702B24AE1500790708 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 170EFF6F2B24AE1500790708 /* Preview Assets.xcassets */; };
 		170EFF7A2B24AE1600790708 /* SongHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EFF792B24AE1600790708 /* SongHelperTests.swift */; };
 		170EFF842B24AE1600790708 /* SongHelperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EFF832B24AE1600790708 /* SongHelperUITests.swift */; };
 		170EFF862B24AE1600790708 /* SongHelperUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EFF852B24AE1600790708 /* SongHelperUITestsLaunchTests.swift */; };
@@ -31,6 +30,8 @@
 		17713D362B33662F00E515C0 /* HandTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D352B33662F00E515C0 /* HandTracker.swift */; };
 		17713D3B2B3369DB00E515C0 /* Chord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17713D3A2B3369DB00E515C0 /* Chord.swift */; };
 		17735C132B24C4AD00EA59E3 /* SoundpipeAudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 17735C122B24C4AD00EA59E3 /* SoundpipeAudioKit */; };
+		1787FBF82B50AF66004875F4 /* Keyboards.sf2 in Resources */ = {isa = PBXBuildFile; fileRef = 17B3FA402B505FB200DD716B /* Keyboards.sf2 */; };
+		1787FBFA2B50AFB4004875F4 /* PianoSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1787FBF92B50AFB4004875F4 /* PianoSampler.swift */; };
 		17B3F9B22B4F535600DD716B /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3F9B12B4F535600DD716B /* DebugView.swift */; };
 /* End PBXBuildFile section */
 
@@ -74,7 +75,9 @@
 		17713D332B33662900E515C0 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
 		17713D352B33662F00E515C0 /* HandTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandTracker.swift; sourceTree = "<group>"; };
 		17713D3A2B3369DB00E515C0 /* Chord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chord.swift; sourceTree = "<group>"; };
+		1787FBF92B50AFB4004875F4 /* PianoSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianoSampler.swift; sourceTree = "<group>"; };
 		17B3F9B12B4F535600DD716B /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
+		17B3FA402B505FB200DD716B /* Keyboards.sf2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Keyboards.sf2; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +113,7 @@
 		170EFF5C2B24AE1300790708 = {
 			isa = PBXGroup;
 			children = (
+				17B3FA3F2B505FA100DD716B /* Sounds */,
 				170EFF672B24AE1300790708 /* SongHelper */,
 				170EFF782B24AE1500790708 /* SongHelperTests */,
 				170EFF822B24AE1600790708 /* SongHelperUITests */,
@@ -202,10 +206,19 @@
 			isa = PBXGroup;
 			children = (
 				17713D2A2B334D5700E515C0 /* PolyphonicPlayer.swift */,
+				1787FBF92B50AFB4004875F4 /* PianoSampler.swift */,
 				17713D2C2B334D9300E515C0 /* MusicUtils.swift */,
 				17713D3A2B3369DB00E515C0 /* Chord.swift */,
 			);
 			path = Music;
+			sourceTree = "<group>";
+		};
+		17B3FA3F2B505FA100DD716B /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				17B3FA402B505FB200DD716B /* Keyboards.sf2 */,
+			);
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -324,8 +337,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				170EFF702B24AE1500790708 /* Preview Assets.xcassets in Resources */,
 				170EFF6D2B24AE1500790708 /* Assets.xcassets in Resources */,
+				1787FBF82B50AF66004875F4 /* Keyboards.sf2 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,6 +371,7 @@
 				176865D12B4F001F0054D276 /* HandPoseMusicController.swift in Sources */,
 				17B3F9B22B4F535600DD716B /* DebugView.swift in Sources */,
 				17713D2D2B334D9300E515C0 /* MusicUtils.swift in Sources */,
+				1787FBFA2B50AFB4004875F4 /* PianoSampler.swift in Sources */,
 				17713D3B2B3369DB00E515C0 /* Chord.swift in Sources */,
 				17713D302B33661700E515C0 /* AVCameraView.swift in Sources */,
 				170EFF6B2B24AE1300790708 /* ContentView.swift in Sources */,

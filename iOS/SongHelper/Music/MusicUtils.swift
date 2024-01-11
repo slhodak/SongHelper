@@ -7,8 +7,6 @@
 
 import Foundation
 
-// To-do: make "offset" a scale degree and later convert it into a number of half-steps
-//      offset is currently just a number of halfsteps (aka difference in midi note)
 
 func getChord(root: Int, tones: [Int]) -> [Int] {
     return tones.map { root + $0 }

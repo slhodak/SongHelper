@@ -19,8 +19,17 @@ struct FingerTipGroupMessage {
     var fingerTipGroup: Int
 }
 
+enum SHInstrument {
+    case sampler
+    case synthesizer
+}
+
 
 class HandPoseMusicController: ObservableObject {
+    private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
+    private var pianoSampler = PianoSampler()
+    private var useInstrument: SHInstrument = .sampler
+    
     @Published var keyRoot: Int = 24 // C1
     var octave = 4
     @Published var musicalMode: MusicalMode = .major
@@ -48,11 +57,12 @@ class HandPoseMusicController: ObservableObject {
     var leftHandFingerTipGroup: Int = 0b0 // 0000
     var rightHandFingerTipGroup: Int = 0b0 // 0000
     
-    private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
     private var rightHandSubscriber: AnyCancellable?
     private var leftHandSubscriber: AnyCancellable?
     
     init(leftHand: HandPose, rightHand: HandPose) {
+        pianoSampler.setup()
+        
         self.leftHandSubscriber = leftHand.fingerTipGroupPublisher.sink { message in
             // update if changed
             if self.leftHandFingerTipGroup != message.fingerTipGroup {
@@ -99,14 +109,29 @@ class HandPoseMusicController: ObservableObject {
     
     func playMusic() {
         guard let notes = getNotesToPlay() else {
-//            print("Could not determine notes to play")
             return
         }
         
-        polyphonicPlayer.noteOn(notes: notes)
+        if useInstrument == .sampler {
+            // Just until I change all midi note types to UInt8 from Int
+            var castNotes: [UInt8] = []
+            for note in notes {
+                castNotes.append(UInt8(note))
+            }
+            
+            pianoSampler.notesOn(notes: castNotes)
+        } else if useInstrument == .synthesizer {
+            polyphonicPlayer.noteOn(notes: notes)
+        }
     }
     
     func stopMusic() {
-        polyphonicPlayer.noteOff()
+        // would be more robust to have an ActiveInstrument or something?
+        // but also would be harder to read?
+        if useInstrument == .sampler {
+            pianoSampler.notesOff()
+        } else if useInstrument == .synthesizer {
+            polyphonicPlayer.noteOff()
+        }
     }
 }
