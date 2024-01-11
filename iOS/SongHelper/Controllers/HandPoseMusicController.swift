@@ -21,20 +21,18 @@ struct FingerTipGroupMessage {
 
 
 class HandPoseMusicController: ObservableObject {
-    @Published var currentRoot: Int = 60
-    // To-do: set this somewhere else... a button? not necessary to control with fingers most of time
-    var musicalMode: MusicalMode = .major
+    @Published var keyRoot: Int = 24 // C1
+    var octave = 4
+    @Published var musicalMode: MusicalMode = .major
     
-    // To-do: make "offset" a scale degree and later convert it into a number of half-steps
-    //      offset is currently just a number of halfsteps (aka difference in midi note)
-    let offsetForFingerTipGroup: [Int: Int] = [
-        0b0001: 0,
+    let scaleDegreeForFingerTipGroup: [Int: Int] = [
+        0b0001: 1,
         0b0010: 2,
-        0b0011: 4,
-        0b0100: 5,
-        0b0101: 7,
-        0b0110: 9,
-        0b0111: 11,
+        0b0011: 3,
+        0b0100: 4,
+        0b0101: 5,
+        0b0110: 6,
+        0b0111: 7,
     ]
     // These can be chosen automatically based on scale degree in key, but modified if right hand says so
     let chordTypeForFingerTipGroup: [Int: Chord] = [
@@ -74,16 +72,19 @@ class HandPoseMusicController: ObservableObject {
         }
     }
     
+    func setMusicalMode(to musicalMode: MusicalMode) {
+        self.musicalMode = musicalMode
+    }
+    
     func getNotesToPlay() -> [Int]? {
-        //  Get the scale degree as a midi note/number of halftones from 0
-        guard let offset = offsetForFingerTipGroup[leftHandFingerTipGroup] else {
+        guard let scaleDegree = scaleDegreeForFingerTipGroup[leftHandFingerTipGroup] else {
             polyphonicPlayer.noteOff()
             return nil
         }
         
-        // Convert the midi note into a scale degree (1 through 7)
-        let scaleDegree = midiIntervalToScaleDegree(musicalMode: musicalMode, midiInterval: offset)
-        guard let scaleDegree = scaleDegree else { return nil }
+        // Convert the scale degree into a number of semitones above the root
+        let midiInterval = scaleDegreeToMidiInterval(musicalMode: musicalMode, scaleDegree: scaleDegree)
+        guard let midiInterval = midiInterval else { return nil }
         
         // Get the chord type, either regular for scale or as modified by right hand if present
         var chordType = chordTypeForFingerTipGroup[rightHandFingerTipGroup]
@@ -92,7 +93,8 @@ class HandPoseMusicController: ObservableObject {
         }
         guard let chordType = chordType else { return nil }
         
-        return getChord(root: currentRoot, offset: offset, tones: chordType.values)
+        let chordRoot = getChordRoot(keyRoot: keyRoot, octave: octave, midiInterval: midiInterval)
+        return getChord(root: chordRoot, tones: chordType.values)
     }
     
     func playMusic() {

@@ -10,12 +10,12 @@ import AVKit
 
 
 struct ContentView: View {
-    private var root = 60 // Middle C
-
     private var handPoseMusicController: HandPoseMusicController
     private var handTracker: HandTracker
     @ObservedObject var leftHand: HandPose
     @ObservedObject var rightHand: HandPose
+    
+    @State private var modeIsMajor: Bool = true
     
     private let size: CGSize = CGSize(
         width: UIScreen.main.bounds.width,
@@ -45,6 +45,17 @@ struct ContentView: View {
                 AVCameraView(size: videoSize)
                 HandPointsView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand, size: videoSize)
                 InterfaceOverlayView(size: videoSize)
+                VStack {
+                    Spacer()
+                    Toggle(modeIsMajor ? "Maj" : "min", isOn: $modeIsMajor)
+                        .onChange(of: modeIsMajor) { newValue in
+                            if newValue == true {
+                                handPoseMusicController.setMusicalMode(to: .major)
+                            } else {
+                                handPoseMusicController.setMusicalMode(to: .minor)
+                            }
+                        }
+                }
 //                Text("This way up")
 //                DebugView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand, handPoseMusicController: handPoseMusicController)
             }

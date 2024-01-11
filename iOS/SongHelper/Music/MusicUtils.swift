@@ -10,44 +10,50 @@ import Foundation
 // To-do: make "offset" a scale degree and later convert it into a number of half-steps
 //      offset is currently just a number of halfsteps (aka difference in midi note)
 
-func getChord(root: Int, offset: Int, tones: [Int]) -> [Int] {
-    return tones.map { root + offset + $0 }
+func getChord(root: Int, tones: [Int]) -> [Int] {
+    return tones.map { root + $0 }
 }
 
-// Converts a midi interval into a scale degree, e.g. 0 is the 1st scale degree, 4 is the 3rd if
-// the scale is major and 3 is the 3rd if the scale is minor
-func midiIntervalToScaleDegree(musicalMode: MusicalMode, midiInterval: Int) -> Int? {
-    if musicalMode == .major {
-        if midiInterval == 0 {
-            return 1
-        } else if midiInterval == 2 {
+func getChordRoot(keyRoot: Int, octave: Int, midiInterval: Int) -> Int {
+    return keyRoot + (12 * (octave - 1)) + midiInterval
+}
+
+// Converts a scale degree into a number of semitones given a musical mode
+// e.g. 3rd scale degree is 4 semitones above the root if the mode is major
+func scaleDegreeToMidiInterval(musicalMode: MusicalMode, scaleDegree: Int) -> Int? {
+    if scaleDegree == 1 {
+        if [.major, .minor].contains(musicalMode) {
+            return 0
+        }
+    } else if scaleDegree == 2 {
+        if [.major, .minor].contains(musicalMode) {
             return 2
-        } else if midiInterval == 4 {
-            return 3
-        } else if midiInterval == 5 {
+        }
+    } else if scaleDegree == 3 {
+        if musicalMode == .major {
             return 4
-        } else if midiInterval == 7 {
+        } else if musicalMode == .minor {
+            return 3
+        }
+    } else if scaleDegree == 4 {
+        if [.major, .minor].contains(musicalMode) {
             return 5
-        } else if midiInterval == 9 {
-            return 6
-        } else if midiInterval == 11 {
+        }
+    } else if scaleDegree == 5 {
+        if [.major, .minor].contains(musicalMode) {
             return 7
         }
-    } else if musicalMode == .minor {
-        if midiInterval == 0 {
-            return 1
-        } else if midiInterval == 2 {
-            return 2
-        } else if midiInterval == 3 {
-            return 3
-        } else if midiInterval == 5 {
-            return 4
-        } else if midiInterval == 6 {
-            return 5
-        } else if midiInterval == 8 {
-            return 6
-        } else if midiInterval == 10 {
-            return 7
+    } else if scaleDegree == 6 {
+        if musicalMode == .major {
+            return 9
+        } else if musicalMode == .minor {
+            return 8
+        }
+    } else if scaleDegree == 7 {
+        if musicalMode == .major {
+            return 11
+        } else if musicalMode == .minor {
+            return 10
         }
     }
     return nil

@@ -23,7 +23,7 @@ struct DebugView: View {
                 .foregroundStyle(.green)
             Text(leftHand.stringifySmoothedFingerTips())
                 .foregroundStyle(.blue)
-            Text(String(handPoseMusicController.currentRoot))
+            Text(String(handPoseMusicController.keyRoot))
             
             
             Text(String(handPoseMusicController.leftHandFingerTipGroup, radix: 2))
