@@ -27,15 +27,16 @@ struct HandPoseMessage {
 class HandPose: ObservableObject {
     var chirality: VNChirality = .unknown
     private var cancellable: AnyCancellable?
-    var fingerTipGroupPublisher = PassthroughSubject<FingerTipGroupMessage, Never>()
+    let fingerTipGroupPublisher = PassthroughSubject<FingerTipGroupMessage, Never>()
     
     @Published var isDetected: Bool = false
     
-    @Published var vnFingerTips: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint] = [:]
-    @Published var recentVNFingerTips: [VNHumanHandPoseObservation.JointName: Deque<CGPoint>] = [:]
-    @Published var fingerTips: [VNHumanHandPoseObservation.JointName: CGPoint] = [:]
-    @Published var fingerTipsNearThumbGroup: Int = 0b0
+    var vnFingerTips: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint] = [:]
+    var recentVNFingerTips: [VNHumanHandPoseObservation.JointName: Deque<CGPoint>] = [:]
+    var fingerTipsNearThumbGroup: Int = 0b0
+    
     let requiredPointsCountForSmoothing: Int = 3
+    @Published var fingerTips: [VNHumanHandPoseObservation.JointName: CGPoint] = [:]
     
     var allVNFingerTips: [CGPoint] = []
     
@@ -67,6 +68,11 @@ class HandPose: ObservableObject {
         }
     }
     
+    // To-do: Consider processing the hand pose data and sending it through instead of storing it
+    //      basically making this more functional and less OO
+    //      could be more readable and faster
+    //      but we need some OO because we have recent fingertips to store and average
+    //      the other reason it is OO is because the @Published updates are processed by SwiftUI...
     func updateHandDataOnMainThread(_ message: HandPoseMessage) {
         DispatchQueue.main.async {
             self.setVNPoints(vnPoints: message.landmarks)
@@ -79,7 +85,6 @@ class HandPose: ObservableObject {
     }
     
     func reset() {
-        print("resetting hand pose")
         self.isDetected = false
         self.vnFingerTips = [:]
         self.recentVNFingerTips = [:]

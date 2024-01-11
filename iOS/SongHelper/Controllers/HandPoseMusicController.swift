@@ -29,6 +29,7 @@ class HandPoseMusicController: ObservableObject {
     private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
     private var pianoSampler = PianoSampler()
     private var useInstrument: SHInstrument = .sampler
+    private var velocity: UInt8 = 77
     
     @Published var keyRoot: Int = 24 // C1
     var octave = 4
@@ -86,6 +87,8 @@ class HandPoseMusicController: ObservableObject {
         self.musicalMode = musicalMode
     }
     
+    // To-do: Go directly from received hand pose message to playing instrument
+    //      would be more readable and run a bit faster
     func getNotesToPlay() -> [Int]? {
         guard let scaleDegree = scaleDegreeForFingerTipGroup[leftHandFingerTipGroup] else {
             polyphonicPlayer.noteOff()
@@ -119,7 +122,7 @@ class HandPoseMusicController: ObservableObject {
                 castNotes.append(UInt8(note))
             }
             
-            pianoSampler.notesOn(notes: castNotes)
+            pianoSampler.notesOn(notes: castNotes, velocity: velocity)
         } else if useInstrument == .synthesizer {
             polyphonicPlayer.noteOn(notes: notes)
         }

@@ -40,9 +40,9 @@ class PianoSampler {
         }
     }
     
-    func notesOn(notes: [UInt8]) {
+    func notesOn(notes: [UInt8], velocity: UInt8) {
         for note in notes {
-            sampler.play(noteNumber: note, velocity: 90, channel: 0)
+            sampler.play(noteNumber: note, velocity: velocity, channel: 0)
             currentNotes.insert(note)
         }
     }

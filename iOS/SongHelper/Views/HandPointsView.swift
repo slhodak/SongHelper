@@ -17,13 +17,11 @@ struct HandPointsView: View {
     var size: CGSize
     
     var body: some View {
-        let rightHandDetected = rightHand.isDetected
-        let leftHandDetected = leftHand.isDetected
         ZStack {
-            if leftHandDetected {
+            if !leftHand.fingerTips.isEmpty {
                 drawHand(from: leftHand.fingerTips, color: .orange)
             }
-            if rightHandDetected {
+            if !rightHand.fingerTips.isEmpty {
                 drawHand(from: rightHand.fingerTips, color: .red)
             }
             
