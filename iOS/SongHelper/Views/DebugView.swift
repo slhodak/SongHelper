@@ -17,8 +17,6 @@ struct DebugView: View {
     
     var body: some View {
         VStack {
-            Text(leftHand.stringifyVNFingerTips())
-                .foregroundStyle(.red)
             Text(leftHand.stringifyRecentVNFingerTips())
                 .foregroundStyle(.green)
             Text(leftHand.stringifySmoothedFingerTips())
@@ -28,7 +26,6 @@ struct DebugView: View {
             
             Text(String(handPoseMusicController.leftHandFingerTipGroup, radix: 2))
             Text(String(handPoseMusicController.rightHandFingerTipGroup, radix: 2))
-            Text(String(leftHand.fingerTipsNearThumbGroup))
         }
     }
 }
