@@ -4,5 +4,6 @@
 
 ## Progress
 Playable using right and left hands
-The interface: you send messages to the device by touching your fingers to your thumb. Left hand controls chord played, right hand can modify the chord
+(Phone should be on its right side, locked in portrait orientation)
+Interface: you send messages to the device by touching your fingers to your thumb. Left hand controls chord played, right hand can modify the chord
 (Pinky does nothing for now)
