@@ -1,5 +1,6 @@
 ### Goals
-1. Make the tool feel like a natural device for playing accompaniment to an existing song
+1. Make it feel like a natural device for playing accompaniment to an existing song
+2. Make it useful for original songwriting
 
 ## Progress
 Playable using right and left hands
