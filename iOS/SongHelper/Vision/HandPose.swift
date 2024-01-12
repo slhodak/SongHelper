@@ -63,11 +63,11 @@ class HandPose: ObservableObject {
     
     func updateHandDataOnMainThread(_ message: HandPoseMessage) {
         DispatchQueue.main.async {
-            let fingerTips = self.processVNPoints(message.landmarks)
+            let (fingerTips, thumbLocation) = self.processVNPoints(message.landmarks)
             self.fingerTips = fingerTips // Store so it can be published to SwiftUI
             let fingerTipsNearThumbGroup = self.findFingertipsNearThumb(fingerTips)
             
-            let message = FingerTipsMessage(fingerTipGroup: fingerTipsNearThumbGroup)
+            let message = FingerTipsMessage(fingerTipGroup: fingerTipsNearThumbGroup, thumbLocation: thumbLocation)
             self.fingerTipGroupPublisher.send(message)
         }
     }
@@ -77,8 +77,9 @@ class HandPose: ObservableObject {
         self.fingerTips = [:]
     }
     
-    func processVNPoints(_ vnPoints: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]) -> [VNHumanHandPoseObservation.JointName: CGPoint] {
+    func processVNPoints(_ vnPoints: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]) -> ([VNHumanHandPoseObservation.JointName: CGPoint], CGPoint?) {
         var smoothedFingerTipPoints: [VNHumanHandPoseObservation.JointName: CGPoint] = [:]
+        var thumbLocation: CGPoint? = nil
         
         for (joint, vnFingerTipPoint) in vnPoints {
             if !FingerTips.contains(joint) { continue }
@@ -105,9 +106,12 @@ class HandPose: ObservableObject {
             }
             
             smoothedFingerTipPoints[joint] = self.smooth(points: recentVNFingerTips[joint]!)
+            if joint == .thumbTip {
+                thumbLocation = pointLocation
+            }
         }
         
-        return smoothedFingerTipPoints
+        return (smoothedFingerTipPoints, thumbLocation)
     }
     
     func smooth(points: Deque<CGPoint>) -> CGPoint {

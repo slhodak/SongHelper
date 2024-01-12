@@ -17,6 +17,7 @@ enum MusicalMode {
 
 struct FingerTipsMessage {
     var fingerTipGroup: Int
+    var thumbLocation: CGPoint?
 }
 
 enum SHInstrument {
@@ -29,13 +30,14 @@ class HandPoseMusicController: ObservableObject {
     private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
     private var pianoSampler = PianoSampler()
     private var useInstrument: SHInstrument = .sampler
-    private var velocity: UInt8 = 77
+    private var isPlaying: Bool = false
     
     @Published var keyRoot: Int = 24 // C1
     var octave = 4
     @Published var musicalMode: MusicalMode = .major
     
     var leftHandFingerTipGroup: Int = 0b0 // 0000
+    var leftHandThumbLocation: CGPoint?
     var rightHandFingerTipGroup: Int = 0b0 // 0000
     
     private var rightHandSubscriber: AnyCancellable?
@@ -71,20 +73,24 @@ class HandPoseMusicController: ObservableObject {
     }
     
     func handleLeftHandUpdate(message: FingerTipsMessage) {
+        // Update thumb location regardless of whether fingertip group changed,
+        // because it controls dynamics and notes can be triggered by right hand too
+        self.leftHandThumbLocation = message.thumbLocation
+        
         guard self.leftHandFingerTipGroup != message.fingerTipGroup else { return }
         
         self.leftHandFingerTipGroup = message.fingerTipGroup
         self.stopMusic()
-        self.playMusic(fingerTipGroup: message.fingerTipGroup)
+        self.playMusic(for: message.fingerTipGroup, with: message.thumbLocation)
     }
     
     func handleRightHandUpdate(message: FingerTipsMessage) {
         guard self.rightHandFingerTipGroup != message.fingerTipGroup else { return }
         
         self.rightHandFingerTipGroup = message.fingerTipGroup
-        self.stopMusic()
-        if self.leftHandFingerTipGroup != 0b0 {
-            self.playMusic(fingerTipGroup: self.leftHandFingerTipGroup)
+        if self.isPlaying {
+            self.stopMusic()
+            self.playMusic(for: self.leftHandFingerTipGroup, with: self.leftHandThumbLocation)
         }
     }
     
@@ -113,10 +119,16 @@ class HandPoseMusicController: ObservableObject {
         return getChord(root: chordRoot, tones: chordType.values)
     }
     
-    func playMusic(fingerTipGroup: Int) {
+    func getVelocity(from thumbLocation: CGPoint) -> UInt8 {
+        return UInt8(thumbLocation.y * 50) + 50
+    }
+    
+    func playMusic(for fingerTipGroup: Int, with thumbLocation: CGPoint? = nil) {
         guard let notes = getNotesToPlay(for: fingerTipGroup) else {
             return
         }
+        
+        isPlaying = true
         
         if useInstrument == .sampler {
             // Just until I change all midi note types to UInt8 from Int
@@ -125,6 +137,10 @@ class HandPoseMusicController: ObservableObject {
                 castNotes.append(UInt8(note))
             }
             
+            var velocity = UInt8(77)
+            if thumbLocation != nil {
+                velocity = getVelocity(from: thumbLocation!)
+            }
             pianoSampler.notesOn(notes: castNotes, velocity: velocity)
         } else if useInstrument == .synthesizer {
             polyphonicPlayer.noteOn(notes: notes)
@@ -132,6 +148,8 @@ class HandPoseMusicController: ObservableObject {
     }
     
     func stopMusic() {
+        isPlaying = false
+        
         // would be more robust to have an ActiveInstrument or something?
         // but also would be harder to read?
         if useInstrument == .sampler {
