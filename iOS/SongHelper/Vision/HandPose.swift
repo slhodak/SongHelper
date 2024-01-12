@@ -27,7 +27,7 @@ struct HandPoseMessage {
 class HandPose: ObservableObject {
     var chirality: VNChirality = .unknown
     private var cancellable: AnyCancellable?
-    let fingerTipGroupPublisher = PassthroughSubject<FingerTipGroupMessage, Never>()
+    let fingerTipGroupPublisher = PassthroughSubject<FingerTipsMessage, Never>()
     
     var recentVNFingerTips: [VNHumanHandPoseObservation.JointName: Deque<CGPoint>] = [:]
     let requiredPointsCountForSmoothing: Int = 3
@@ -56,7 +56,7 @@ class HandPose: ObservableObject {
         
         DispatchQueue.main.async {
             self.reset()
-            let message = FingerTipGroupMessage(fingerTipGroup: 0b0)
+            let message = FingerTipsMessage(fingerTipGroup: 0b0)
             self.fingerTipGroupPublisher.send(message)
         }
     }
@@ -67,7 +67,7 @@ class HandPose: ObservableObject {
             self.fingerTips = fingerTips // Store so it can be published to SwiftUI
             let fingerTipsNearThumbGroup = self.findFingertipsNearThumb(fingerTips)
             
-            let message = FingerTipGroupMessage(fingerTipGroup: fingerTipsNearThumbGroup)
+            let message = FingerTipsMessage(fingerTipGroup: fingerTipsNearThumbGroup)
             self.fingerTipGroupPublisher.send(message)
         }
     }

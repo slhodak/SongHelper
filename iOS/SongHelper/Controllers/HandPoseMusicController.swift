@@ -15,7 +15,7 @@ enum MusicalMode {
     case minor
 }
 
-struct FingerTipGroupMessage {
+struct FingerTipsMessage {
     var fingerTipGroup: Int
 }
 
@@ -34,6 +34,12 @@ class HandPoseMusicController: ObservableObject {
     @Published var keyRoot: Int = 24 // C1
     var octave = 4
     @Published var musicalMode: MusicalMode = .major
+    
+    var leftHandFingerTipGroup: Int = 0b0 // 0000
+    var rightHandFingerTipGroup: Int = 0b0 // 0000
+    
+    private var rightHandSubscriber: AnyCancellable?
+    private var leftHandSubscriber: AnyCancellable?
     
     let scaleDegreeForFingerTipGroup: [Int: Int] = [
         0b0001: 1,
@@ -55,31 +61,30 @@ class HandPoseMusicController: ObservableObject {
         0b0111: .fullDim,
     ]
     
-    var leftHandFingerTipGroup: Int = 0b0 // 0000
-    var rightHandFingerTipGroup: Int = 0b0 // 0000
-    
-    private var rightHandSubscriber: AnyCancellable?
-    private var leftHandSubscriber: AnyCancellable?
-    
     init(leftHand: HandPose, rightHand: HandPose) {
         pianoSampler.setup()
         
-        self.leftHandSubscriber = leftHand.fingerTipGroupPublisher.sink { message in
-            // update if changed
-            if self.leftHandFingerTipGroup != message.fingerTipGroup {
-                self.leftHandFingerTipGroup = message.fingerTipGroup
-                self.stopMusic()
-                self.playMusic()
-            }
-        }
+        self.leftHandSubscriber = leftHand.fingerTipGroupPublisher
+            .sink(receiveValue: handleLeftHandUpdate)
+        self.rightHandSubscriber = rightHand.fingerTipGroupPublisher
+            .sink(receiveValue: handleRightHandUpdate)
+    }
+    
+    func handleLeftHandUpdate(message: FingerTipsMessage) {
+        guard self.leftHandFingerTipGroup != message.fingerTipGroup else { return }
         
-        self.rightHandSubscriber = rightHand.fingerTipGroupPublisher.sink { message in
-            // update if changed
-            if self.rightHandFingerTipGroup != message.fingerTipGroup {
-                self.rightHandFingerTipGroup = message.fingerTipGroup
-                self.stopMusic()
-                self.playMusic()
-            }
+        self.leftHandFingerTipGroup = message.fingerTipGroup
+        self.stopMusic()
+        self.playMusic(fingerTipGroup: message.fingerTipGroup)
+    }
+    
+    func handleRightHandUpdate(message: FingerTipsMessage) {
+        guard self.rightHandFingerTipGroup != message.fingerTipGroup else { return }
+        
+        self.rightHandFingerTipGroup = message.fingerTipGroup
+        self.stopMusic()
+        if self.leftHandFingerTipGroup != 0b0 {
+            self.playMusic(fingerTipGroup: self.leftHandFingerTipGroup)
         }
     }
     
@@ -87,10 +92,8 @@ class HandPoseMusicController: ObservableObject {
         self.musicalMode = musicalMode
     }
     
-    // To-do: Go directly from received hand pose message to playing instrument
-    //      would be more readable and run a bit faster
-    func getNotesToPlay() -> [Int]? {
-        guard let scaleDegree = scaleDegreeForFingerTipGroup[leftHandFingerTipGroup] else {
+    func getNotesToPlay(for fingerTipGroup: Int) -> [Int]? {
+        guard let scaleDegree = scaleDegreeForFingerTipGroup[fingerTipGroup] else {
             polyphonicPlayer.noteOff()
             return nil
         }
@@ -110,8 +113,8 @@ class HandPoseMusicController: ObservableObject {
         return getChord(root: chordRoot, tones: chordType.values)
     }
     
-    func playMusic() {
-        guard let notes = getNotesToPlay() else {
+    func playMusic(fingerTipGroup: Int) {
+        guard let notes = getNotesToPlay(for: fingerTipGroup) else {
             return
         }
         
