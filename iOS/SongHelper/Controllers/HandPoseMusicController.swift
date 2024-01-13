@@ -116,7 +116,10 @@ class HandPoseMusicController: ObservableObject {
         return getChord(root: chordRoot, tones: chordType.values)
     }
     
-    func getVelocity(from thumbLocation: CGPoint) -> UInt8 {
+    func getVelocity(from thumbLocation: CGPoint?) -> UInt8 {
+        guard let thumbLocation = thumbLocation else {
+            return 77
+        }
         return UInt8(thumbLocation.y * 50) + 50
     }
     
@@ -126,12 +129,9 @@ class HandPoseMusicController: ObservableObject {
         }
         
         isPlaying = true
+        let velocity = getVelocity(from: thumbLocation)
         
         if useInstrument == .sampler {
-            var velocity = UInt8(77)
-            if thumbLocation != nil {
-                velocity = getVelocity(from: thumbLocation!)
-            }
             pianoSampler.notesOn(notes: notes, velocity: velocity)
         } else if useInstrument == .synthesizer {
             polyphonicPlayer.noteOn(notes: notes)
