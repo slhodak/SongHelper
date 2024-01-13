@@ -73,8 +73,7 @@ class HandPoseMusicController: ObservableObject {
     }
     
     func handleLeftHandUpdate(message: FingerTipsMessage) {
-        // Update thumb location regardless of whether fingertip group changed,
-        // because it controls dynamics and notes can be triggered by right hand too
+        // Update thumb location regardless of whether fingertip group changed
         self.leftHandThumbLocation = message.thumbLocation
         
         guard self.leftHandFingerTipGroup != message.fingerTipGroup else { return }
@@ -88,6 +87,8 @@ class HandPoseMusicController: ObservableObject {
         guard self.rightHandFingerTipGroup != message.fingerTipGroup else { return }
         
         self.rightHandFingerTipGroup = message.fingerTipGroup
+        // Right hand finger poses used to cause notes to be played, and it was kind of cool,
+        // but harder to play. Maybe this could be a mode.
     }
     
     func setMusicalMode(to musicalMode: MusicalMode) {
