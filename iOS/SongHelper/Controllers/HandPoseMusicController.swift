@@ -39,6 +39,8 @@ class HandPoseMusicController: ObservableObject {
     var leftHandFingerTipGroup: Int = 0b0 // 0000
     var leftHandThumbLocation: CGPoint?
     var rightHandFingerTipGroup: Int = 0b0 // 0000
+    let updateFingerTipsAfter: TimeInterval = 0.5
+    var lastUpdate: TimeInterval = Date().timeIntervalSince1970 - 5 // Be ready immediately
     
     private var rightHandSubscriber: AnyCancellable?
     private var leftHandSubscriber: AnyCancellable?
@@ -72,11 +74,24 @@ class HandPoseMusicController: ObservableObject {
             .sink(receiveValue: handleRightHandUpdate)
     }
     
+    func shouldRegisterFingerTipsUpdate(_ message: FingerTipsMessage) -> Bool {
+        // Only count an update if it's different from last positino
+        guard self.leftHandFingerTipGroup != message.fingerTipGroup else { return false }
+
+        let now = Date().timeIntervalSince1970
+        if self.lastUpdate < (now - self.updateFingerTipsAfter) {
+            self.lastUpdate = now
+            return true
+        }
+        
+        return false
+    }
+    
     func handleLeftHandUpdate(message: FingerTipsMessage) {
         // Update thumb location regardless of whether fingertip group changed
         self.leftHandThumbLocation = message.thumbLocation
         
-        guard self.leftHandFingerTipGroup != message.fingerTipGroup else { return }
+        guard self.shouldRegisterFingerTipsUpdate(message) else { return }
         
         self.leftHandFingerTipGroup = message.fingerTipGroup
         self.stopMusic()
