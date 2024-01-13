@@ -8,17 +8,17 @@
 import Foundation
 
 
-func getChord(root: Int, tones: [Int]) -> [Int] {
+func getChord(root: UInt8, tones: [UInt8]) -> [UInt8] {
     return tones.map { root + $0 }
 }
 
-func getChordRoot(keyRoot: Int, octave: Int, midiInterval: Int) -> Int {
+func getChordRoot(keyRoot: UInt8, octave: UInt8, midiInterval: UInt8) -> UInt8 {
     return keyRoot + (12 * (octave - 1)) + midiInterval
 }
 
 // Converts a scale degree into a number of semitones given a musical mode
 // e.g. 3rd scale degree is 4 semitones above the root if the mode is major
-func scaleDegreeToMidiInterval(musicalMode: MusicalMode, scaleDegree: Int) -> Int? {
+func scaleDegreeToMidiInterval(musicalMode: MusicalMode, scaleDegree: UInt8) -> UInt8? {
     if scaleDegree == 1 {
         if [.major, .minor].contains(musicalMode) {
             return 0
@@ -57,7 +57,7 @@ func scaleDegreeToMidiInterval(musicalMode: MusicalMode, scaleDegree: Int) -> In
     return nil
 }
 
-func getRegularChordTypeFor(musicalMode: MusicalMode, scaleDegree: Int) -> Chord? {
+func getRegularChordTypeFor(musicalMode: MusicalMode, scaleDegree: UInt8) -> Chord? {
     if musicalMode == .major {
         if scaleDegree == 1 {
             return .majorTriad

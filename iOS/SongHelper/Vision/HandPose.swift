@@ -16,7 +16,7 @@ let FingerTips: [VNHumanHandPoseObservation.JointName] = [
 ]
 
 let ConfidenceThreshold: Float = 0.5
-
+let FingerTipProximityThreshold: Double = 0.1
 
 struct HandPoseMessage {
     var chirality: VNChirality
@@ -141,7 +141,7 @@ class HandPose: ObservableObject {
                 from: smoothedFingerTipPoint, to: smoothedThumbTipPoint
             ) else { continue }
             
-            if distanceToThumb < 0.125 {
+            if distanceToThumb > FingerTipProximityThreshold {
                 switch joint {
                 case .indexTip:
                     fingerTipsNearThumbGroup += 0b1

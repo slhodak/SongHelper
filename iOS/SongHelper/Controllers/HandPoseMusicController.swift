@@ -32,8 +32,8 @@ class HandPoseMusicController: ObservableObject {
     private var useInstrument: SHInstrument = .sampler
     private var isPlaying: Bool = false
     
-    @Published var keyRoot: Int = 24 // C1
-    var octave = 4
+    @Published var keyRoot: UInt8 = 24 // C1
+    var octave: UInt8 = 4
     @Published var musicalMode: MusicalMode = .major
     
     var leftHandFingerTipGroup: Int = 0b0 // 0000
@@ -43,24 +43,24 @@ class HandPoseMusicController: ObservableObject {
     private var rightHandSubscriber: AnyCancellable?
     private var leftHandSubscriber: AnyCancellable?
     
-    let scaleDegreeForFingerTipGroup: [Int: Int] = [
+    let scaleDegreeForFingerTipGroup: [Int: UInt8] = [
         0b0001: 1,
-        0b0010: 2,
-        0b0011: 3,
-        0b0100: 4,
-        0b0101: 5,
-        0b0110: 6,
-        0b0111: 7,
+        0b0011: 2,
+        0b0111: 3,
+        0b1111: 4,
+        0b1000: 5,
+        0b1100: 6,
+        0b1110: 7,
     ]
     // These can be chosen automatically based on scale degree in key, but modified if right hand says so
     let chordTypeForFingerTipGroup: [Int: Chord] = [
         0b0001: .majorTriad,
-        0b0010: .minorTriad,
-        0b0011: .halfDim,
-        0b0100: .major7,
-        0b0101: .dominant7,
-        0b0110: .minor7,
-        0b0111: .fullDim,
+        0b0011: .dominant7,
+        0b0111: .major7,
+        0b1111: .minorTriad,
+        0b1000: .minor7,
+        0b1100: .halfDim,
+        0b1110: .fullDim,
     ]
     
     init(leftHand: HandPose, rightHand: HandPose) {
@@ -88,17 +88,13 @@ class HandPoseMusicController: ObservableObject {
         guard self.rightHandFingerTipGroup != message.fingerTipGroup else { return }
         
         self.rightHandFingerTipGroup = message.fingerTipGroup
-        if self.isPlaying {
-            self.stopMusic()
-            self.playMusic(for: self.leftHandFingerTipGroup, with: self.leftHandThumbLocation)
-        }
     }
     
     func setMusicalMode(to musicalMode: MusicalMode) {
         self.musicalMode = musicalMode
     }
     
-    func getNotesToPlay(for fingerTipGroup: Int) -> [Int]? {
+    func getNotesToPlay(for fingerTipGroup: Int) -> [UInt8]? {
         guard let scaleDegree = scaleDegreeForFingerTipGroup[fingerTipGroup] else {
             polyphonicPlayer.noteOff()
             return nil
@@ -131,17 +127,11 @@ class HandPoseMusicController: ObservableObject {
         isPlaying = true
         
         if useInstrument == .sampler {
-            // Just until I change all midi note types to UInt8 from Int
-            var castNotes: [UInt8] = []
-            for note in notes {
-                castNotes.append(UInt8(note))
-            }
-            
             var velocity = UInt8(77)
             if thumbLocation != nil {
                 velocity = getVelocity(from: thumbLocation!)
             }
-            pianoSampler.notesOn(notes: castNotes, velocity: velocity)
+            pianoSampler.notesOn(notes: notes, velocity: velocity)
         } else if useInstrument == .synthesizer {
             polyphonicPlayer.noteOn(notes: notes)
         }

@@ -17,7 +17,7 @@ enum Chord {
     case minor7
     case fullDim
     
-    var values: [Int] {
+    var values: [UInt8] {
         switch self {
         case .minorTriad:
             return [0, 3, 7]

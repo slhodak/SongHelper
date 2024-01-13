@@ -41,7 +41,7 @@ class PolyphonicPlayer {
         }
     }
     
-    func noteOn(notes: [Int]) {
+    func noteOn(notes: [UInt8]) {
         guard !isPlaying else { return }
         
         isPlaying = true
