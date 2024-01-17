@@ -64,7 +64,7 @@ class HandPoseMusicController: ObservableObject {
         0b1111: .minorTriad,
         0b1000: .minor7,
         0b1100: .halfDim,
-        0b1110: .fullDim,
+        0b1110: .sus4,
     ]
     
     init(leftHand: HandPose, rightHand: HandPose) {
@@ -118,6 +118,9 @@ class HandPoseMusicController: ObservableObject {
         guard self.rightHandFingerTipGroup != message.fingerTipGroup else { return }
         
         self.rightHandFingerTipGroup = message.fingerTipGroup
+        if let chordType = chordTypeForFingerTipGroup[message.fingerTipGroup] {
+            self.chordType = chordType
+        }
         // Right hand pose updates used to cause notes to be played, and it was kind of cool,
         // but harder to play. Maybe this could be a mode.
     }

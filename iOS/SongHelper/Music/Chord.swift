@@ -16,6 +16,7 @@ enum Chord {
     case dominant7
     case minor7
     case fullDim
+    case sus4
     
     var values: [UInt8] {
         switch self {
@@ -33,6 +34,8 @@ enum Chord {
             return [0, 3, 7, 10]
         case .fullDim:
             return [0, 3, 6, 9]
+        case .sus4:
+            return [0, 5, 7]
         }
     }
     
@@ -52,6 +55,8 @@ enum Chord {
             return "Min7"
         case .fullDim:
             return "Dim"
+        case .sus4:
+            return "sus4"
         }
     }
 }
