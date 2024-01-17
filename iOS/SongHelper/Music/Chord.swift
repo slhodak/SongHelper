@@ -35,4 +35,23 @@ enum Chord {
             return [0, 3, 6, 9]
         }
     }
+    
+    var string: String {
+        switch self {
+        case .minorTriad:
+            return "Min"
+        case .majorTriad:
+            return "Maj"
+        case .halfDim:
+            return "Half Dim"
+        case .major7:
+            return "Maj7"
+        case .dominant7:
+            return "Dominant 7"
+        case .minor7:
+            return "Min7"
+        case .fullDim:
+            return "Dim"
+        }
+    }
 }

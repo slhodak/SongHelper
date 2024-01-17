@@ -34,6 +34,8 @@ class HandPoseMusicController: ObservableObject {
     @Published var keyRoot: UInt8 = 24 // C1
     var octave: UInt8 = 4
     @Published var musicalMode: MusicalMode = .major
+    @Published var chordRoot: UInt8 = 24
+    @Published var chordType: Chord = .majorTriad
     
     var leftHandFingerTipGroup: Int = 0b0 // 0000
     var leftHandThumbLocation: CGPoint?
@@ -124,6 +126,12 @@ class HandPoseMusicController: ObservableObject {
         self.musicalMode = musicalMode
     }
     
+    private func setCurrentChord(chordRoot: UInt8, chordType: Chord) {
+        self.chordRoot = chordRoot
+        self.chordType = chordType
+        print("Set chordRoot: \(self.chordRoot) and chordType: \(self.chordType)")
+    }
+    
     func getNotesToPlay(for fingerTipGroup: Int) -> [UInt8]? {
         guard let scaleDegree = scaleDegreeForFingerTipGroup[fingerTipGroup] else {
             polyphonicPlayer.noteOff()
@@ -142,6 +150,9 @@ class HandPoseMusicController: ObservableObject {
         guard let chordType = chordType else { return nil }
         
         let chordRoot = getChordRoot(keyRoot: keyRoot, octave: octave, midiInterval: midiInterval)
+        
+        self.setCurrentChord(chordRoot: chordRoot, chordType: chordType)
+        
         return getChord(root: chordRoot, tones: chordType.values)
     }
     

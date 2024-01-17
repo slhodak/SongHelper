@@ -10,10 +10,12 @@ import SwiftUI
 
 
 struct InterfaceOverlayView: View {
+    @ObservedObject var handPoseMusicController: HandPoseMusicController
     var size: CGSize
     var rectSize: CGSize
     
-    init(size: CGSize) {
+    init(handPoseMusicController: HandPoseMusicController, size: CGSize) {
+        self.handPoseMusicController = handPoseMusicController
         self.size = size
         self.rectSize = CGSize(width: size.width - 2, height: (size.height/2) - 2)
     }
@@ -34,6 +36,12 @@ struct InterfaceOverlayView: View {
                     .frame(width: size.width - 1, height: size.height - 1)
                 
             }
+            VStack(spacing: 0) {
+                Text(handPoseMusicController.chordType.string)
+                Spacer()
+                Text(midiToLetter(midiNote: handPoseMusicController.chordRoot))
+            }
+            .font(.title)
         }
     }
 }

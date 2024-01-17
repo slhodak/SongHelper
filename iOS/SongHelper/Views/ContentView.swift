@@ -44,7 +44,7 @@ struct ContentView: View {
             ZStack {
                 AVCameraView(size: videoSize)
                 HandPointsView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand, size: videoSize)
-                InterfaceOverlayView(size: videoSize)
+                InterfaceOverlayView(handPoseMusicController: handPoseMusicController, size: videoSize)
                 VStack {
                     Spacer()
                     Toggle(modeIsMajor ? "Maj" : "min", isOn: $modeIsMajor)
