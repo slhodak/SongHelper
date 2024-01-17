@@ -30,7 +30,6 @@ class HandPoseMusicController: ObservableObject {
     private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
     private var pianoSampler = PianoSampler()
     private var useInstrument: SHInstrument = .sampler
-    private var isPlaying: Bool = false
     
     @Published var keyRoot: UInt8 = 24 // C1
     var octave: UInt8 = 4
@@ -39,8 +38,9 @@ class HandPoseMusicController: ObservableObject {
     var leftHandFingerTipGroup: Int = 0b0 // 0000
     var leftHandThumbLocation: CGPoint?
     var rightHandFingerTipGroup: Int = 0b0 // 0000
-    let updateFingerTipsAfter: TimeInterval = 0.5
-    var lastUpdate: TimeInterval = Date().timeIntervalSince1970 - 5 // Be ready immediately
+    var currentPoseHasBeenPlayed: Bool = false
+    let updateFingerTipsAfter: TimeInterval = 0.05
+    var lastChangingUpdate: TimeInterval = Date().timeIntervalSince1970 - 5 // Be ready immediately
     
     private var rightHandSubscriber: AnyCancellable?
     private var leftHandSubscriber: AnyCancellable?
@@ -74,35 +74,49 @@ class HandPoseMusicController: ObservableObject {
             .sink(receiveValue: handleRightHandUpdate)
     }
     
-    func shouldRegisterFingerTipsUpdate(_ message: FingerTipsMessage) -> Bool {
-        // Only count an update if it's different from last positino
-        guard self.leftHandFingerTipGroup != message.fingerTipGroup else { return false }
-
+    // First check if hand pose is different; if so, update last update time and update last finger pose
+    // Then check if hand pose is being held--check age of last update time
+    // Then check if this change has been played yet
+    func shouldPlayLeftHandPose(_ message: FingerTipsMessage) -> Bool {
         let now = Date().timeIntervalSince1970
-        if self.lastUpdate < (now - self.updateFingerTipsAfter) {
-            self.lastUpdate = now
-            return true
+        
+        // Only play new sounds when left hand pose has stopped changing
+        if self.leftHandFingerTipGroup != message.fingerTipGroup {
+            self.currentPoseHasBeenPlayed = false
+            self.lastChangingUpdate = now
+            self.leftHandFingerTipGroup = message.fingerTipGroup
+            return false
         }
         
-        return false
+        // Hand pose was changing but most recent change has not been held long enough to be registered
+        if lastChangingUpdate > (now - updateFingerTipsAfter) {
+            return false
+        }
+        
+        // Only play each new change once
+        if self.currentPoseHasBeenPlayed {
+            return false
+        }
+        
+        // Hand pose was changed but has not been changing; it is being held
+        return true
     }
     
     func handleLeftHandUpdate(message: FingerTipsMessage) {
         // Update thumb location regardless of whether fingertip group changed
         self.leftHandThumbLocation = message.thumbLocation
+        guard self.shouldPlayLeftHandPose(message) else { return }
         
-        guard self.shouldRegisterFingerTipsUpdate(message) else { return }
-        
-        self.leftHandFingerTipGroup = message.fingerTipGroup
         self.stopMusic()
         self.playMusic(for: message.fingerTipGroup, with: message.thumbLocation)
+        self.currentPoseHasBeenPlayed = true
     }
     
     func handleRightHandUpdate(message: FingerTipsMessage) {
         guard self.rightHandFingerTipGroup != message.fingerTipGroup else { return }
         
         self.rightHandFingerTipGroup = message.fingerTipGroup
-        // Right hand finger poses used to cause notes to be played, and it was kind of cool,
+        // Right hand pose updates used to cause notes to be played, and it was kind of cool,
         // but harder to play. Maybe this could be a mode.
     }
     
@@ -143,7 +157,6 @@ class HandPoseMusicController: ObservableObject {
             return
         }
         
-        isPlaying = true
         let velocity = getVelocity(from: thumbLocation)
         
         if useInstrument == .sampler {
@@ -154,8 +167,6 @@ class HandPoseMusicController: ObservableObject {
     }
     
     func stopMusic() {
-        isPlaying = false
-        
         // would be more robust to have an ActiveInstrument or something?
         // but also would be harder to read?
         if useInstrument == .sampler {
