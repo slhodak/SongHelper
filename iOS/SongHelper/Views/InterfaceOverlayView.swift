@@ -37,9 +37,7 @@ struct InterfaceOverlayView: View {
                 
             }
             VStack(spacing: 0) {
-                Text(handPoseMusicController.chordType.string)
-                Spacer()
-                Text(midiToLetter(midiNote: handPoseMusicController.chordRoot))
+                Text("Next: \(handPoseMusicController.getCurrentChord())")
             }
             .font(.title)
         }

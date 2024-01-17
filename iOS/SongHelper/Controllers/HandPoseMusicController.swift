@@ -118,11 +118,22 @@ class HandPoseMusicController: ObservableObject {
         guard self.rightHandFingerTipGroup != message.fingerTipGroup else { return }
         
         self.rightHandFingerTipGroup = message.fingerTipGroup
-        if let chordType = chordTypeForFingerTipGroup[message.fingerTipGroup] {
-            self.chordType = chordType
-        }
+        self.updateChordType(rh: message.fingerTipGroup)
         // Right hand pose updates used to cause notes to be played, and it was kind of cool,
         // but harder to play. Maybe this could be a mode.
+    }
+    
+    func updateChordType(rh rightHandFingerTipGroup: Int) {
+        if let chordType = chordTypeForFingerTipGroup[rightHandFingerTipGroup] {
+            self.chordType = chordType
+        } else {
+            // Get the regular chord type for the scale degree
+            guard let scaleDegree = scaleDegreeForFingerTipGroup[self.leftHandFingerTipGroup] else { return }
+            
+            if let chordType = getRegularChordTypeFor(musicalMode: musicalMode, scaleDegree: scaleDegree) {
+                self.chordType = chordType
+            }
+        }
     }
     
     func setMusicalMode(to musicalMode: MusicalMode) {
@@ -133,6 +144,10 @@ class HandPoseMusicController: ObservableObject {
         self.chordRoot = chordRoot
         self.chordType = chordType
         print("Set chordRoot: \(self.chordRoot) and chordType: \(self.chordType)")
+    }
+    
+    func getCurrentChord() -> String {
+        return "\(midiToLetter(midiNote: chordRoot))\(chordType.string)"
     }
     
     func getNotesToPlay(for fingerTipGroup: Int) -> [UInt8]? {
