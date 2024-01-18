@@ -12,7 +12,7 @@ func getChord(root: UInt8, tones: [UInt8]) -> [UInt8] {
     return tones.map { root + $0 }
 }
 
-func getChordRoot(keyRoot: UInt8, octave: UInt8, midiInterval: UInt8) -> UInt8 {
+func findChordRoot(keyRoot: UInt8, octave: UInt8, midiInterval: UInt8) -> UInt8 {
     return keyRoot + (12 * (octave - 1)) + midiInterval
 }
 

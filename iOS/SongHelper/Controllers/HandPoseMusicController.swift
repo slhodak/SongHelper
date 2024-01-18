@@ -30,12 +30,13 @@ class HandPoseMusicController: ObservableObject {
     private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
     private var pianoSampler = PianoSampler()
     private var useInstrument: SHInstrument = .sampler
+    private var metronome = Metronome()
     
     @Published var keyRoot: UInt8 = 24 // C1
     var octave: UInt8 = 4
     @Published var musicalMode: MusicalMode = .major
-    @Published var chordRoot: UInt8 = 24
-    @Published var chordType: Chord = .majorTriad
+    @Published var chordRoot: UInt8?
+    @Published var chordType: Chord?
     
     var leftHandFingerTipGroup: Int = 0b0 // 0000
     var leftHandThumbLocation: CGPoint?
@@ -74,104 +75,72 @@ class HandPoseMusicController: ObservableObject {
             .sink(receiveValue: handleLeftHandUpdate)
         self.rightHandSubscriber = rightHand.fingerTipGroupPublisher
             .sink(receiveValue: handleRightHandUpdate)
-    }
-    
-    // First check if hand pose is different; if so, update last update time and update last finger pose
-    // Then check if hand pose is being held--check age of last update time
-    // Then check if this change has been played yet
-    func shouldPlayLeftHandPose(_ message: FingerTipsMessage) -> Bool {
-        let now = Date().timeIntervalSince1970
         
-        // Only play new sounds when left hand pose has stopped changing
-        if self.leftHandFingerTipGroup != message.fingerTipGroup {
-            self.currentPoseHasBeenPlayed = false
-            self.lastChangingUpdate = now
-            self.leftHandFingerTipGroup = message.fingerTipGroup
-            return false
+        self.metronome.onBeatCallback = {
+            self.stopCurrentChord()
+            self.playCurrentChord()
         }
-        
-        // Hand pose was changing but most recent change has not been held long enough to be registered
-        if lastChangingUpdate > (now - updateFingerTipsAfter) {
-            return false
-        }
-        
-        // Only play each new change once
-        if self.currentPoseHasBeenPlayed {
-            return false
-        }
-        
-        // Hand pose was changed but has not been changing; it is being held
-        return true
+        self.metronome.start()
     }
     
     func handleLeftHandUpdate(message: FingerTipsMessage) {
+        guard self.leftHandFingerTipGroup != message.fingerTipGroup else { return }
+        
         // Update thumb location regardless of whether fingertip group changed
         self.leftHandThumbLocation = message.thumbLocation
-        guard self.shouldPlayLeftHandPose(message) else { return }
-        
-        self.stopMusic()
-        self.playMusic(for: message.fingerTipGroup, with: message.thumbLocation)
-        self.currentPoseHasBeenPlayed = true
+        self.leftHandFingerTipGroup = message.fingerTipGroup
+        self.setCurrentChordRoot()
     }
     
     func handleRightHandUpdate(message: FingerTipsMessage) {
         guard self.rightHandFingerTipGroup != message.fingerTipGroup else { return }
         
         self.rightHandFingerTipGroup = message.fingerTipGroup
-        self.updateChordType(rh: message.fingerTipGroup)
-        // Right hand pose updates used to cause notes to be played, and it was kind of cool,
-        // but harder to play. Maybe this could be a mode.
-    }
-    
-    func updateChordType(rh rightHandFingerTipGroup: Int) {
-        if let chordType = chordTypeForFingerTipGroup[rightHandFingerTipGroup] {
-            self.chordType = chordType
-        } else {
-            // Get the regular chord type for the scale degree
-            guard let scaleDegree = scaleDegreeForFingerTipGroup[self.leftHandFingerTipGroup] else { return }
-            
-            if let chordType = getRegularChordTypeFor(musicalMode: musicalMode, scaleDegree: scaleDegree) {
-                self.chordType = chordType
-            }
-        }
+        self.setCurrentChordType()
     }
     
     func setMusicalMode(to musicalMode: MusicalMode) {
         self.musicalMode = musicalMode
     }
     
-    private func setCurrentChord(chordRoot: UInt8, chordType: Chord) {
-        self.chordRoot = chordRoot
-        self.chordType = chordType
-        print("Set chordRoot: \(self.chordRoot) and chordType: \(self.chordType)")
+    func setCurrentChordType() {
+        self.chordType = nil
+        
+        // Interpret the right hand fingertip grouping as a chord type, if it is present
+        if let chordType = chordTypeForFingerTipGroup[rightHandFingerTipGroup] {
+            self.chordType = chordType
+            return
+        }
+        
+        // Get the regular chord type for the scale degree
+        guard let scaleDegree = scaleDegreeForFingerTipGroup[self.leftHandFingerTipGroup] else { return }
+        
+        self.chordType = getRegularChordTypeFor(musicalMode: musicalMode, scaleDegree: scaleDegree)
+    }
+    
+    private func setCurrentChordRoot() {
+        self.chordRoot = nil
+        
+        // Interpret the fingertip grouping as a scale degree
+        guard let scaleDegree = scaleDegreeForFingerTipGroup[leftHandFingerTipGroup] else { return }
+        
+        // Convert the scale degree into a number of semitones above the root
+        guard let midiInterval = scaleDegreeToMidiInterval(musicalMode: musicalMode, scaleDegree: scaleDegree) else { return }
+        
+        self.chordRoot = findChordRoot(keyRoot: keyRoot, octave: octave, midiInterval: midiInterval)
+        
+        //  If not set by right hand, must set chord type by scale degree
+        if rightHandFingerTipGroup == 0b0 {
+            setCurrentChordType()
+        }
     }
     
     func getCurrentChord() -> String {
+        guard let chordRoot = chordRoot, let chordType = chordType else {
+            return ""
+        }
+        
         return "\(midiToLetter(midiNote: chordRoot))\(chordType.string)"
-    }
-    
-    func getNotesToPlay(for fingerTipGroup: Int) -> [UInt8]? {
-        guard let scaleDegree = scaleDegreeForFingerTipGroup[fingerTipGroup] else {
-            polyphonicPlayer.noteOff()
-            return nil
-        }
-        
-        // Convert the scale degree into a number of semitones above the root
-        let midiInterval = scaleDegreeToMidiInterval(musicalMode: musicalMode, scaleDegree: scaleDegree)
-        guard let midiInterval = midiInterval else { return nil }
-        
-        // Get the chord type, either regular for scale or as modified by right hand if present
-        var chordType = chordTypeForFingerTipGroup[rightHandFingerTipGroup]
-        if chordType == nil {
-            chordType = getRegularChordTypeFor(musicalMode: musicalMode, scaleDegree: scaleDegree)
-        }
-        guard let chordType = chordType else { return nil }
-        
-        let chordRoot = getChordRoot(keyRoot: keyRoot, octave: octave, midiInterval: midiInterval)
-        
-        self.setCurrentChord(chordRoot: chordRoot, chordType: chordType)
-        
-        return getChord(root: chordRoot, tones: chordType.values)
     }
     
     func getVelocity(from thumbLocation: CGPoint?) -> UInt8 {
@@ -181,12 +150,12 @@ class HandPoseMusicController: ObservableObject {
         return UInt8(thumbLocation.y * 50) + 50
     }
     
-    func playMusic(for fingerTipGroup: Int, with thumbLocation: CGPoint? = nil) {
-        guard let notes = getNotesToPlay(for: fingerTipGroup) else {
-            return
-        }
+    func playCurrentChord() {
+        guard let chordRoot = chordRoot,
+              let chordType = chordType else { return }
         
-        let velocity = getVelocity(from: thumbLocation)
+        let notes = getChord(root: chordRoot, tones: chordType.values)
+        let velocity = getVelocity(from: leftHandThumbLocation)
         
         if useInstrument == .sampler {
             pianoSampler.notesOn(notes: notes, velocity: velocity)
@@ -195,9 +164,7 @@ class HandPoseMusicController: ObservableObject {
         }
     }
     
-    func stopMusic() {
-        // would be more robust to have an ActiveInstrument or something?
-        // but also would be harder to read?
+    func stopCurrentChord() {
         if useInstrument == .sampler {
             pianoSampler.notesOff()
         } else if useInstrument == .synthesizer {
