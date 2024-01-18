@@ -12,7 +12,6 @@ import AVKit
 struct ContentView: View {
     private var handPoseMusicController: HandPoseMusicController
     private var handTracker: HandTracker
-    private var metronome = Metronome()
     @ObservedObject var leftHand: HandPose
     @ObservedObject var rightHand: HandPose
     
@@ -33,7 +32,6 @@ struct ContentView: View {
         self.leftHand = leftHand
         self.rightHand = rightHand
         self.handPoseMusicController = HandPoseMusicController(leftHand: leftHand, rightHand: rightHand)
-        self.metronome.start()
     }
     
     var body: some View {

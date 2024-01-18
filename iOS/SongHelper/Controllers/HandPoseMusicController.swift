@@ -30,12 +30,13 @@ class HandPoseMusicController: ObservableObject {
     private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
     private var pianoSampler = PianoSampler()
     private var useInstrument: SHInstrument = .sampler
+    private var metronome = Metronome()
     
     @Published var keyRoot: UInt8 = 24 // C1
     var octave: UInt8 = 4
     @Published var musicalMode: MusicalMode = .major
-    @Published var chordRoot: UInt8? = 24
-    @Published var chordType: Chord? = .majorTriad
+    @Published var chordRoot: UInt8?
+    @Published var chordType: Chord?
     
     var leftHandFingerTipGroup: Int = 0b0 // 0000
     var leftHandThumbLocation: CGPoint?
@@ -74,6 +75,12 @@ class HandPoseMusicController: ObservableObject {
             .sink(receiveValue: handleLeftHandUpdate)
         self.rightHandSubscriber = rightHand.fingerTipGroupPublisher
             .sink(receiveValue: handleRightHandUpdate)
+        
+        self.metronome.onBeatCallback = {
+            self.stopCurrentChord()
+            self.playCurrentChord()
+        }
+        self.metronome.start()
     }
     
     func handleLeftHandUpdate(message: FingerTipsMessage) {
@@ -92,6 +99,10 @@ class HandPoseMusicController: ObservableObject {
         self.setCurrentChordType()
     }
     
+    func setMusicalMode(to musicalMode: MusicalMode) {
+        self.musicalMode = musicalMode
+    }
+    
     func setCurrentChordType() {
         self.chordType = nil
         
@@ -107,10 +118,6 @@ class HandPoseMusicController: ObservableObject {
         self.chordType = getRegularChordTypeFor(musicalMode: musicalMode, scaleDegree: scaleDegree)
     }
     
-    func setMusicalMode(to musicalMode: MusicalMode) {
-        self.musicalMode = musicalMode
-    }
-    
     private func setCurrentChordRoot() {
         self.chordRoot = nil
         
@@ -121,6 +128,11 @@ class HandPoseMusicController: ObservableObject {
         guard let midiInterval = scaleDegreeToMidiInterval(musicalMode: musicalMode, scaleDegree: scaleDegree) else { return }
         
         self.chordRoot = findChordRoot(keyRoot: keyRoot, octave: octave, midiInterval: midiInterval)
+        
+        //  If not set by right hand, must set chord type by scale degree
+        if rightHandFingerTipGroup == 0b0 {
+            setCurrentChordType()
+        }
     }
     
     func getCurrentChord() -> String {

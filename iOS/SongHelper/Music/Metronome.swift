@@ -14,9 +14,15 @@ class Metronome {
     var bpm: Int = 100
     var audioPlayer: AVAudioPlayer?
     var beat: Int = 0
+    var pattern: [Int] = [1, 0, 1, 0]
+    var onBeatCallback: (() -> Void)?
     
     init() {
         setupAudioPlayer()
+    }
+    
+    func setOnBeatCallback(onBeatCallback: @escaping () -> Void) {
+        self.onBeatCallback = onBeatCallback
     }
     
     private func setupAudioPlayer() {
@@ -57,5 +63,9 @@ class Metronome {
             audioPlayer?.currentTime = 0 // Reset so it starts playing tick again from the start
         }
         audioPlayer?.play()
+        beat = (beat + 1) % 4
+        if let cb = onBeatCallback, pattern[beat] == 1 {
+            cb()
+        }
     }
 }
