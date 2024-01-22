@@ -9,7 +9,8 @@ import Foundation
 import AVFoundation
 
 
-class Metronome {
+class Metronome: ObservableObject {
+    @Published var tickIsOn: Bool = false
     var timer: Timer?
     var bpm: Int = 100
     var audioPlayer: AVAudioPlayer?
@@ -57,7 +58,9 @@ class Metronome {
     }
     
     @objc private func tick() {
-//        playTick()
+        if tickIsOn {
+            playTick()
+        }
         playBeat()
     }
     
@@ -75,5 +78,9 @@ class Metronome {
         if let cb = onBeatCallback, pattern[beat] == 1 {
             cb()
         }
+    }
+    
+    func setTickIsOn(to value: Bool) {
+        tickIsOn = value
     }
 }

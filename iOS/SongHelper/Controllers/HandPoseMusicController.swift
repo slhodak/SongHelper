@@ -30,7 +30,7 @@ class HandPoseMusicController: ObservableObject {
     private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
     private var pianoSampler = PianoSampler()
     private var useInstrument: SHInstrument = .sampler
-    private var metronome = Metronome()
+    private var metronome: Metronome
     
     @Published var keyRoot: UInt8 = 24 // C1
     var octave: UInt8 = 4
@@ -68,9 +68,10 @@ class HandPoseMusicController: ObservableObject {
         0b1110: .sus4,
     ]
     
-    init(leftHand: HandPose, rightHand: HandPose) {
+    init(metronome: Metronome, leftHand: HandPose, rightHand: HandPose) {
         pianoSampler.setup()
         
+        self.metronome = metronome
         self.leftHandSubscriber = leftHand.fingerTipGroupPublisher
             .sink(receiveValue: handleLeftHandUpdate)
         self.rightHandSubscriber = rightHand.fingerTipGroupPublisher
