@@ -95,7 +95,7 @@ func getRegularChordTypeFor(musicalMode: MusicalMode, scaleDegree: UInt8) -> Cho
 }
 
 func midiToLetter(midiNote: UInt8) -> String {
-    let normalizedMidiNote = midiNote - 20      // A0 starts at 21
+    let normalizedMidiNote = midiNote - 21      // A0 starts at 21
     let pitchClass = Int(normalizedMidiNote % 12)
-    return ["A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#"][pitchClass - 1]
+    return ["A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#"][pitchClass]
 }
