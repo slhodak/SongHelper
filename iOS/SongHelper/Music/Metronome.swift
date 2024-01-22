@@ -47,7 +47,7 @@ class Metronome {
         timer = Timer.scheduledTimer(
             timeInterval: timeInterval,
             target: self,
-            selector: #selector(playTick),
+            selector: #selector(tick),
             userInfo: nil, repeats: true
         )
     }
@@ -56,13 +56,21 @@ class Metronome {
         timer?.invalidate()
     }
     
-    @objc private func playTick() {
+    @objc private func tick() {
+//        playTick()
+        playBeat()
+    }
+    
+    private func playTick() {
         // Avoid player being blocked by ongoing previous tick playback
         if audioPlayer?.isPlaying == true {
             audioPlayer?.stop()
             audioPlayer?.currentTime = 0 // Reset so it starts playing tick again from the start
         }
         audioPlayer?.play()
+    }
+    
+    private func playBeat() {
         beat = (beat + 1) % 4
         if let cb = onBeatCallback, pattern[beat] == 1 {
             cb()
