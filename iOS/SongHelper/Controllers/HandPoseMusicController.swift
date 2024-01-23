@@ -100,6 +100,16 @@ class HandPoseMusicController: ObservableObject {
         self.setCurrentChordType()
     }
     
+    func updateKeyRoot(to keyName: String) {
+        // Incredibly fragile; use an enum for KeyName, or do proper sharps and flats
+        guard let keyRootOffset = MU.noteNames.firstIndex(where: { $0 == keyName }) else {
+            print("Error: Could not find KeyRoot index")
+            return
+        }
+        
+        self.keyRoot = UInt8(21 + keyRootOffset) // 21 is A0
+    }
+    
     func setMusicalMode(to musicalMode: MusicalMode) {
         self.musicalMode = musicalMode
     }
@@ -116,7 +126,7 @@ class HandPoseMusicController: ObservableObject {
         // Get the regular chord type for the scale degree
         guard let scaleDegree = scaleDegreeForFingerTipGroup[self.leftHandFingerTipGroup] else { return }
         
-        self.chordType = getRegularChordTypeFor(musicalMode: musicalMode, scaleDegree: scaleDegree)
+        self.chordType = MU.getRegularChordTypeFor(musicalMode: musicalMode, scaleDegree: scaleDegree)
     }
     
     private func setCurrentChordRoot() {
@@ -126,9 +136,9 @@ class HandPoseMusicController: ObservableObject {
         guard let scaleDegree = scaleDegreeForFingerTipGroup[leftHandFingerTipGroup] else { return }
         
         // Convert the scale degree into a number of semitones above the root
-        guard let midiInterval = scaleDegreeToMidiInterval(musicalMode: musicalMode, scaleDegree: scaleDegree) else { return }
+        guard let midiInterval = MU.scaleDegreeToMidiInterval(musicalMode: musicalMode, scaleDegree: scaleDegree) else { return }
         
-        self.chordRoot = findChordRoot(keyRoot: keyRoot, octave: octave, midiInterval: midiInterval)
+        self.chordRoot = MU.findChordRoot(keyRoot: keyRoot, octave: octave, midiInterval: midiInterval)
         
         //  If not set by right hand, must set chord type by scale degree
         if rightHandFingerTipGroup == 0b0 {
@@ -141,7 +151,7 @@ class HandPoseMusicController: ObservableObject {
             return ""
         }
         
-        return "\(midiToLetter(midiNote: chordRoot))\(chordType.string)"
+        return "\(MU.midiToLetter(midiNote: chordRoot))\(chordType.string)"
     }
     
     func getVelocity(from thumbLocation: CGPoint?) -> UInt8 {
@@ -155,7 +165,7 @@ class HandPoseMusicController: ObservableObject {
         guard let chordRoot = chordRoot,
               let chordType = chordType else { return }
         
-        let notes = getChord(root: chordRoot, tones: chordType.values)
+        let notes = MU.getChord(root: chordRoot, tones: chordType.values)
         let velocity = getVelocity(from: leftHandThumbLocation)
         
         if useInstrument == .sampler {

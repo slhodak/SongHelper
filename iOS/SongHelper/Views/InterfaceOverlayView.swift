@@ -11,6 +11,7 @@ import SwiftUI
 
 struct InterfaceOverlayView: View {
     @State private var modeIsMajor: Bool = true
+    @State private var selectedKey: String = "C"
     @State private var metronomeTickIsOn: Bool = false
     @ObservedObject var handPoseMusicController: HandPoseMusicController
     @ObservedObject var metronome: Metronome
@@ -37,6 +38,23 @@ struct InterfaceOverlayView: View {
                 Text("Next: \(handPoseMusicController.getCurrentChord())")
                 Spacer()
                 VStack(spacing: 0) {
+                    HStack {
+                        Text("Key: ")
+                        Picker("KeyRoot", selection: $selectedKey) {
+                            ForEach(MU.noteNames, id: \.self) { noteName in
+                                Text(noteName)
+                                    .foregroundColor(.black)
+                                    .tag(noteName)
+                            }
+                        }
+                        .pickerStyle(WheelPickerStyle())
+                        .frame(width: 50, height: 50)
+                        .onChange(of: selectedKey) { newKey in
+                            handPoseMusicController.updateKeyRoot(to: selectedKey)
+                        }
+                    }
+                    .background(Color.white.opacity(0.3))
+                    
                     HStack {
                         Text("Mode: ")
                         Toggle(modeIsMajor ? "Major" : "minor", isOn: $modeIsMajor)
