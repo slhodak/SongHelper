@@ -36,7 +36,7 @@ struct InterfaceOverlayView: View {
                 Spacer()
                 Text("Next: \(handPoseMusicController.getCurrentChord())")
                 Spacer()
-                VStack {
+                VStack(spacing: 0) {
                     HStack {
                         Text("Mode: ")
                         Toggle(modeIsMajor ? "Major" : "minor", isOn: $modeIsMajor)
@@ -48,7 +48,7 @@ struct InterfaceOverlayView: View {
                                 }
                             }
                     }
-                    .background(Color.white.opacity(0.25))
+                    .background(Color.white.opacity(0.3))
                     
                     HStack {
                         Text("Metronome: ")
@@ -61,19 +61,25 @@ struct InterfaceOverlayView: View {
                                 }
                             }
                     }
-                    .background(Color.white.opacity(0.25))
+                    .background(Color.white.opacity(0.3))
                     
                     HStack {
-                        Text("BPM: \(metronome.bpm)")
-                        Slider(value: Binding(
-                            get: { Double(metronome.bpm) },
-                            set: { metronome.bpm = Int($0) }
-                        ), in: 40...200, step: 1)
+                        Text("BPM: ")
+                        Picker("BPM", selection: $metronome.bpm) {
+                            ForEach((30...220).reversed(), id: \.self) { bpm in
+                                Text("\(bpm)")
+                                    .foregroundColor(.black)
+                                    .tag(bpm)
+                            }
+                        }
+                        .pickerStyle(WheelPickerStyle())
+                        .frame(width: 80, height: 50)
                     }
-                    .background(Color.white.opacity(0.25))
+                    .background(Color.white.opacity(0.3))
                 }
             }
             .font(.title3)
+            .foregroundStyle(.black)
             .padding(12)
         }
     }
