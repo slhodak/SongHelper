@@ -70,7 +70,7 @@ struct InterfaceOverlayView: View {
                     
                     HStack {
                         Text("Mode: ")
-                        Toggle(modeIsMajor ? "Major" : "minor", isOn: $modeIsMajor)
+                        Toggle(modeIsMajor ? "Maj" : "min", isOn: $modeIsMajor)
                             .onChange(of: modeIsMajor) { newValue in
                                 if newValue == true {
                                     handPoseMusicController.setMusicalMode(to: .major)
@@ -78,11 +78,10 @@ struct InterfaceOverlayView: View {
                                     handPoseMusicController.setMusicalMode(to: .minor)
                                 }
                             }
-                    }
-                    .background(Color.white.opacity(0.3))
-                    
-                    HStack {
-                        Text("Metronome: ")
+                        
+                        Spacer()
+                        
+                        Text("Tick: ")
                         Toggle(metronomeTickIsOn ? "On" : "Off", isOn: $metronomeTickIsOn)
                             .onChange(of: metronomeTickIsOn) { newValue in
                                 if newValue == true {
