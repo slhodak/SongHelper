@@ -14,6 +14,7 @@ struct InterfaceOverlayView: View {
     @State private var metronomeTickIsOn: Bool = false
     @ObservedObject var handPoseMusicController: HandPoseMusicController
     @ObservedObject var metronome: Metronome
+    @FocusState private var isBPMInputActive: Bool
     var size: CGSize
     
     init(handPoseMusicController: HandPoseMusicController, metronome: Metronome, size: CGSize) {
@@ -59,6 +60,15 @@ struct InterfaceOverlayView: View {
                                     metronome.setTickIsOn(to: false)
                                 }
                             }
+                    }
+                    .background(Color.white.opacity(0.25))
+                    
+                    HStack {
+                        Text("BPM: \(metronome.bpm)")
+                        Slider(value: Binding(
+                            get: { Double(metronome.bpm) },
+                            set: { metronome.bpm = Int($0) }
+                        ), in: 40...200, step: 1)
                     }
                     .background(Color.white.opacity(0.25))
                 }

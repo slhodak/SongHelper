@@ -11,8 +11,14 @@ import AVFoundation
 
 class Metronome: ObservableObject {
     @Published var tickIsOn: Bool = false
+    @Published var bpm: Int = 100 {
+        didSet {
+            stop()
+            start()
+        }
+    }
+    
     var timer: Timer?
-    var bpm: Int = 100
     var audioPlayer: AVAudioPlayer?
     var beat: Int = 0
     var pattern: [Int] = [1, 0, 1, 0]
