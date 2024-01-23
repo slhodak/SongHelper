@@ -52,6 +52,19 @@ struct InterfaceOverlayView: View {
                         .onChange(of: selectedKey) { newKey in
                             handPoseMusicController.updateKeyRoot(to: selectedKey)
                         }
+                        
+                        Spacer()
+                        
+                        Text("BPM: ")
+                        Picker("BPM", selection: $metronome.bpm) {
+                            ForEach((30...220).reversed(), id: \.self) { bpm in
+                                Text("\(bpm)")
+                                    .foregroundColor(.black)
+                                    .tag(bpm)
+                            }
+                        }
+                        .pickerStyle(WheelPickerStyle())
+                        .frame(width: 80, height: 50)
                     }
                     .background(Color.white.opacity(0.3))
                     
@@ -78,20 +91,6 @@ struct InterfaceOverlayView: View {
                                     metronome.setTickIsOn(to: false)
                                 }
                             }
-                    }
-                    .background(Color.white.opacity(0.3))
-                    
-                    HStack {
-                        Text("BPM: ")
-                        Picker("BPM", selection: $metronome.bpm) {
-                            ForEach((30...220).reversed(), id: \.self) { bpm in
-                                Text("\(bpm)")
-                                    .foregroundColor(.black)
-                                    .tag(bpm)
-                            }
-                        }
-                        .pickerStyle(WheelPickerStyle())
-                        .frame(width: 80, height: 50)
                     }
                     .background(Color.white.opacity(0.3))
                 }
