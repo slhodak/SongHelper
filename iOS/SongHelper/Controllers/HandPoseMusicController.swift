@@ -101,7 +101,6 @@ class HandPoseMusicController: ObservableObject {
     }
     
     func updateKeyRoot(to keyName: String) {
-        // Incredibly fragile; use an enum for KeyName, or do proper sharps and flats
         guard let keyRootOffset = MU.noteNames.firstIndex(where: { $0 == keyName }) else {
             print("Error: Could not find KeyRoot index")
             return
