@@ -81,8 +81,7 @@ struct InterfaceOverlayView: View {
                         
                         Spacer()
                         
-                        Text("Tick: ")
-                        Toggle(metronomeTickIsOn ? "On" : "Off", isOn: $metronomeTickIsOn)
+                        Toggle("Click", isOn: $metronomeTickIsOn)
                             .onChange(of: metronomeTickIsOn) { newValue in
                                 if newValue == true {
                                     metronome.setTickIsOn(to: true)
