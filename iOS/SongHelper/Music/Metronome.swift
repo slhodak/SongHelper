@@ -1,5 +1,5 @@
 //
-//  Metronome.swift
+//  Conductor.swift
 //  SongHelper
 //
 //  Created by Sam Hodak on 1/17/24.
@@ -9,7 +9,7 @@ import Foundation
 import AVFoundation
 
 
-class Metronome: ObservableObject {
+class Conductor: ObservableObject {
     @Published var tickIsOn: Bool = false
     @Published var bpm: Int = 100 {
         didSet {
@@ -21,7 +21,7 @@ class Metronome: ObservableObject {
     var timer: Timer?
     var audioPlayer: AVAudioPlayer?
     var beat: Int = 0
-    var pattern: [Int] = [1, 0, 1, 0]
+    var pattern: [Int] = Array(repeating: 0, count: 32)
     var onBeatCallback: (() -> Void)?
     
     init() {
@@ -38,7 +38,7 @@ class Metronome: ObservableObject {
             audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
             audioPlayer?.prepareToPlay()
         } catch {
-            print("Unable to load the metronome sound file.")
+            print("Unable to load the conductor sound file.")
         }
     }
     
@@ -80,7 +80,7 @@ class Metronome: ObservableObject {
     }
     
     private func playBeat() {
-        beat = (beat + 1) % 4
+        beat = (beat + 1) % 32
         if let cb = onBeatCallback, pattern[beat] == 1 {
             cb()
         }

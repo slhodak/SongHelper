@@ -18,7 +18,7 @@ struct ContentView: View {
     private var handPoseMusicController: HandPoseMusicController
     @ObservedObject var handPoseNavigationController: HandPoseNavigationController
     private var handTracker: HandTracker
-    @ObservedObject var metronome: Metronome
+    @ObservedObject var conductor: Conductor
     @ObservedObject var leftHand: HandPose
     @ObservedObject var rightHand: HandPose
     
@@ -26,14 +26,14 @@ struct ContentView: View {
         let handTracker = HandTracker()
         self.handTracker = handTracker
         
-        let metronome = Metronome()
+        let conductor = Conductor()
         let leftHand = HandPose(chirality: .left, handTracker: handTracker)
         let rightHand = HandPose(chirality: .right, handTracker: handTracker)
         
-        self.metronome = metronome
+        self.conductor = conductor
         self.leftHand = leftHand
         self.rightHand = rightHand
-        self.handPoseMusicController = HandPoseMusicController(metronome: metronome, leftHand: leftHand, rightHand: rightHand)
+        self.handPoseMusicController = HandPoseMusicController(conductor: conductor, leftHand: leftHand, rightHand: rightHand)
         
         self.handPoseNavigationController = HandPoseNavigationController(leftHand: leftHand, rightHand: rightHand)
     }
@@ -51,7 +51,7 @@ struct ContentView: View {
             HandTrackingChordView(
                 handPoseMusicController: handPoseMusicController,
                 handTracker: handTracker,
-                metronome: metronome,
+                conductor: conductor,
                 leftHand: leftHand,
                 rightHand: rightHand
             )
@@ -153,14 +153,14 @@ class HandPoseNavigationController: ObservableObject {
 struct HandTrackingChordView: View {
     var handPoseMusicController: HandPoseMusicController
     var handTracker: HandTracker
-    @ObservedObject var metronome: Metronome
+    @ObservedObject var conductor: Conductor
     @ObservedObject var leftHand: HandPose
     @ObservedObject var rightHand: HandPose
     
     var body: some View {
         ZStack {
             AVHandTrackingView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand)
-            InterfaceOverlayView(handPoseMusicController: handPoseMusicController, metronome: metronome)
+            InterfaceOverlayView(handPoseMusicController: handPoseMusicController, conductor: conductor)
             //            DebugView(leftHand: handTracker, rightHand: leftHand, handTracker: rightHand, handPoseMusicController: handPoseMusicController)
         }
         .navigationBarBackButtonHidden()

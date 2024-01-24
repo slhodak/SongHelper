@@ -14,12 +14,12 @@ struct InterfaceOverlayView: View {
     @State private var selectedKey: String = "C"
     @State private var metronomeTickIsOn: Bool = false
     @ObservedObject var handPoseMusicController: HandPoseMusicController
-    @ObservedObject var metronome: Metronome
+    @ObservedObject var conductor: Conductor
     @FocusState private var isBPMInputActive: Bool
     
-    init(handPoseMusicController: HandPoseMusicController, metronome: Metronome) {
+    init(handPoseMusicController: HandPoseMusicController, conductor: Conductor) {
         self.handPoseMusicController = handPoseMusicController
-        self.metronome = metronome
+        self.conductor = conductor
     }
     
     var body: some View {
@@ -49,7 +49,7 @@ struct InterfaceOverlayView: View {
                 
                 HStack {
                     Text("BPM: ")
-                    Picker("BPM", selection: $metronome.bpm) {
+                    Picker("BPM", selection: $conductor.bpm) {
                         ForEach((30...220).reversed(), id: \.self) { bpm in
                             Text("\(bpm)")
                                 .foregroundColor(.black)
@@ -72,7 +72,7 @@ struct InterfaceOverlayView: View {
                 HStack {
                     Toggle("Click", isOn: $metronomeTickIsOn)
                         .onChange(of: metronomeTickIsOn) { newValue in
-                            metronome.setTickIsOn(to: newValue)
+                            conductor.setTickIsOn(to: newValue)
                         }
                         .frame(maxWidth: 120)
                 }
