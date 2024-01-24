@@ -147,7 +147,7 @@ class HandPoseMusicController: ObservableObject {
     
     func getCurrentChord() -> String {
         guard let chordRoot = chordRoot, let chordType = chordType else {
-            return ""
+            return "none"
         }
         
         return "\(MU.midiToLetter(midiNote: chordRoot))\(chordType.string)"

@@ -23,11 +23,14 @@ struct InterfaceOverlayView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
-            Text("Next: \(handPoseMusicController.getCurrentChord())")
-            Spacer()
-            VStack(spacing: 0) {
+        HStack {
+            VStack(alignment: .leading, spacing: 0) {
+                VStack {
+                    Text("Current Cord")
+                    Text(handPoseMusicController.getCurrentChord())
+                }
+                .font(.title2)
+                
                 HStack {
                     Text("Key: ")
                     Picker("KeyRoot", selection: $selectedKey) {
@@ -42,9 +45,9 @@ struct InterfaceOverlayView: View {
                     .onChange(of: selectedKey) { newKey in
                         handPoseMusicController.updateKeyRoot(to: selectedKey)
                     }
-                    
-                    Spacer()
-                    
+                }
+                
+                HStack {
                     Text("BPM: ")
                     Picker("BPM", selection: $metronome.bpm) {
                         ForEach((30...220).reversed(), id: \.self) { bpm in
@@ -56,35 +59,29 @@ struct InterfaceOverlayView: View {
                     .pickerStyle(WheelPickerStyle())
                     .frame(width: 80, height: 50)
                 }
-                .background(Color.white.opacity(0.3))
                 
                 HStack {
                     Text("Mode: ")
                     Toggle(modeIsMajor ? "Maj" : "min", isOn: $modeIsMajor)
                         .onChange(of: modeIsMajor) { newValue in
-                            if newValue == true {
-                                handPoseMusicController.setMusicalMode(to: .major)
-                            } else {
-                                handPoseMusicController.setMusicalMode(to: .minor)
-                            }
+                            handPoseMusicController.setMusicalMode(to: newValue == true ? .major : .minor)
                         }
-                    
-                    Spacer()
-                    
+                        .frame(maxWidth: 100)
+                }
+                
+                HStack {
                     Toggle("Click", isOn: $metronomeTickIsOn)
                         .onChange(of: metronomeTickIsOn) { newValue in
-                            if newValue == true {
-                                metronome.setTickIsOn(to: true)
-                            } else {
-                                metronome.setTickIsOn(to: false)
-                            }
+                            metronome.setTickIsOn(to: newValue)
                         }
+                        .frame(maxWidth: 120)
                 }
-                .background(Color.white.opacity(0.3))
             }
+            .background(Color.white.opacity(0.3))
+            Spacer()
         }
         .font(.title3)
         .foregroundStyle(.black)
-        .padding(12)
+        .ignoresSafeArea(.container)
     }
 }
