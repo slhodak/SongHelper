@@ -40,11 +40,13 @@ class CameraManager: ObservableObject {
             self.configCaptureSession()
             self.session.startRunning()
         }
+        print("configured camera manager")
     }
     
     private func setError(_ error: CameraError?) {
         DispatchQueue.main.async {
             self.error = error
+            print("error in camera setup: \(String(describing: error))")
         }
     }
     
@@ -121,9 +123,6 @@ class CameraManager: ObservableObject {
         session.addOutput(videoOutput)
         // Set video output format type
         videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange]
-        // Set video orientation
-        let videoConnection = videoOutput.connection(with: .video)
-        videoConnection?.videoOrientation = .portrait
         
         status = .configured
     }

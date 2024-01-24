@@ -10,7 +10,7 @@ import Vision
 import Combine
 
 
-class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ObservableObject {
+class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     var handPosePublisher = PassthroughSubject<HandPoseMessage, Never>()
     
     let vnSequenceHandler = VNSequenceRequestHandler()
@@ -36,7 +36,7 @@ class HandTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Obser
             try vnSequenceHandler.perform(
                 [humanHandPoseRequest],
                 on: sampleBuffer,
-                orientation: .left)
+                orientation: .up)
         } catch {
             print(error.localizedDescription)
         }
