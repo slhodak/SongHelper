@@ -24,6 +24,7 @@ struct BeatSquare: View {
 }
 
 struct BeatSequenceView: View {
+    
     var body: some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 8)) {
             ForEach(0..<32) { _ in
