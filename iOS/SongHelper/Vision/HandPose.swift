@@ -137,9 +137,7 @@ class HandPose: ObservableObject {
         for (joint, smoothedFingerTipPoint) in fingerTips {
             if joint == .thumbTip { continue }
             
-            guard let distanceToThumb = self.distance(
-                from: smoothedFingerTipPoint, to: smoothedThumbTipPoint
-            ) else { continue }
+            let distanceToThumb = VU.distance(from: smoothedFingerTipPoint, to: smoothedThumbTipPoint)
             
             if distanceToThumb > FingerTipProximityThreshold {
                 switch joint {
@@ -158,13 +156,6 @@ class HandPose: ObservableObject {
         }
         
         return fingerTipsNearThumbGroup
-    }
-    
-    func distance(from point1: CGPoint, to point2: CGPoint) -> Double? {
-        let distanceX = point1.x - point2.x
-        let distanceY = point1.y - point2.y
-        
-        return sqrt(pow(distanceX, 2) + pow(distanceY, 2))
     }
     
     func stringifyRecentVNFingerTips() -> String {

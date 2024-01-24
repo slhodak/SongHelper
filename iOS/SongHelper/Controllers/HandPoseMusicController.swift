@@ -45,8 +45,8 @@ class HandPoseMusicController: ObservableObject {
     let updateFingerTipsAfter: TimeInterval = 0.05
     var lastChangingUpdate: TimeInterval = Date().timeIntervalSince1970 - 5 // Be ready immediately
     
-    private var rightHandSubscriber: AnyCancellable?
     private var leftHandSubscriber: AnyCancellable?
+    private var rightHandSubscriber: AnyCancellable?
     
     let scaleDegreeForFingerTipGroup: [Int: UInt8] = [
         0b0001: 1,

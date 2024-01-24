@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		170AC5992B6172CC00CE92C8 /* BeatSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170AC5982B6172CC00CE92C8 /* BeatSequenceView.swift */; };
+		170AC59B2B618A5F00CE92C8 /* VisionUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170AC59A2B618A5F00CE92C8 /* VisionUtils.swift */; };
 		170EFF692B24AE1300790708 /* SongHelperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EFF682B24AE1300790708 /* SongHelperApp.swift */; };
 		170EFF6B2B24AE1300790708 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EFF6A2B24AE1300790708 /* ContentView.swift */; };
 		170EFF6D2B24AE1500790708 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 170EFF6C2B24AE1500790708 /* Assets.xcassets */; };
@@ -55,6 +57,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		170AC5982B6172CC00CE92C8 /* BeatSequenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatSequenceView.swift; sourceTree = "<group>"; };
+		170AC59A2B618A5F00CE92C8 /* VisionUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionUtils.swift; sourceTree = "<group>"; };
 		170EFF652B24AE1300790708 /* SongHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SongHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		170EFF682B24AE1300790708 /* SongHelperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongHelperApp.swift; sourceTree = "<group>"; };
 		170EFF6A2B24AE1300790708 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -188,6 +192,7 @@
 				17713D332B33662900E515C0 /* CameraManager.swift */,
 				17713D352B33662F00E515C0 /* HandTracker.swift */,
 				171405AC2B4CA45D00A4985B /* HandPose.swift */,
+				170AC59A2B618A5F00CE92C8 /* VisionUtils.swift */,
 				173393AC2B33C2FE00A8DE98 /* Shapes.swift */,
 			);
 			path = Vision;
@@ -196,6 +201,7 @@
 		17713D382B33686D00E515C0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				170AC5982B6172CC00CE92C8 /* BeatSequenceView.swift */,
 				17B3F9B12B4F535600DD716B /* DebugView.swift */,
 				170EFF6A2B24AE1300790708 /* ContentView.swift */,
 				173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */,
@@ -372,6 +378,7 @@
 			files = (
 				17713D322B33662100E515C0 /* AVCameraView.swift in Sources */,
 				17713D342B33662900E515C0 /* CameraManager.swift in Sources */,
+				170AC59B2B618A5F00CE92C8 /* VisionUtils.swift in Sources */,
 				17713D2B2B334D5700E515C0 /* PolyphonicPlayer.swift in Sources */,
 				173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */,
 				17713D362B33662F00E515C0 /* HandTracker.swift in Sources */,
@@ -385,6 +392,7 @@
 				173393AD2B33C2FE00A8DE98 /* Shapes.swift in Sources */,
 				173393AA2B33C2BA00A8DE98 /* HandPointsView.swift in Sources */,
 				171405AD2B4CA45D00A4985B /* HandPose.swift in Sources */,
+				170AC5992B6172CC00CE92C8 /* BeatSequenceView.swift in Sources */,
 				176B02032B589DB500ABD9EE /* Metronome.swift in Sources */,
 				170EFF692B24AE1300790708 /* SongHelperApp.swift in Sources */,
 			);
@@ -559,7 +567,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationLandscapeLeft;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -593,7 +601,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationLandscapeLeft;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
