@@ -1,16 +1,15 @@
 ## Demo
-First demo: https://youtu.be/Ux4W1l56F3Q
+Latest demo: https://youtu.be/75oDdCjcVsk?si=PIBho_V3BBh2cPs_
 
 ### Goals
 1. Make it feel like a natural device for playing accompaniment to an existing song
 2. Make it useful for original songwriting
 
-## Progress
-Conduct  using right and left hands
-(Phone should be on its right side, locked in portrait orientation)
+### To Use
+Queue chords to a beat using the position of your left and right hands
+Phone must be on its right side (landscape left orientation)
 
-### Interface
-You queue chords by pulling fingers away from your thumb; these gestures signify numbers.  
+Queue chords by pulling fingers away from your thumb; these gestures signify numbers.  
 Numbers 1-4 are made with the (near) universal gestures for numbers 1-4  
 5 is made by moving the pinky away from the thumb  
 6 by moving both pinky and ring finger away from the thumb  
