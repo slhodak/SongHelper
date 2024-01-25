@@ -34,17 +34,28 @@ struct ContentView: View {
     }
     
     var body: some View {
-        if handPoseNavigationController.currentView == .chord {
-            HandTrackingChordView(
-                handPoseMusicController: handPoseMusicController,
-                handTracker: handTracker,
-                conductor: conductor,
-                leftHand: leftHand,
-                rightHand: rightHand
-            )
-        } else if handPoseNavigationController.currentView == .beat {
-            BeatSequenceView(conductor: conductor)
+        // ZStack only so we can overlay the DebugView if we want to
+        ZStack {
+            if handPoseNavigationController.currentView == .chord {
+                HandTrackingChordView(handPoseMusicController: handPoseMusicController,
+                                      handTracker: handTracker,
+                                      conductor: conductor,
+                                      leftHand: leftHand,
+                                      rightHand: rightHand
+                )
+            } else if handPoseNavigationController.currentView == .beat {
+                BeatSequenceView(conductor: conductor)
+            }
+//            getDebugView()
         }
+    }
+    
+    private func getDebugView() -> some View {
+        return DebugView(leftHand: leftHand,
+                         rightHand: rightHand,
+                         handTracker: handTracker,
+                         handPoseMusicController: handPoseMusicController,
+                         handPoseNavigationController: handPoseNavigationController)
     }
     
     private func isChordViewActive() -> Bool {

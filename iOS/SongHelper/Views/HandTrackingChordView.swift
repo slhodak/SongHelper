@@ -20,7 +20,6 @@ struct HandTrackingChordView: View {
         ZStack {
             AVHandTrackingView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand)
             InterfaceOverlayView(handPoseMusicController: handPoseMusicController, conductor: conductor)
-//            DebugView(leftHand: handTracker, rightHand: leftHand, handTracker: rightHand, handPoseMusicController: handPoseMusicController)
         }
         .navigationBarBackButtonHidden()
     }

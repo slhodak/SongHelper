@@ -95,4 +95,12 @@ class HandPoseNavigationController: ObservableObject {
     private func delayNextToggle() {
         ignoreUpdateUntil = Date().timeIntervalSince1970 + 3
     }
+    
+    func printRightHandThumbLocation() -> String {
+        guard let rightHandThumbLocation = rightHandThumbLocation else {
+            return "not found"
+        }
+        
+        return "x: \(rightHandThumbLocation.x), y: \(rightHandThumbLocation.y)"
+    }
 }
