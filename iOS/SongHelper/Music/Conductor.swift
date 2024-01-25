@@ -21,7 +21,7 @@ class Conductor: ObservableObject {
     var audioPlayerClick1: AVAudioPlayer?
     var audioPlayerClick234: AVAudioPlayer?
     let beatsPerMeasure = 4
-    var beat: Int = 0
+    @Published var beat: Int = 0
     @Published var pattern: [Bool] = Array(repeating: false, count: 32)
     let patternResolution: Int = 8 // 8th notes
     let patternLength: Int = 32

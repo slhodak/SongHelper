@@ -47,6 +47,9 @@ struct ContentView: View {
                 BeatSequenceView(conductor: conductor)
             }
 //            getDebugView()
+            TempoIndicatorView(beat: $conductor.beat, beatsPerMeasure: conductor.beatsPerMeasure)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxHeight: .infinity, alignment: .top)
         }
     }
     
