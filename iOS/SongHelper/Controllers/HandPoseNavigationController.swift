@@ -22,10 +22,7 @@ class HandPoseNavigationController: ObservableObject {
     private var rightHandThumbLocation: CGPoint?
     private var leftHandSubscriber: AnyCancellable?
     private var rightHandSubscriber: AnyCancellable?
-    // Only handle a pose update every so often so user must hold pose
-    // to-do this doesn't really make them hold the pose, make it so they do have to?
-    private let updateHandlingDelay: TimeInterval = 0
-    private var lastUpdateHandledAtTime: TimeInterval = Date().timeIntervalSince1970 - 2
+    private var ignoreUpdateUntil: TimeInterval = Date().timeIntervalSince1970
     
     init(leftHand: HandPose, rightHand: HandPose) {
         self.leftHandSubscriber = leftHand.fingerTipGroupPublisher
@@ -58,8 +55,8 @@ class HandPoseNavigationController: ObservableObject {
     
     private func shouldHandleHandPoseUpdate() -> Bool {
         let now = Date().timeIntervalSince1970
-        if lastUpdateHandledAtTime + updateHandlingDelay <= now {
-            lastUpdateHandledAtTime = now
+        if ignoreUpdateUntil <= now {
+            ignoreUpdateUntil = now
             return true
         }
         
@@ -96,6 +93,6 @@ class HandPoseNavigationController: ObservableObject {
     }
     
     private func delayNextToggle() {
-        lastUpdateHandledAtTime = Date().timeIntervalSince1970 + 3
+        ignoreUpdateUntil = Date().timeIntervalSince1970 + 3
     }
 }
