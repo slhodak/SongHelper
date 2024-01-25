@@ -22,7 +22,7 @@ class HandPoseNavigationController: ObservableObject {
     private var rightHandThumbLocation: CGPoint?
     private var leftHandSubscriber: AnyCancellable?
     private var rightHandSubscriber: AnyCancellable?
-    private var ignoreUpdateUntil: TimeInterval = Date().timeIntervalSince1970
+    private var ignoreHandPoseUntil: TimeInterval = Date().timeIntervalSince1970
     
     init(leftHand: HandPose, rightHand: HandPose) {
         self.leftHandSubscriber = leftHand.fingerTipGroupPublisher
@@ -32,10 +32,10 @@ class HandPoseNavigationController: ObservableObject {
     }
     
     private func handleLeftHandUpdate(message: FingerTipsMessage) {
-        guard shouldHandleHandPoseUpdate() else { return }
-        
         leftHandFingerTipGroup = message.fingerTipGroup
         leftHandThumbLocation = message.thumbLocation
+        
+        guard shouldCheckForTogglePose() else { return }
         
         if handsInNavigationTogglePose() {
             toggleAppView()
@@ -43,20 +43,20 @@ class HandPoseNavigationController: ObservableObject {
     }
     
     private func handleRightHandUpdate(message: FingerTipsMessage) {
-        guard shouldHandleHandPoseUpdate() else { return }
-        
         rightHandFingerTipGroup = message.fingerTipGroup
         rightHandThumbLocation = message.thumbLocation
+        
+        guard shouldCheckForTogglePose() else { return }
         
         if handsInNavigationTogglePose() {
             toggleAppView()
         }
     }
     
-    private func shouldHandleHandPoseUpdate() -> Bool {
+    private func shouldCheckForTogglePose() -> Bool {
         let now = Date().timeIntervalSince1970
-        if ignoreUpdateUntil <= now {
-            ignoreUpdateUntil = now
+        if ignoreHandPoseUntil <= now {
+            ignoreHandPoseUntil = now
             return true
         }
         
@@ -93,7 +93,7 @@ class HandPoseNavigationController: ObservableObject {
     }
     
     private func delayNextToggle() {
-        ignoreUpdateUntil = Date().timeIntervalSince1970 + 3
+        ignoreHandPoseUntil = Date().timeIntervalSince1970 + 3
     }
     
     func printRightHandThumbLocation() -> String {
