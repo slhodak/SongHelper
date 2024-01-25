@@ -18,7 +18,8 @@ class Conductor: ObservableObject {
         }
     }
     var timer: Timer?
-    var audioPlayer: AVAudioPlayer?
+    var audioPlayerClick1: AVAudioPlayer?
+    var audioPlayerClick234: AVAudioPlayer?
     let beatsPerMeasure = 4
     var beat: Int = 0
     @Published var pattern: [Bool] = Array(repeating: false, count: 32)
@@ -27,18 +28,23 @@ class Conductor: ObservableObject {
     var onBeatCallback: (() -> Void)?
     
     init() {
-        setupAudioPlayer()
+        setupAudioPlayers()
     }
     
     func setOnBeatCallback(onBeatCallback: @escaping () -> Void) {
         self.onBeatCallback = onBeatCallback
     }
     
-    private func setupAudioPlayer() {
-        guard let soundURL = Bundle.main.url(forResource: "click1", withExtension: "mp3") else { return }
+    private func setupAudioPlayers() {
+        // To-do: Use a single sample file with both sounds
+        guard let click1URL = Bundle.main.url(forResource: "click-1", withExtension: "mp3") else { return }
+        guard let click234URL = Bundle.main.url(forResource: "click-234", withExtension: "mp3") else { return }
+        
         do {
-            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
-            audioPlayer?.prepareToPlay()
+            audioPlayerClick1 = try AVAudioPlayer(contentsOf: click1URL)
+            audioPlayerClick234 = try AVAudioPlayer(contentsOf: click234URL)
+            audioPlayerClick1?.prepareToPlay()
+            audioPlayerClick234?.prepareToPlay()
         } catch {
             print("Unable to load the click sound.")
         }
@@ -71,12 +77,21 @@ class Conductor: ObservableObject {
         beat = (beat + 1) % patternLength
         let isQuarterNoteDownbeat = beat % (patternResolution / 4) == 0
         if tickIsOn && isQuarterNoteDownbeat {
-            playTick()
+            playCorrectClick()
         }
         playBeat()
     }
     
-    private func playTick() {
+    private func playCorrectClick() {
+        let isWholeNoteDownbeat = beat % patternResolution == 0
+        if isWholeNoteDownbeat {
+            playClick(from: audioPlayerClick1)
+        } else {
+            playClick(from: audioPlayerClick234)
+        }
+    }
+    
+    private func playClick(from audioPlayer: AVAudioPlayer?) {
         // Avoid player being blocked by ongoing previous tick playback
         if audioPlayer?.isPlaying == true {
             audioPlayer?.stop()
