@@ -19,6 +19,8 @@
 		171405AD2B4CA45D00A4985B /* HandPose.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171405AC2B4CA45D00A4985B /* HandPose.swift */; };
 		17168E502B62E52300FEF910 /* click-1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 17168E4F2B62E52300FEF910 /* click-1.mp3 */; };
 		17168E522B62E52700FEF910 /* click-234.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 17168E512B62E52700FEF910 /* click-234.mp3 */; };
+		17168E542B62E9B900FEF910 /* HandPoseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17168E532B62E9B900FEF910 /* HandPoseNavigationController.swift */; };
+		17168E562B62E9E700FEF910 /* HandTrackingChordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17168E552B62E9E700FEF910 /* HandTrackingChordView.swift */; };
 		173393AA2B33C2BA00A8DE98 /* HandPointsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393A92B33C2BA00A8DE98 /* HandPointsView.swift */; };
 		173393AD2B33C2FE00A8DE98 /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AC2B33C2FE00A8DE98 /* Shapes.swift */; };
 		173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */; };
@@ -73,6 +75,8 @@
 		171405AC2B4CA45D00A4985B /* HandPose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandPose.swift; sourceTree = "<group>"; };
 		17168E4F2B62E52300FEF910 /* click-1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "click-1.mp3"; sourceTree = "<group>"; };
 		17168E512B62E52700FEF910 /* click-234.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "click-234.mp3"; sourceTree = "<group>"; };
+		17168E532B62E9B900FEF910 /* HandPoseNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandPoseNavigationController.swift; sourceTree = "<group>"; };
+		17168E552B62E9E700FEF910 /* HandTrackingChordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandTrackingChordView.swift; sourceTree = "<group>"; };
 		173393A92B33C2BA00A8DE98 /* HandPointsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandPointsView.swift; sourceTree = "<group>"; };
 		173393AC2B33C2FE00A8DE98 /* Shapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shapes.swift; sourceTree = "<group>"; };
 		173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceOverlayView.swift; sourceTree = "<group>"; };
@@ -183,6 +187,7 @@
 		176865CF2B4EFFE70054D276 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				17168E532B62E9B900FEF910 /* HandPoseNavigationController.swift */,
 				176865D02B4F001F0054D276 /* HandPoseMusicController.swift */,
 			);
 			path = Controllers;
@@ -206,6 +211,7 @@
 				170AC5982B6172CC00CE92C8 /* BeatSequenceView.swift */,
 				17B3F9B12B4F535600DD716B /* DebugView.swift */,
 				170EFF6A2B24AE1300790708 /* ContentView.swift */,
+				17168E552B62E9E700FEF910 /* HandTrackingChordView.swift */,
 				173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */,
 				17713D312B33662100E515C0 /* AVCameraView.swift */,
 				1761F6412B6085190001D019 /* AVHandTrackingView.swift */,
@@ -383,6 +389,7 @@
 				17713D322B33662100E515C0 /* AVCameraView.swift in Sources */,
 				17713D342B33662900E515C0 /* CameraManager.swift in Sources */,
 				170AC59B2B618A5F00CE92C8 /* VisionUtils.swift in Sources */,
+				17168E542B62E9B900FEF910 /* HandPoseNavigationController.swift in Sources */,
 				17713D2B2B334D5700E515C0 /* PolyphonicPlayer.swift in Sources */,
 				173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */,
 				17713D362B33662F00E515C0 /* HandTracker.swift in Sources */,
@@ -398,6 +405,7 @@
 				171405AD2B4CA45D00A4985B /* HandPose.swift in Sources */,
 				170AC5992B6172CC00CE92C8 /* BeatSequenceView.swift in Sources */,
 				176B02032B589DB500ABD9EE /* Conductor.swift in Sources */,
+				17168E562B62E9E700FEF910 /* HandTrackingChordView.swift in Sources */,
 				170EFF692B24AE1300790708 /* SongHelperApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

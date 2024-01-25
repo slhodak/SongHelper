@@ -51,12 +51,12 @@ class HandPose: ObservableObject {
     }
     
     func eraseHandDataOnMainThread() {
-        // Only erase if hand data exists
+        // Only erase if hand data exists (to make this idempotent)
         guard !self.fingerTips.isEmpty else { return }
         
         DispatchQueue.main.async {
             self.reset()
-            let message = FingerTipsMessage(fingerTipGroup: 0b0)
+            let message = FingerTipsMessage(fingerTipGroup: 0b0, thumbLocation: nil)
             self.fingerTipGroupPublisher.send(message)
         }
     }
