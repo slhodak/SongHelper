@@ -38,14 +38,6 @@ struct ContentView: View {
         self.handPoseNavigationController = HandPoseNavigationController(leftHand: leftHand, rightHand: rightHand)
     }
     
-    private func isChordViewActive() -> Bool {
-        return handPoseNavigationController.currentView == .chord
-    }
-    
-    private func isBeatViewActive() -> Bool {
-        return handPoseNavigationController.currentView == .beat
-    }
-    
     var body: some View {
         if handPoseNavigationController.currentView == .chord {
             HandTrackingChordView(
@@ -56,8 +48,16 @@ struct ContentView: View {
                 rightHand: rightHand
             )
         } else if handPoseNavigationController.currentView == .beat {
-            BeatSequenceView()
+            BeatSequenceView(conductor: conductor)
         }
+    }
+    
+    private func isChordViewActive() -> Bool {
+        return handPoseNavigationController.currentView == .chord
+    }
+    
+    private func isBeatViewActive() -> Bool {
+        return handPoseNavigationController.currentView == .beat
     }
 }
 

@@ -10,7 +10,8 @@ import SwiftUI
 
 
 struct BeatSquare: View {
-    @State private var isSelected: Bool = false
+    var position: Int
+    @Binding var isSelected: Bool
     
     var body: some View {
         Button(action: {
@@ -24,11 +25,12 @@ struct BeatSquare: View {
 }
 
 struct BeatSequenceView: View {
+    @ObservedObject var conductor: Conductor
     
     var body: some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 8)) {
-            ForEach(0..<32) { _ in
-                BeatSquare()
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: conductor.patternResolution)) {
+            ForEach(0..<conductor.patternLength) { index in
+                BeatSquare(position: index, isSelected: $conductor.pattern[index])
             }
         }
         .navigationBarBackButtonHidden()

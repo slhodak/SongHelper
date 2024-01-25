@@ -85,10 +85,10 @@ class HandPoseMusicController: ObservableObject {
     }
     
     func handleLeftHandUpdate(message: FingerTipsMessage) {
-        guard self.leftHandFingerTipGroup != message.fingerTipGroup else { return }
-        
         // Update thumb location regardless of whether fingertip group changed
         self.leftHandThumbLocation = message.thumbLocation
+        guard self.leftHandFingerTipGroup != message.fingerTipGroup else { return }
+        
         self.leftHandFingerTipGroup = message.fingerTipGroup
         self.setCurrentChordRoot()
     }

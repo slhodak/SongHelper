@@ -35,7 +35,6 @@ struct AVCameraUIView: UIViewRepresentable {
         
         setVideoOrientation(previewLayer: context.coordinator.previewLayer!)
         
-        print("made ui view")
         return cameraPreviewView
     }
     
@@ -49,7 +48,6 @@ struct AVCameraUIView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UIViewType, context: UIViewRepresentableContext<AVCameraUIView>) {
-        print("ran ui view update")
     }
     
     class Coordinator {

@@ -17,11 +17,13 @@ class Conductor: ObservableObject {
             start()
         }
     }
-    
     var timer: Timer?
     var audioPlayer: AVAudioPlayer?
+    let beatsPerMeasure = 4
     var beat: Int = 0
-    var pattern: [Int] = Array(repeating: 0, count: 32)
+    @Published var pattern: [Bool] = Array(repeating: false, count: 32)
+    let patternResolution: Int = 8 // 8th notes
+    let patternLength: Int = 32
     var onBeatCallback: (() -> Void)?
     
     init() {
@@ -38,7 +40,7 @@ class Conductor: ObservableObject {
             audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
             audioPlayer?.prepareToPlay()
         } catch {
-            print("Unable to load the conductor sound file.")
+            print("Unable to load the click sound.")
         }
     }
     
@@ -50,9 +52,11 @@ class Conductor: ObservableObject {
     
     func start() {
         timer?.invalidate() // Stops any existing timer
-        let timeInterval = 60.0 / Double(bpm)
+        let ticksPerBeat = Double(patternResolution) / Double(beatsPerMeasure)
+        let ticksPerMinute = Double(bpm) * ticksPerBeat
+        let secondsPerTick = 60.0 / ticksPerMinute
         timer = Timer.scheduledTimer(
-            timeInterval: timeInterval,
+            timeInterval: secondsPerTick,
             target: self,
             selector: #selector(tick),
             userInfo: nil, repeats: true
@@ -64,7 +68,9 @@ class Conductor: ObservableObject {
     }
     
     @objc private func tick() {
-        if tickIsOn {
+        beat = (beat + 1) % patternLength
+        let isQuarterNoteDownbeat = beat % (patternResolution / 4) == 0
+        if tickIsOn && isQuarterNoteDownbeat {
             playTick()
         }
         playBeat()
@@ -80,8 +86,7 @@ class Conductor: ObservableObject {
     }
     
     private func playBeat() {
-        beat = (beat + 1) % 32
-        if let cb = onBeatCallback, pattern[beat] == 1 {
+        if let cb = onBeatCallback, pattern[beat] == true {
             cb()
         }
     }

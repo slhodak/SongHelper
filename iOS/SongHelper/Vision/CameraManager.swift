@@ -40,7 +40,6 @@ class CameraManager: ObservableObject {
             self.configCaptureSession()
             self.session.startRunning()
         }
-        print("configured camera manager")
     }
     
     private func setError(_ error: CameraError?) {
