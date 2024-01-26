@@ -577,7 +577,8 @@
 				DEVELOPMENT_TEAM = D3D2BJZUS3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "It will use the Camera";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Required for hand tracking";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Required for audio recording";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -611,7 +612,8 @@
 				DEVELOPMENT_TEAM = D3D2BJZUS3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "It will use the Camera";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Required for hand tracking";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Required for audio recording";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

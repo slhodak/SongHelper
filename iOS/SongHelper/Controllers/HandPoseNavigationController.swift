@@ -19,7 +19,7 @@ enum AppView {
 class HandPoseNavigationController: ObservableObject {
     @Published var currentView: AppView = .chord
     @Published var navigationMenuIsOpen: Bool = false
-    var optionSubviewFrames: [String: CGRect] = [:]
+    var optionSubviewFrames: [AppView: CGRect] = [:]
     private var selectingView: AppView = .none
     // is it restarting hand tracking after I select a thing?
     // it adds 5-10 "hands left nav menu pose" after redrawing UI without hands moving
@@ -64,8 +64,8 @@ class HandPoseNavigationController: ObservableObject {
         if handsInNavigationMenuPose() {
             if shouldTryOpeningMenu() {
                 openNavigationMenu()
-                if let frameName = thumbIsTouchingOptionSubviewFrame() {
-                    if selectAppView(by: frameName) {
+                if let selectedAppView = thumbIsTouchingOptionSubviewFrame() {
+                    if selectAppView(selectedAppView) {
                         closeNavigationMenu()
                         delayOpeningMenu()
                         blockOpeningMenu = true
@@ -109,19 +109,24 @@ class HandPoseNavigationController: ObservableObject {
     
     // Change the current view if a selection is held for n seconds
     // Returns whether currentView was changed
-    private func selectAppView(by name: String) -> Bool {
+    private func selectAppView(_ appView: AppView) -> Bool {
         let now = Date().timeIntervalSince1970
         
-        switch name {
-        case "chordProgression":
+        switch appView {
+        case .chord:
             if selectingView != .chord {
                 selectingViewSince = now
                 selectingView = .chord
             }
-        case "patternEditor":
+        case .beat:
             if selectingView != .beat {
                 selectingViewSince = now
                 selectingView = .beat
+            }
+        case .audio:
+            if selectingView != .audio {
+                selectingViewSince = now
+                selectingView = .audio
             }
         default:
             selectingView = .none
@@ -163,16 +168,16 @@ class HandPoseNavigationController: ObservableObject {
         optionSubviewFrames = [:]
     }
     
-    func setOptionSubviewFrame(for name: String, to bounds: CGRect) {
+    func setOptionSubviewFrame(for name: AppView, to bounds: CGRect) {
         optionSubviewFrames[name] = bounds
     }
     
-    private func thumbIsTouchingOptionSubviewFrame() -> String? {
+    private func thumbIsTouchingOptionSubviewFrame() -> AppView? {
         guard let leftHandThumbLocation = leftHandThumbLocation else { return nil }
         
-        for (name, frame) in optionSubviewFrames {
+        for (appView, frame) in optionSubviewFrames {
             if frame.contains(leftHandThumbLocation) {
-                return name
+                return appView
             }
         }
         
