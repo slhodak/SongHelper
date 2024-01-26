@@ -18,12 +18,11 @@ enum AppView {
 class HandPoseNavigationController: ObservableObject {
     @Published var currentView: AppView = .chord
     @Published var navigationMenuIsOpen: Bool = false
-    var viewBounds: CGSize?
     var optionSubviewFrames: [String: CGRect] = [:]
     private var selectingView: AppView = .none
     private var selectingViewSince: TimeInterval?
     private let selectViewAfter: TimeInterval = 0.5
-    private let thumbsTouchingDistance: Double = 75
+    private let thumbsTouchingDistance: Double = 70 // in UI screen points
     private var leftHandFingerTipGroup: Int = 0b0
     private var rightHandFingerTipGroup: Int = 0b0
     private var leftHandThumbLocation: CGPoint?
@@ -41,7 +40,7 @@ class HandPoseNavigationController: ObservableObject {
     
     private func handleLeftHandUpdate(message: FingerTipsMessage) {
         leftHandFingerTipGroup = message.fingerTipGroup
-        leftHandThumbLocation = transformedThumbLocation(message.thumbLocation)
+        leftHandThumbLocation = message.thumbLocationUIPoint
         
         if handsInNavigationMenuPose() {
             openNavigationMenu()
@@ -55,7 +54,7 @@ class HandPoseNavigationController: ObservableObject {
     
     private func handleRightHandUpdate(message: FingerTipsMessage) {
         rightHandFingerTipGroup = message.fingerTipGroup
-        rightHandThumbLocation = transformedThumbLocation(message.thumbLocation)
+        rightHandThumbLocation = message.thumbLocationUIPoint
         
         if handsInNavigationMenuPose() {
             openNavigationMenu()
@@ -67,19 +66,7 @@ class HandPoseNavigationController: ObservableObject {
         }
     }
     
-    // To-Do: transform the fingertip points earlier -- probably in HandPose
-    private func transformedThumbLocation(_ thumbLocation: CGPoint?) -> CGPoint? {
-        guard let thumbLocation = thumbLocation,
-              let viewBounds = viewBounds else { return nil }
-        
-        return CGPoint(
-            x: (thumbLocation.x * viewBounds.width * -1) + viewBounds.width,
-            y: (thumbLocation.y * viewBounds.height * -1) + viewBounds.height
-        )
-    }
-    
     // The Navigation Menu Pose: both hands have fingers together and both thumbs are touching each other
-    // bringing the grouped fingers over an option (for >0.5s) will select it
     private func handsInNavigationMenuPose() -> Bool {
         return (
             leftHandFingerTipGroup == 0b0 &&
@@ -145,11 +132,7 @@ class HandPoseNavigationController: ObservableObject {
     }
     
     // Menu Option Selection
-    // Hit-Testing comparing thumb location and option view frames
-    
-    func setViewBounds(to size: CGSize) {
-        viewBounds = size
-    }
+    // Hit-Testing comparing thumb location and option View frames
     
     private func resetOptionSubviewFrames() {
         optionSubviewFrames = [:]

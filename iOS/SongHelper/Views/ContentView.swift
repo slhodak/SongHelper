@@ -56,25 +56,6 @@ struct ContentView: View {
                     NavigationMenuView(handPoseNavigationController: handPoseNavigationController)
                 }
             }
-            .onAppear() {
-                handPoseNavigationController.setViewBounds(to: geo.size)
-            }
         }
-    }
-    
-    private func getDebugView() -> some View {
-        return DebugView(leftHand: leftHand,
-                         rightHand: rightHand,
-                         handTracker: handTracker,
-                         handPoseMusicController: handPoseMusicController,
-                         handPoseNavigationController: handPoseNavigationController)
-    }
-    
-    private func isChordViewActive() -> Bool {
-        return handPoseNavigationController.currentView == .chord
-    }
-    
-    private func isBeatViewActive() -> Bool {
-        return handPoseNavigationController.currentView == .beat
     }
 }

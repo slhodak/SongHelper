@@ -15,11 +15,6 @@ enum MusicalMode {
     case minor
 }
 
-struct FingerTipsMessage {
-    var fingerTipGroup: Int
-    var thumbLocation: CGPoint?
-}
-
 enum SHInstrument {
     case sampler
     case synthesizer
@@ -86,7 +81,7 @@ class HandPoseMusicController: ObservableObject {
     
     func handleLeftHandUpdate(message: FingerTipsMessage) {
         // Update thumb location regardless of whether fingertip group changed
-        self.leftHandThumbLocation = message.thumbLocation
+        self.leftHandThumbLocation = message.thumbLocationVNPoint
         guard self.leftHandFingerTipGroup != message.fingerTipGroup else { return }
         
         self.leftHandFingerTipGroup = message.fingerTipGroup

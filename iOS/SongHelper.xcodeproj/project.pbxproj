@@ -25,6 +25,7 @@
 		173393AA2B33C2BA00A8DE98 /* HandPointsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393A92B33C2BA00A8DE98 /* HandPointsView.swift */; };
 		173393AD2B33C2FE00A8DE98 /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AC2B33C2FE00A8DE98 /* Shapes.swift */; };
 		173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */; };
+		1757A6C42B643CE800584E3D /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1757A6C32B643CE800584E3D /* Messages.swift */; };
 		1761F6422B6085190001D019 /* AVHandTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1761F6412B6085190001D019 /* AVHandTrackingView.swift */; };
 		176865D12B4F001F0054D276 /* HandPoseMusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176865D02B4F001F0054D276 /* HandPoseMusicController.swift */; };
 		176865D42B4F288B0054D276 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 176865D32B4F288B0054D276 /* Collections */; };
@@ -83,6 +84,7 @@
 		173393A92B33C2BA00A8DE98 /* HandPointsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandPointsView.swift; sourceTree = "<group>"; };
 		173393AC2B33C2FE00A8DE98 /* Shapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shapes.swift; sourceTree = "<group>"; };
 		173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceOverlayView.swift; sourceTree = "<group>"; };
+		1757A6C32B643CE800584E3D /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
 		1761F6412B6085190001D019 /* AVHandTrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVHandTrackingView.swift; sourceTree = "<group>"; };
 		176865D02B4F001F0054D276 /* HandPoseMusicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandPoseMusicController.swift; sourceTree = "<group>"; };
 		176B02022B589DB500ABD9EE /* Conductor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conductor.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 		176865CF2B4EFFE70054D276 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				1757A6C32B643CE800584E3D /* Messages.swift */,
 				17168E532B62E9B900FEF910 /* HandPoseNavigationController.swift */,
 				176865D02B4F001F0054D276 /* HandPoseMusicController.swift */,
 			);
@@ -393,6 +396,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				17168E582B630E6200FEF910 /* TempoIndicatorView.swift in Sources */,
+				1757A6C42B643CE800584E3D /* Messages.swift in Sources */,
 				17713D322B33662100E515C0 /* AVCameraView.swift in Sources */,
 				17713D342B33662900E515C0 /* CameraManager.swift in Sources */,
 				170AC59B2B618A5F00CE92C8 /* VisionUtils.swift in Sources */,

@@ -17,13 +17,9 @@ struct Dot: Shape {
         var path = Path()
         
         for point in points {
-            // Scale, mirror, and translate
-            let x = (point.x * size.width * -1) + size.width
-            let y = (point.y * size.height * -1) + size.height
-            
             path.addEllipse(in: CGRect(
-                x: x,
-                y: y,
+                x: point.x,
+                y: point.y,
                 width: dotRadius,
                 height: dotRadius)
             )

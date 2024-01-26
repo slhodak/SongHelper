@@ -16,16 +16,12 @@ let FingerTips: [VNHumanHandPoseObservation.JointName] = [
 ]
 
 let ConfidenceThreshold: Float = 0.5
-let FingerTipProximityThreshold: Double = 0.1
-
-struct HandPoseMessage {
-    var chirality: VNChirality
-    var landmarks: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]
-}
+let FingerTipProximityThreshold: Double = 60 // in UI screen points
 
 
 class HandPose: ObservableObject {
     var chirality: VNChirality = .unknown
+    var viewBounds: CGSize?
     private var cancellable: AnyCancellable?
     let fingerTipGroupPublisher = PassthroughSubject<FingerTipsMessage, Never>()
     
@@ -37,6 +33,10 @@ class HandPose: ObservableObject {
         self.reset()
         self.chirality = chirality
         self.cancellable = handTracker.handPosePublisher.sink(receiveValue: self.handleHandPoseMessage)
+    }
+    
+    func setViewBounds(to size: CGSize) {
+        viewBounds = size
     }
     
     func handleHandPoseMessage(_ message: HandPoseMessage) {
@@ -51,23 +51,29 @@ class HandPose: ObservableObject {
     }
     
     func eraseHandDataOnMainThread() {
-        // Only erase if hand data exists (to make this idempotent)
+        // Only erase if hand data exists (makes this idempotent)
         guard !self.fingerTips.isEmpty else { return }
         
         DispatchQueue.main.async {
             self.reset()
-            let message = FingerTipsMessage(fingerTipGroup: 0b0, thumbLocation: nil)
+            let message = FingerTipsMessage(fingerTipGroup: 0b0,
+                                            thumbLocationVNPoint: nil,
+                                            thumbLocationUIPoint: nil)
+            
             self.fingerTipGroupPublisher.send(message)
         }
     }
     
     func updateHandDataOnMainThread(_ message: HandPoseMessage) {
         DispatchQueue.main.async {
-            let (fingerTips, thumbLocation) = self.processVNPoints(message.landmarks)
+            let (fingerTips, thumbLocationVNPoint, thumbLocationUIPoint) = self.processVNPoints(message.landmarks)
             self.fingerTips = fingerTips // Store so it can be published to SwiftUI
             let fingerTipsNearThumbGroup = self.findFingertipsNearThumb(fingerTips)
             
-            let message = FingerTipsMessage(fingerTipGroup: fingerTipsNearThumbGroup, thumbLocation: thumbLocation)
+            let message = FingerTipsMessage(fingerTipGroup: fingerTipsNearThumbGroup,
+                                            thumbLocationVNPoint: thumbLocationVNPoint,
+                                            thumbLocationUIPoint: thumbLocationUIPoint)
+            
             self.fingerTipGroupPublisher.send(message)
         }
     }
@@ -77,9 +83,10 @@ class HandPose: ObservableObject {
         self.fingerTips = [:]
     }
     
-    func processVNPoints(_ vnPoints: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]) -> ([VNHumanHandPoseObservation.JointName: CGPoint], CGPoint?) {
-        var smoothedFingerTipPoints: [VNHumanHandPoseObservation.JointName: CGPoint] = [:]
-        var thumbLocation: CGPoint? = nil
+    func processVNPoints(_ vnPoints: [VNHumanHandPoseObservation.JointName: VNRecognizedPoint]) -> ([VNHumanHandPoseObservation.JointName: CGPoint], CGPoint?, CGPoint?) {
+        var fingerTipUIPoints: [VNHumanHandPoseObservation.JointName: CGPoint] = [:]
+        var thumbLocationVNPoint: CGPoint? = nil
+        var thumbLocationUIPoint: CGPoint? = nil
         
         for (joint, vnFingerTipPoint) in vnPoints {
             if !FingerTips.contains(joint) { continue }
@@ -105,13 +112,19 @@ class HandPose: ObservableObject {
                 }
             }
             
-            smoothedFingerTipPoints[joint] = self.smooth(points: recentVNFingerTips[joint]!)
+            let smoothedFingerTipPoint = self.smooth(points: recentVNFingerTips[joint]!)
+            let transformedFingerTipPoint = self.transformFingerTip(
+                point: smoothedFingerTipPoint
+            )
+            fingerTipUIPoints[joint] = transformedFingerTipPoint
+            
             if joint == .thumbTip {
-                thumbLocation = pointLocation
+                thumbLocationVNPoint = smoothedFingerTipPoint
+                thumbLocationUIPoint = transformedFingerTipPoint
             }
         }
         
-        return (smoothedFingerTipPoints, thumbLocation)
+        return (fingerTipUIPoints, thumbLocationVNPoint, thumbLocationUIPoint)
     }
     
     func smooth(points: Deque<CGPoint>) -> CGPoint {
@@ -127,17 +140,28 @@ class HandPose: ObservableObject {
         return CGPoint(x: avgX, y: avgY)
     }
     
+    // Convert point from VNPoint coordinates to UI coordinates within View
+    private func transformFingerTip(point: CGPoint) -> CGPoint? {
+        guard let viewBounds = viewBounds else { return nil }
+    
+        // Scale, mirror, and translate
+        return CGPoint(
+            x: (point.x * viewBounds.width * -1) + viewBounds.width,
+            y: (point.y * viewBounds.height * -1) + viewBounds.height
+        )
+    }
+    
     func findFingertipsNearThumb(_ fingerTips: [VNHumanHandPoseObservation.JointName: CGPoint]) -> Int {
         var fingerTipsNearThumbGroup = 0b0
         
-        guard let smoothedThumbTipPoint = fingerTips[.thumbTip] else {
+        guard let thumbTipPoint = fingerTips[.thumbTip] else {
             return fingerTipsNearThumbGroup
         }
         
-        for (joint, smoothedFingerTipPoint) in fingerTips {
+        for (joint, fingerTipPoint) in fingerTips {
             if joint == .thumbTip { continue }
             
-            let distanceToThumb = VU.distance(from: smoothedFingerTipPoint, to: smoothedThumbTipPoint)
+            let distanceToThumb = VU.distance(from: fingerTipPoint, to: thumbTipPoint)
             
             if distanceToThumb > FingerTipProximityThreshold {
                 switch joint {

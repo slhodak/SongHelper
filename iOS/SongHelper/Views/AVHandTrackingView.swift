@@ -27,6 +27,10 @@ struct AVHandTrackingView: View {
                 }
                 .frame(width: frameSize.width, height: frameSize.height)
             }
+            .onAppear() {
+                leftHand.setViewBounds(to: frameSize)
+                rightHand.setViewBounds(to: frameSize)
+            }
         }
     }
 }
