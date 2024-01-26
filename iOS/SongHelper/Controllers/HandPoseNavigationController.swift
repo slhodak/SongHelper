@@ -20,8 +20,17 @@ class HandPoseNavigationController: ObservableObject {
     @Published var navigationMenuIsOpen: Bool = false
     var optionSubviewFrames: [String: CGRect] = [:]
     private var selectingView: AppView = .none
+    // is it restarting hand tracking after I select a thing?
+    // it adds 5-10 "hands left nav menu pose" after redrawing UI without hands moving
+    // hand tracking gets f'd by restarting UI
+    // not a great use of time to try to make this smooth
+    // add the audio recording
+    private var handsLeftPose: Int = 0
     private var selectingViewSince: TimeInterval?
     private let selectViewAfter: TimeInterval = 0.5
+    private var delayOpeningMenuAt: TimeInterval = Date().timeIntervalSince1970 - 3
+    private let delayOpeningMenuFor: TimeInterval = 3
+    private var blockOpeningMenu: Bool = false
     private let thumbsTouchingDistance: Double = 70 // in UI screen points
     private var leftHandFingerTipGroup: Int = 0b0
     private var rightHandFingerTipGroup: Int = 0b0
@@ -41,29 +50,41 @@ class HandPoseNavigationController: ObservableObject {
     private func handleLeftHandUpdate(message: FingerTipsMessage) {
         leftHandFingerTipGroup = message.fingerTipGroup
         leftHandThumbLocation = message.thumbLocationUIPoint
-        
-        if handsInNavigationMenuPose() {
-            openNavigationMenu()
-            if let frameName = thumbIsTouchingOptionSubviewFrame() {
-                selectAppView(by: frameName)
-            }
-        } else {
-            closeNavigationMenu()
-        }
+        updateNavigationMenu()
     }
     
     private func handleRightHandUpdate(message: FingerTipsMessage) {
         rightHandFingerTipGroup = message.fingerTipGroup
         rightHandThumbLocation = message.thumbLocationUIPoint
-        
+        updateNavigationMenu()
+    }
+    
+    private func updateNavigationMenu() {
         if handsInNavigationMenuPose() {
-            openNavigationMenu()
-            if let frameName = thumbIsTouchingOptionSubviewFrame() {
-                selectAppView(by: frameName)
+            if shouldTryOpeningMenu() {
+                openNavigationMenu()
+                if let frameName = thumbIsTouchingOptionSubviewFrame() {
+                    if selectAppView(by: frameName) {
+                        closeNavigationMenu()
+                        delayOpeningMenu()
+                        blockOpeningMenu = true
+                    }
+                }
             }
         } else {
+//            print("hands left nav menu pose \(handsLeftPose)")
+//            handsLeftPose += 1
             closeNavigationMenu()
+            blockOpeningMenu = false
         }
+    }
+    
+    private func shouldTryOpeningMenu() -> Bool {
+        return delayOpeningMenuAt + delayOpeningMenuFor < Date().timeIntervalSince1970 && !blockOpeningMenu
+    }
+    
+    private func delayOpeningMenu() {
+        delayOpeningMenuAt = Date().timeIntervalSince1970
     }
     
     // The Navigation Menu Pose: both hands have fingers together and both thumbs are touching each other
@@ -86,7 +107,8 @@ class HandPoseNavigationController: ObservableObject {
     }
     
     // Change the current view if a selection is held for n seconds
-    private func selectAppView(by name: String) {
+    // Returns whether currentView was changed
+    private func selectAppView(by name: String) -> Bool {
         let now = Date().timeIntervalSince1970
         
         switch name {
@@ -104,18 +126,20 @@ class HandPoseNavigationController: ObservableObject {
             selectingView = .none
         }
         
-        if selectingView != .none {
-            updateCurrentView(to: selectingView, atTime: now)
-        }
+        return updateCurrentView(atTime: now)
     }
     
-    private func updateCurrentView(to: AppView, atTime now: TimeInterval) {
-        guard let selectingViewSince = selectingViewSince else { return }
+    private func updateCurrentView(atTime now: TimeInterval) -> Bool {
+        guard let selectingViewSince = selectingViewSince,
+              selectingView != .none else { return false }
         
         if selectingViewSince <= now - selectViewAfter {
             currentView = selectingView
             selectingView = .none
+            return true
         }
+        
+        return false
     }
     
     private func openNavigationMenu() {

@@ -25,7 +25,7 @@ class Conductor: ObservableObject {
     @Published var tick: Int = 0 // ticks per measure = patternResolution
     @Published var beat: Int = 0
     @Published var pattern: [Bool] = Array(repeating: false, count: 16)
-    let patternLength: Int = 32
+    let patternLength: Int = 16
     var onTickCallback: (() -> Void)?
     
     init(bpm: Int, patternResolution: Int, beatsPerMeasure: Int) {
