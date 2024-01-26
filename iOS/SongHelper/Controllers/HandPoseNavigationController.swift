@@ -22,7 +22,7 @@ class HandPoseNavigationController: ObservableObject {
     var optionSubviewFrames: [String: CGRect] = [:]
     private var selectingView: AppView = .none
     private var selectingViewSince: TimeInterval?
-    private let selectViewAfter: TimeInterval = 1
+    private let selectViewAfter: TimeInterval = 0.5
     private let thumbsTouchingDistance: Double = 75
     private var leftHandFingerTipGroup: Int = 0b0
     private var rightHandFingerTipGroup: Int = 0b0
@@ -125,7 +125,7 @@ class HandPoseNavigationController: ObservableObject {
     private func updateCurrentView(to: AppView, atTime now: TimeInterval) {
         guard let selectingViewSince = selectingViewSince else { return }
         
-        if selectingViewSince + selectViewAfter >= now {
+        if selectingViewSince <= now - selectViewAfter {
             currentView = selectingView
             selectingView = .none
         }
@@ -142,10 +142,6 @@ class HandPoseNavigationController: ObservableObject {
         
         navigationMenuIsOpen = false
         resetOptionSubviewFrames()
-    }
-    
-    private func delayNextPoseCheck() {
-        ignoreHandPoseUntil = Date().timeIntervalSince1970 + 3
     }
     
     // Menu Option Selection

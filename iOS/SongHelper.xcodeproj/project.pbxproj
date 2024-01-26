@@ -41,6 +41,7 @@
 		1787FBF82B50AF66004875F4 /* Keyboards.sf2 in Resources */ = {isa = PBXBuildFile; fileRef = 17B3FA402B505FB200DD716B /* Keyboards.sf2 */; };
 		1787FBFA2B50AFB4004875F4 /* PianoSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1787FBF92B50AFB4004875F4 /* PianoSampler.swift */; };
 		17B3F9B22B4F535600DD716B /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3F9B12B4F535600DD716B /* DebugView.swift */; };
+		17C6887C2B636A7D00808BBB /* NavigationMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C6887B2B636A7D00808BBB /* NavigationMenuView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +95,7 @@
 		1787FBF92B50AFB4004875F4 /* PianoSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianoSampler.swift; sourceTree = "<group>"; };
 		17B3F9B12B4F535600DD716B /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		17B3FA402B505FB200DD716B /* Keyboards.sf2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Keyboards.sf2; sourceTree = "<group>"; };
+		17C6887B2B636A7D00808BBB /* NavigationMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMenuView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +215,7 @@
 				170AC5982B6172CC00CE92C8 /* BeatSequenceView.swift */,
 				17B3F9B12B4F535600DD716B /* DebugView.swift */,
 				170EFF6A2B24AE1300790708 /* ContentView.swift */,
+				17C6887B2B636A7D00808BBB /* NavigationMenuView.swift */,
 				17168E572B630E6200FEF910 /* TempoIndicatorView.swift */,
 				17168E552B62E9E700FEF910 /* HandTrackingChordView.swift */,
 				173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */,
@@ -402,6 +405,7 @@
 				17713D2D2B334D9300E515C0 /* MusicUtils.swift in Sources */,
 				1761F6422B6085190001D019 /* AVHandTrackingView.swift in Sources */,
 				1787FBFA2B50AFB4004875F4 /* PianoSampler.swift in Sources */,
+				17C6887C2B636A7D00808BBB /* NavigationMenuView.swift in Sources */,
 				17713D3B2B3369DB00E515C0 /* Chord.swift in Sources */,
 				170EFF6B2B24AE1300790708 /* ContentView.swift in Sources */,
 				173393AD2B33C2FE00A8DE98 /* Shapes.swift in Sources */,
