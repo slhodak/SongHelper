@@ -12,7 +12,6 @@ import SwiftUI
 struct InterfaceOverlayView: View {
     @State private var modeIsMajor: Bool = true
     @State private var selectedKey: String = "C"
-    @State private var metronomeTickIsOn: Bool = false
     @ObservedObject var handPoseMusicController: HandPoseMusicController
     @ObservedObject var conductor: Conductor
     @FocusState private var isBPMInputActive: Bool
@@ -70,10 +69,7 @@ struct InterfaceOverlayView: View {
                 }
                 
                 HStack {
-                    Toggle("Click", isOn: $metronomeTickIsOn)
-                        .onChange(of: metronomeTickIsOn) { newValue in
-                            conductor.setTickIsOn(to: newValue)
-                        }
+                    Toggle("Click", isOn: $conductor.clickIsOn)
                         .frame(maxWidth: 120)
                 }
             }

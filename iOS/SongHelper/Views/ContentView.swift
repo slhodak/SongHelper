@@ -21,7 +21,7 @@ struct ContentView: View {
         let handTracker = HandTracker()
         self.handTracker = handTracker
         
-        let conductor = Conductor()
+        let conductor = Conductor(bpm: 100, patternResolution: 8, beatsPerMeasure: 4)
         let leftHand = HandPose(chirality: .left, handTracker: handTracker)
         let rightHand = HandPose(chirality: .right, handTracker: handTracker)
         
@@ -47,9 +47,11 @@ struct ContentView: View {
                 BeatSequenceView(conductor: conductor)
             }
 //            getDebugView()
-            TempoIndicatorView(beat: $conductor.beat, beatsPerMeasure: conductor.beatsPerMeasure)
+            TempoIndicatorView(beat: $conductor.beat,
+                               beatsPerMeasure: conductor.beatsPerMeasure)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .frame(maxHeight: .infinity, alignment: .top)
+                .padding(.top, 5)
         }
     }
     

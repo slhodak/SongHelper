@@ -10,7 +10,7 @@ import AVFoundation
 
 
 class Conductor: ObservableObject {
-    @Published var tickIsOn: Bool = false
+    @Published var clickIsOn: Bool = false
     @Published var bpm: Int = 100 {
         didSet {
             stop()
@@ -20,19 +20,23 @@ class Conductor: ObservableObject {
     var timer: Timer?
     var audioPlayerClick1: AVAudioPlayer?
     var audioPlayerClick234: AVAudioPlayer?
-    let beatsPerMeasure = 4
+    let beatsPerMeasure: Int
+    let patternResolution: Int
+    @Published var tick: Int = 0 // ticks per measure = patternResolution
     @Published var beat: Int = 0
     @Published var pattern: [Bool] = Array(repeating: false, count: 32)
-    let patternResolution: Int = 8 // 8th notes
     let patternLength: Int = 32
-    var onBeatCallback: (() -> Void)?
+    var onTickCallback: (() -> Void)?
     
-    init() {
+    init(bpm: Int, patternResolution: Int, beatsPerMeasure: Int) {
+        self.bpm = bpm
+        self.patternResolution = patternResolution
+        self.beatsPerMeasure = beatsPerMeasure
         setupAudioPlayers()
     }
     
-    func setOnBeatCallback(onBeatCallback: @escaping () -> Void) {
-        self.onBeatCallback = onBeatCallback
+    func setOnTickCallback(_ onTickCallback: @escaping () -> Void) {
+        self.onTickCallback = onTickCallback
     }
     
     private func setupAudioPlayers() {
@@ -56,15 +60,18 @@ class Conductor: ObservableObject {
         self.start()
     }
     
-    func start() {
-        timer?.invalidate() // Stops any existing timer
+    func getSecondsPerTick() -> TimeInterval {
         let ticksPerBeat = Double(patternResolution) / Double(beatsPerMeasure)
         let ticksPerMinute = Double(bpm) * ticksPerBeat
-        let secondsPerTick = 60.0 / ticksPerMinute
+        return 60.0 / ticksPerMinute
+    }
+    
+    func start() {
+        timer?.invalidate() // Stops any existing timer
         timer = Timer.scheduledTimer(
-            timeInterval: secondsPerTick,
+            timeInterval: getSecondsPerTick(),
             target: self,
-            selector: #selector(tick),
+            selector: #selector(doTick),
             userInfo: nil, repeats: true
         )
     }
@@ -73,17 +80,36 @@ class Conductor: ObservableObject {
         timer?.invalidate()
     }
     
-    @objc private func tick() {
-        beat = (beat + 1) % patternLength
-        let isQuarterNoteDownbeat = beat % (patternResolution / 4) == 0
-        if tickIsOn && isQuarterNoteDownbeat {
+    @objc private func doTick() {
+        incrementTick()
+        if incrementBeat() && clickIsOn {
             playCorrectClick()
         }
-        playBeat()
+        runTickCallback()
+    }
+    
+    private func runTickCallback() {
+        if let cb = onTickCallback, pattern[tick] == true {
+            cb()
+        }
+    }
+    
+    private func incrementTick() {
+        tick = (tick + 1) % patternLength
+    }
+    
+    private func incrementBeat() -> Bool {
+        // Check that this tick is a beat's tick, not a subdivision
+        guard tick % (patternResolution / beatsPerMeasure) == 0 else {
+            return false
+        }
+        
+        beat = (beat + 1) % beatsPerMeasure
+        return true
     }
     
     private func playCorrectClick() {
-        let isWholeNoteDownbeat = beat % patternResolution == 0
+        let isWholeNoteDownbeat = tick % patternResolution == 0
         if isWholeNoteDownbeat {
             playClick(from: audioPlayerClick1)
         } else {
@@ -98,15 +124,5 @@ class Conductor: ObservableObject {
             audioPlayer?.currentTime = 0 // Reset so it starts playing tick again from the start
         }
         audioPlayer?.play()
-    }
-    
-    private func playBeat() {
-        if let cb = onBeatCallback, pattern[beat] == true {
-            cb()
-        }
-    }
-    
-    func setTickIsOn(to value: Bool) {
-        tickIsOn = value
     }
 }

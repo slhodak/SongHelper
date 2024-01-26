@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct TempoIndicatorView: View {
-    @State private var angle: Double = 0
+    @State private var angle: Double = 90
     @Binding var beat: Int
     let beatsPerMeasure: Int
     
@@ -28,9 +28,7 @@ struct TempoIndicatorView: View {
                 .rotationEffect(.degrees(angle))
         }
         .onChange(of: beat) { newBeat in
-            withAnimation(.linear) {
-                angle += Double(360 / beatsPerMeasure)
-            }
+            angle += Double(360 / beatsPerMeasure)
         }
     }
 }

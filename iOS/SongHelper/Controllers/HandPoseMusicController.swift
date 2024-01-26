@@ -77,10 +77,10 @@ class HandPoseMusicController: ObservableObject {
         self.rightHandSubscriber = rightHand.fingerTipGroupPublisher
             .sink(receiveValue: handleRightHandUpdate)
         
-        self.conductor.onBeatCallback = {
+        self.conductor.setOnTickCallback({
             self.stopCurrentChord()
             self.playCurrentChord()
-        }
+        })
         self.conductor.start()
     }
     
