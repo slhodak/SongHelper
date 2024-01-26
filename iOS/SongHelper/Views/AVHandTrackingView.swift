@@ -26,10 +26,10 @@ struct AVHandTrackingView: View {
                     HandPointsView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand, size: frameSize)
                 }
                 .frame(width: frameSize.width, height: frameSize.height)
-            }
-            .onAppear() {
-                leftHand.setViewBounds(to: frameSize)
-                rightHand.setViewBounds(to: frameSize)
+                .onAppear() {
+                    leftHand.setViewBounds(to: frameSize)
+                    rightHand.setViewBounds(to: frameSize)
+                }
             }
         }
     }
