@@ -34,24 +34,31 @@ struct ContentView: View {
     }
     
     var body: some View {
-        // ZStack only so we can overlay the DebugView if we want to
-        ZStack {
-            if handPoseNavigationController.currentView == .chord {
-                HandTrackingChordView(handPoseMusicController: handPoseMusicController,
-                                      handTracker: handTracker,
-                                      conductor: conductor,
-                                      leftHand: leftHand,
-                                      rightHand: rightHand
-                )
-            } else if handPoseNavigationController.currentView == .beat {
-                BeatSequenceView(conductor: conductor)
+        GeometryReader { geo in
+            ZStack {
+                if handPoseNavigationController.currentView == .chord {
+                    HandTrackingChordView(handPoseMusicController: handPoseMusicController,
+                                          handTracker: handTracker,
+                                          conductor: conductor,
+                                          leftHand: leftHand,
+                                          rightHand: rightHand)
+                } else if handPoseNavigationController.currentView == .beat {
+                    BeatSequenceView(conductor: conductor)
+                }
+                
+                TempoIndicatorView(beat: $conductor.beat,
+                                   beatsPerMeasure: conductor.beatsPerMeasure)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .padding(.top, 5)
+                
+                if handPoseNavigationController.navigationMenuIsOpen {
+                    NavigationMenuView(handPoseNavigationController: handPoseNavigationController)
+                }
             }
-//            getDebugView()
-            TempoIndicatorView(beat: $conductor.beat,
-                               beatsPerMeasure: conductor.beatsPerMeasure)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .frame(maxHeight: .infinity, alignment: .top)
-                .padding(.top, 5)
+            .onAppear() {
+                handPoseNavigationController.setViewBounds(to: geo.size)
+            }
         }
     }
     
@@ -69,5 +76,57 @@ struct ContentView: View {
     
     private func isBeatViewActive() -> Bool {
         return handPoseNavigationController.currentView == .beat
+    }
+}
+
+
+struct NavigationMenuView: View {
+    // This View tells the HPNC where the options are located when it creates them
+    var handPoseNavigationController: HandPoseNavigationController
+    
+    // To-Do: base the options locations on the location of the thumbs, like a pie menu
+    var body: some View {
+        GeometryReader { geo in
+            let frameSize = CGSize(width: geo.size.height * (1920/1080),
+                                   height: geo.size.height)
+            
+            HStack {
+                Spacer()
+                HStack {
+                    ZStack {
+                        Rectangle()
+                            .frame(maxWidth: frameSize.width / 3)
+                            .background(GeometryReader { patternOptionGeo in
+                                Color.orange
+                                    .onAppear() {
+                                        handPoseNavigationController.setOptionSubviewFrame(for: "patternEditor", to: patternOptionGeo.frame(in: .named("videoOverlaySpace")))
+                                    }
+                            })
+                            .opacity(0.2)
+                        
+                        Text("Pattern Editor")
+                    }
+                    
+                    Spacer()
+                    
+                    ZStack {
+                        Rectangle()
+                            .frame(maxWidth: frameSize.width / 3)
+                            .background(GeometryReader { chordOptionGeo in
+                                Color.purple
+                                    .onAppear() {
+                                        handPoseNavigationController.setOptionSubviewFrame(for: "chordProgression", to: chordOptionGeo.frame(in: .named("videoOverlaySpace")))
+                                    }
+                            })
+                            .opacity(0.2)
+                        
+                        Text("Chord Progression")
+                    }
+                }
+                .frame(width: frameSize.width, height: frameSize.height)
+                // To-Do: Find a less fragile way for this Menu to overlay the video
+                .coordinateSpace(name: "videoOverlaySpace")
+            }
+        }
     }
 }

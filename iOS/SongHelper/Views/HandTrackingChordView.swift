@@ -21,6 +21,5 @@ struct HandTrackingChordView: View {
             AVHandTrackingView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand)
             InterfaceOverlayView(handPoseMusicController: handPoseMusicController, conductor: conductor)
         }
-        .navigationBarBackButtonHidden()
     }
 }

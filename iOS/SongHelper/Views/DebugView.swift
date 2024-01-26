@@ -27,8 +27,6 @@ struct DebugView: View {
             
             Text(String(handPoseMusicController.leftHandFingerTipGroup, radix: 2))
             Text(String(handPoseMusicController.rightHandFingerTipGroup, radix: 2))
-            
-            Text(handPoseNavigationController.printRightHandThumbLocation())
         }
     }
 }
