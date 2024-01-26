@@ -10,7 +10,8 @@ import SwiftUI
 
 
 struct TempoIndicatorView: View {
-    @State private var angle: Double = 90
+    @State private var angle: Double = 0
+    @State private var color: Color = .blue
     @Binding var beat: Int
     let beatsPerMeasure: Int
     
@@ -23,12 +24,17 @@ struct TempoIndicatorView: View {
             
             Circle()
                 .frame(width: 20, height: 20)
-                .foregroundStyle(.blue)
+                .foregroundStyle(color)
                 .offset(y: -15)
                 .rotationEffect(.degrees(angle))
         }
         .onChange(of: beat) { newBeat in
             angle += Double(360 / beatsPerMeasure)
+            if newBeat == 0 {
+                color = .blue
+            } else {
+                color = .yellow
+            }
         }
     }
 }
