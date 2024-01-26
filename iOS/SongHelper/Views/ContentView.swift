@@ -19,17 +19,15 @@ struct ContentView: View {
     
     init() {
         let handTracker = HandTracker()
-        self.handTracker = handTracker
-        
         let conductor = Conductor(bpm: 100, patternResolution: 8, beatsPerMeasure: 4)
         let leftHand = HandPose(chirality: .left, handTracker: handTracker)
         let rightHand = HandPose(chirality: .right, handTracker: handTracker)
         
+        self.handTracker = handTracker
         self.conductor = conductor
         self.leftHand = leftHand
         self.rightHand = rightHand
         self.handPoseMusicController = HandPoseMusicController(conductor: conductor, leftHand: leftHand, rightHand: rightHand)
-        
         self.handPoseNavigationController = HandPoseNavigationController(leftHand: leftHand, rightHand: rightHand)
     }
     
