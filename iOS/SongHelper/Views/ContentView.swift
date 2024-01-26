@@ -33,14 +33,35 @@ struct ContentView: View {
     
     var body: some View {
         GeometryReader { geo in
+            let frameSize = CGSize(width: geo.size.height * (1920/1080), height: geo.size.height)
+            
             ZStack {
+                HStack {
+                    Spacer()
+                    ZStack {
+                        if handPoseNavigationController.currentView == .chord {
+                            AVCameraUIView(captureSession: CameraManager.shared.session)
+                        }
+                        
+                        if handPoseNavigationController.navigationMenuIsOpen {
+                            NavigationMenuView(handPoseNavigationController: handPoseNavigationController, frameSize: frameSize)
+                        }
+                        
+                        HandPointsView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand, size: frameSize)
+                    }
+                    .frame(width: frameSize.width, height: frameSize.height)
+                    .coordinateSpace(name: "videoOverlaySpace")
+                    .onAppear() {
+                        leftHand.setViewBounds(to: frameSize)
+                        rightHand.setViewBounds(to: frameSize)
+                    }
+                }
+                
                 if handPoseNavigationController.currentView == .chord {
-                    HandTrackingChordView(handPoseMusicController: handPoseMusicController,
-                                          handTracker: handTracker,
-                                          conductor: conductor,
-                                          leftHand: leftHand,
-                                          rightHand: rightHand)
-                } else if handPoseNavigationController.currentView == .beat {
+                    InterfaceOverlayView(handPoseMusicController: handPoseMusicController, conductor: conductor)
+                }
+                
+                if handPoseNavigationController.currentView == .beat {
                     BeatSequenceView(conductor: conductor)
                 }
                 
@@ -49,10 +70,6 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .frame(maxHeight: .infinity, alignment: .top)
                     .padding(.top, 5)
-                
-                if handPoseNavigationController.navigationMenuIsOpen {
-                    NavigationMenuView(handPoseNavigationController: handPoseNavigationController)
-                }
             }
         }
     }
