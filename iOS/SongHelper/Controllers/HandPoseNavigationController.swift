@@ -12,6 +12,7 @@ import Combine
 enum AppView {
     case chord
     case beat
+    case audio
     case none
 }
 
