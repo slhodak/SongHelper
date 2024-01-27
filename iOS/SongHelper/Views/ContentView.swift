@@ -24,16 +24,21 @@ struct ContentView: View {
     init() {
         let audioRecorder = AudioRecorder()
         let handTracker = HandTracker()
-        let conductor = Conductor(bpm: 100, patternResolution: 8, beatsPerMeasure: 4)
         let leftHand = HandPose(chirality: .left, handTracker: handTracker)
         let rightHand = HandPose(chirality: .right, handTracker: handTracker)
+        let handPoseMusicController = HandPoseMusicController(leftHand: leftHand, rightHand: rightHand)
+        let conductor = Conductor(bpm: 100,
+                                  patternResolution: 8,
+                                  beatsPerMeasure: 4,
+                                  handPoseMusicController: handPoseMusicController,
+                                  audioRecorder: audioRecorder)
         
         self.audioRecorder = audioRecorder
         self.handTracker = handTracker
         self.conductor = conductor
         self.leftHand = leftHand
         self.rightHand = rightHand
-        self.handPoseMusicController = HandPoseMusicController(conductor: conductor, leftHand: leftHand, rightHand: rightHand)
+        self.handPoseMusicController = handPoseMusicController
         self.handPoseNavigationController = HandPoseNavigationController(leftHand: leftHand, rightHand: rightHand)
     }
     
@@ -79,11 +84,16 @@ struct ContentView: View {
                             Button(action: audioRecorder.startRecording) {
                                 Image(systemName: "circle.fill").foregroundStyle(.red)
                             }
-                            Button(action: audioRecorder.stop) {
+                            Button(action: audioRecorder.stopRecording) {
                                 Image(systemName: "stop.fill").foregroundStyle(.black)
                             }
-                            Button(action: audioRecorder.play){
+                            Button(action: audioRecorder.playRecording){
                                 Image(systemName: "play.fill").foregroundStyle(.black)
+                            }
+                            Button(action: conductor.toggleLoopPlayAudio) {
+                                Image(systemName: "arrow.clockwise").foregroundStyle(
+                                    conductor.loopPlayAudio ? .blue : .gray
+                                )
                             }
                         }
                         .font(.largeTitle)

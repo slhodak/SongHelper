@@ -18,6 +18,9 @@ class Conductor: ObservableObject {
         }
     }
     var timer: Timer?
+    let handPoseMusicController: HandPoseMusicController
+    let audioRecorder: AudioRecorder
+    @Published var loopPlayAudio: Bool = false
     var audioPlayerClick1: AVAudioPlayer?
     var audioPlayerClick234: AVAudioPlayer?
     let beatsPerMeasure: Int
@@ -28,15 +31,19 @@ class Conductor: ObservableObject {
     let patternLength: Int = 16
     var onTickCallback: (() -> Void)?
     
-    init(bpm: Int, patternResolution: Int, beatsPerMeasure: Int) {
+    init(bpm: Int,
+         patternResolution: Int,
+         beatsPerMeasure: Int,
+         handPoseMusicController: HandPoseMusicController,
+         audioRecorder: AudioRecorder
+    ) {
         self.bpm = bpm
         self.patternResolution = patternResolution
         self.beatsPerMeasure = beatsPerMeasure
+        self.audioRecorder = audioRecorder
+        self.handPoseMusicController = handPoseMusicController
         setupAudioPlayers()
-    }
-    
-    func setOnTickCallback(_ onTickCallback: @escaping () -> Void) {
-        self.onTickCallback = onTickCallback
+        self.start()
     }
     
     private func setupAudioPlayers() {
@@ -83,14 +90,11 @@ class Conductor: ObservableObject {
     @objc private func doTick() {
         incrementTick()
         if incrementBeat() && clickIsOn {
-            playCorrectClick()
+            playClick()
         }
-        runTickCallback()
-    }
-    
-    private func runTickCallback() {
-        if let cb = onTickCallback, pattern[tick] == true {
-            cb()
+        if pattern[tick] {
+            self.handPoseMusicController.stopCurrentChord()
+            self.handPoseMusicController.playCurrentChord()
         }
     }
     
@@ -108,9 +112,8 @@ class Conductor: ObservableObject {
         return true
     }
     
-    private func playCorrectClick() {
-        let isWholeNoteDownbeat = tick % patternResolution == 0
-        if isWholeNoteDownbeat {
+    private func playClick() {
+        if beat == 0 {
             playClick(from: audioPlayerClick1)
         } else {
             playClick(from: audioPlayerClick234)
@@ -124,5 +127,10 @@ class Conductor: ObservableObject {
             audioPlayer?.currentTime = 0 // Reset so it starts playing tick again from the start
         }
         audioPlayer?.play()
+    }
+    
+    func toggleLoopPlayAudio() {
+        loopPlayAudio.toggle()
+        print("loop play audio = \(loopPlayAudio)")
     }
 }
