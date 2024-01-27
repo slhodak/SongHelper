@@ -19,11 +19,11 @@ struct NavigationMenuView: View {
         HStack {
             ZStack {
                 Rectangle()
-                    .frame(maxWidth: frameSize.width / 3)
-                    .background(GeometryReader { patternOptionGeo in
+                    .frame(maxWidth: frameSize.width / 4)
+                    .background(GeometryReader { geo in
                         Color.orange
                             .onAppear() {
-                                handPoseNavigationController.setOptionSubviewFrame(for: "patternEditor", to: patternOptionGeo.frame(in: .named("videoOverlaySpace")))
+                                handPoseNavigationController.setOptionSubviewFrame(for: .beat, to: geo.frame(in: .named(videoOverlaySpace)))
                             }
                     })
                     .opacity(0.2)
@@ -31,15 +31,30 @@ struct NavigationMenuView: View {
                 Text("Pattern Editor")
             }
             
-            Spacer()
+            VStack {
+                ZStack {
+                    Rectangle()
+                        .frame(maxHeight: frameSize.height / 4)
+                        .background(GeometryReader { geo in
+                            Color.orange
+                                .onAppear() {
+                                    handPoseNavigationController.setOptionSubviewFrame(for: .audio, to: geo.frame(in: .named(videoOverlaySpace)))
+                                }
+                        })
+                        .opacity(0.2)
+                    
+                    Text("Audio Recorder")
+                }
+                Spacer()
+            }
             
             ZStack {
                 Rectangle()
-                    .frame(maxWidth: frameSize.width / 3)
-                    .background(GeometryReader { chordOptionGeo in
+                    .frame(maxWidth: frameSize.width / 4)
+                    .background(GeometryReader { geo in
                         Color.purple
                             .onAppear() {
-                                handPoseNavigationController.setOptionSubviewFrame(for: "chordProgression", to: chordOptionGeo.frame(in: .named("videoOverlaySpace")))
+                                handPoseNavigationController.setOptionSubviewFrame(for: .chord, to: geo.frame(in: .named(videoOverlaySpace)))
                             }
                     })
                     .opacity(0.2)

@@ -32,7 +32,6 @@ class CameraManager: ObservableObject {
     
     private init() {
         config()
-        print("configuring camera")
     }
     
     private func config() {

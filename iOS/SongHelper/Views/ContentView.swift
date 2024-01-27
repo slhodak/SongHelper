@@ -9,25 +9,36 @@ import SwiftUI
 import AVKit
 
 
+let videoOverlaySpace = "videoOverlaySpace"
+
+
 struct ContentView: View {
     private var handPoseMusicController: HandPoseMusicController
     @ObservedObject var handPoseNavigationController: HandPoseNavigationController
     private var handTracker: HandTracker
+    private var audioRecorder: AudioRecorder
     @ObservedObject var conductor: Conductor
     @ObservedObject var leftHand: HandPose
     @ObservedObject var rightHand: HandPose
     
     init() {
+        let audioRecorder = AudioRecorder()
         let handTracker = HandTracker()
-        let conductor = Conductor(bpm: 100, patternResolution: 8, beatsPerMeasure: 4)
         let leftHand = HandPose(chirality: .left, handTracker: handTracker)
         let rightHand = HandPose(chirality: .right, handTracker: handTracker)
+        let handPoseMusicController = HandPoseMusicController(leftHand: leftHand, rightHand: rightHand)
+        let conductor = Conductor(bpm: 100,
+                                  patternResolution: 8,
+                                  beatsPerMeasure: 4,
+                                  handPoseMusicController: handPoseMusicController,
+                                  audioRecorder: audioRecorder)
         
+        self.audioRecorder = audioRecorder
         self.handTracker = handTracker
         self.conductor = conductor
         self.leftHand = leftHand
         self.rightHand = rightHand
-        self.handPoseMusicController = HandPoseMusicController(conductor: conductor, leftHand: leftHand, rightHand: rightHand)
+        self.handPoseMusicController = handPoseMusicController
         self.handPoseNavigationController = HandPoseNavigationController(leftHand: leftHand, rightHand: rightHand)
     }
     
@@ -50,7 +61,7 @@ struct ContentView: View {
                         HandPointsView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand, size: frameSize)
                     }
                     .frame(width: frameSize.width, height: frameSize.height)
-                    .coordinateSpace(name: "videoOverlaySpace")
+                    .coordinateSpace(name: videoOverlaySpace)
                     .onAppear() {
                         leftHand.setViewBounds(to: frameSize)
                         rightHand.setViewBounds(to: frameSize)
@@ -58,11 +69,17 @@ struct ContentView: View {
                 }
                 
                 if handPoseNavigationController.currentView == .chord {
+                    // Eventually this view should show/hide things based on which view is present in the other part of the screen
+                    // and not be an "overlay" view, but a sidebar/panel view
                     InterfaceOverlayView(handPoseMusicController: handPoseMusicController, conductor: conductor)
                 }
                 
                 if handPoseNavigationController.currentView == .beat {
                     BeatSequenceView(conductor: conductor)
+                }
+                
+                if handPoseNavigationController.currentView == .audio {
+                    AudioRecorderView(audioRecorder: audioRecorder, conductor: conductor)
                 }
                 
                 TempoIndicatorView(beat: $conductor.beat,

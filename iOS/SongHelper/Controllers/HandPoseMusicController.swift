@@ -25,7 +25,6 @@ class HandPoseMusicController: ObservableObject {
     private var polyphonicPlayer = PolyphonicPlayer(voices: 3)
     private var pianoSampler = PianoSampler()
     private var useInstrument: SHInstrument = .sampler
-    private var conductor: Conductor
     
     @Published var keyRoot: UInt8 = 24 // C1
     var octave: UInt8 = 4
@@ -63,20 +62,13 @@ class HandPoseMusicController: ObservableObject {
         0b1110: .sus4,
     ]
     
-    init(conductor: Conductor, leftHand: HandPose, rightHand: HandPose) {
+    init(leftHand: HandPose, rightHand: HandPose) {
         pianoSampler.setup()
         
-        self.conductor = conductor
         self.leftHandSubscriber = leftHand.fingerTipGroupPublisher
             .sink(receiveValue: handleLeftHandUpdate)
         self.rightHandSubscriber = rightHand.fingerTipGroupPublisher
             .sink(receiveValue: handleRightHandUpdate)
-        
-        self.conductor.setOnTickCallback({
-            self.stopCurrentChord()
-            self.playCurrentChord()
-        })
-        self.conductor.start()
     }
     
     func handleLeftHandUpdate(message: FingerTipsMessage) {
