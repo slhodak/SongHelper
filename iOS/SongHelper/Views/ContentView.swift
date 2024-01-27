@@ -75,10 +75,18 @@ struct ContentView: View {
                 
                 if handPoseNavigationController.currentView == .audio {
                     ZStack {
-                        Text("Record Audio")
-                        Button("Record", action: audioRecorder.startRecording)
-                        Button("Play", action: audioRecorder.play)
-                        Button("Stop", action: audioRecorder.stop)
+                        HStack {
+                            Button(action: audioRecorder.startRecording) {
+                                Image(systemName: "circle.fill").foregroundStyle(.red)
+                            }
+                            Button(action: audioRecorder.stop) {
+                                Image(systemName: "stop.fill").foregroundStyle(.black)
+                            }
+                            Button(action: audioRecorder.play){
+                                Image(systemName: "play.fill").foregroundStyle(.black)
+                            }
+                        }
+                        .font(.largeTitle)
                     }
                 }
                 
@@ -90,90 +98,4 @@ struct ContentView: View {
             }
         }
     }
-}
-
-import AVFoundation
-
-class AudioRecorder: NSObject, AVAudioRecorderDelegate {
-    let engine = AVAudioEngine()
-    var recorder: AVAudioRecorder?
-    let player = AVAudioPlayer()
-    
-    override init() {
-        super.init()
-        config()
-    }
-    
-    private func config() {
-        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("myAudioFile.mp4")
-        
-        let settings: [String: Any] = [
-            AVFormatIDKey: kAudioFormatMPEG4AAC,
-            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue,
-            AVEncoderBitRateKey: 32000,
-            AVNumberOfChannelsKey: 2,
-            AVSampleRateKey: 44100
-        ]
-        
-        do {
-            recorder = try AVAudioRecorder(url: url, settings: settings)
-            recorder!.delegate = self
-            recorder!.isMeteringEnabled = true
-            recorder!.prepareToRecord()
-        } catch {
-            recorder = nil
-            print(error.localizedDescription)
-        }
-    }
-    
-    private func configureAudioSession() {
-        let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setCategory(.playAndRecord)
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
-    func startRecording() {
-        print("To start recording audio")
-        guard let recorder = recorder,
-              !recorder.isRecording else { return }
-        
-        AVAudioSession.sharedInstance().requestRecordPermission {
-            [unowned self] granted in
-            if granted {
-                DispatchQueue.main.async {
-                    self.configureAudioSession()
-                    if let recorder = self.recorder {
-                        recorder.record()
-                    }
-                }
-            }
-        }
-    }
-    
-    func stopRecording() {
-        print("To stop recording audio")
-    }
-    
-    func stopPlayback() {
-        print("To stop audio playback")
-    }
-    
-    func play() {
-        print("Playing audio")
-    }
-    
-    func stop() {
-        print("Stopping audio")
-        guard let recorder = recorder else { return }
-        
-        if recorder.isRecording {
-            stopRecording()
-        } else {
-            stopPlayback()
-        }
-    }
-    
 }

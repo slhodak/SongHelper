@@ -25,6 +25,7 @@
 		173393AD2B33C2FE00A8DE98 /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AC2B33C2FE00A8DE98 /* Shapes.swift */; };
 		173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */; };
 		1757A6C42B643CE800584E3D /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1757A6C32B643CE800584E3D /* Messages.swift */; };
+		1757A6C62B648FD200584E3D /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1757A6C52B648FD200584E3D /* AudioRecorder.swift */; };
 		176865D12B4F001F0054D276 /* HandPoseMusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176865D02B4F001F0054D276 /* HandPoseMusicController.swift */; };
 		176865D42B4F288B0054D276 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 176865D32B4F288B0054D276 /* Collections */; };
 		176865D62B4F288B0054D276 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 176865D52B4F288B0054D276 /* DequeModule */; };
@@ -82,6 +83,7 @@
 		173393AC2B33C2FE00A8DE98 /* Shapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shapes.swift; sourceTree = "<group>"; };
 		173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceOverlayView.swift; sourceTree = "<group>"; };
 		1757A6C32B643CE800584E3D /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
+		1757A6C52B648FD200584E3D /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		176865D02B4F001F0054D276 /* HandPoseMusicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandPoseMusicController.swift; sourceTree = "<group>"; };
 		176B02022B589DB500ABD9EE /* Conductor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conductor.swift; sourceTree = "<group>"; };
 		17713D2A2B334D5700E515C0 /* PolyphonicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolyphonicPlayer.swift; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 		17713D392B33687F00E515C0 /* Music */ = {
 			isa = PBXGroup;
 			children = (
+				1757A6C52B648FD200584E3D /* AudioRecorder.swift */,
 				17713D2A2B334D5700E515C0 /* PolyphonicPlayer.swift */,
 				1787FBF92B50AFB4004875F4 /* PianoSampler.swift */,
 				17713D2C2B334D9300E515C0 /* MusicUtils.swift */,
@@ -391,6 +394,7 @@
 			files = (
 				17168E582B630E6200FEF910 /* TempoIndicatorView.swift in Sources */,
 				1757A6C42B643CE800584E3D /* Messages.swift in Sources */,
+				1757A6C62B648FD200584E3D /* AudioRecorder.swift in Sources */,
 				17713D322B33662100E515C0 /* AVCameraView.swift in Sources */,
 				17713D342B33662900E515C0 /* CameraManager.swift in Sources */,
 				170AC59B2B618A5F00CE92C8 /* VisionUtils.swift in Sources */,
