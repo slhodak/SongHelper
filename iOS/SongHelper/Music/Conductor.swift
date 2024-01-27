@@ -96,6 +96,9 @@ class Conductor: ObservableObject {
             self.handPoseMusicController.stopCurrentChord()
             self.handPoseMusicController.playCurrentChord()
         }
+        if tick == 0 && loopPlayAudio {
+            self.audioRecorder.playRecording()
+        }
     }
     
     private func incrementTick() {

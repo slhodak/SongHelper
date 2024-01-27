@@ -64,8 +64,4 @@ class AudioRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDelegate {
             audioPlayer?.play()
         }
     }
-    
-    func stopPlayback() {
-        print("To stop audio playback")
-    }
 }

@@ -84,9 +84,6 @@ struct ContentView: View {
                             Button(action: audioRecorder.startRecording) {
                                 Image(systemName: "circle.fill").foregroundStyle(.red)
                             }
-                            Button(action: audioRecorder.stopRecording) {
-                                Image(systemName: "stop.fill").foregroundStyle(.black)
-                            }
                             Button(action: audioRecorder.playRecording){
                                 Image(systemName: "play.fill").foregroundStyle(.black)
                             }
