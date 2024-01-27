@@ -92,7 +92,7 @@ class Conductor: ObservableObject {
         if incrementBeat() && clickIsOn {
             playClick()
         }
-        if pattern[tick] {
+        if pattern[tick] == true {
             self.handPoseMusicController.stopCurrentChord()
             self.handPoseMusicController.playCurrentChord()
         }

@@ -26,6 +26,7 @@
 		173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */; };
 		1757A6C42B643CE800584E3D /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1757A6C32B643CE800584E3D /* Messages.swift */; };
 		1757A6C62B648FD200584E3D /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1757A6C52B648FD200584E3D /* AudioRecorder.swift */; };
+		1757A6C82B64A5E500584E3D /* AudioRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1757A6C72B64A5E500584E3D /* AudioRecorderView.swift */; };
 		176865D12B4F001F0054D276 /* HandPoseMusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176865D02B4F001F0054D276 /* HandPoseMusicController.swift */; };
 		176865D42B4F288B0054D276 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 176865D32B4F288B0054D276 /* Collections */; };
 		176865D62B4F288B0054D276 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 176865D52B4F288B0054D276 /* DequeModule */; };
@@ -84,6 +85,7 @@
 		173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceOverlayView.swift; sourceTree = "<group>"; };
 		1757A6C32B643CE800584E3D /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
 		1757A6C52B648FD200584E3D /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		1757A6C72B64A5E500584E3D /* AudioRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderView.swift; sourceTree = "<group>"; };
 		176865D02B4F001F0054D276 /* HandPoseMusicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandPoseMusicController.swift; sourceTree = "<group>"; };
 		176B02022B589DB500ABD9EE /* Conductor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conductor.swift; sourceTree = "<group>"; };
 		17713D2A2B334D5700E515C0 /* PolyphonicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolyphonicPlayer.swift; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 				170AC5982B6172CC00CE92C8 /* BeatSequenceView.swift */,
 				17B3F9B12B4F535600DD716B /* DebugView.swift */,
 				170EFF6A2B24AE1300790708 /* ContentView.swift */,
+				1757A6C72B64A5E500584E3D /* AudioRecorderView.swift */,
 				17C6887B2B636A7D00808BBB /* NavigationMenuView.swift */,
 				17168E572B630E6200FEF910 /* TempoIndicatorView.swift */,
 				173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */,
@@ -397,6 +400,7 @@
 				1757A6C62B648FD200584E3D /* AudioRecorder.swift in Sources */,
 				17713D322B33662100E515C0 /* AVCameraView.swift in Sources */,
 				17713D342B33662900E515C0 /* CameraManager.swift in Sources */,
+				1757A6C82B64A5E500584E3D /* AudioRecorderView.swift in Sources */,
 				170AC59B2B618A5F00CE92C8 /* VisionUtils.swift in Sources */,
 				17168E542B62E9B900FEF910 /* HandPoseNavigationController.swift in Sources */,
 				17713D2B2B334D5700E515C0 /* PolyphonicPlayer.swift in Sources */,

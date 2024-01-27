@@ -79,22 +79,7 @@ struct ContentView: View {
                 }
                 
                 if handPoseNavigationController.currentView == .audio {
-                    ZStack {
-                        HStack {
-                            Button(action: audioRecorder.startRecording) {
-                                Image(systemName: "circle.fill").foregroundStyle(.red)
-                            }
-                            Button(action: audioRecorder.playRecording){
-                                Image(systemName: "play.fill").foregroundStyle(.black)
-                            }
-                            Button(action: conductor.toggleLoopPlayAudio) {
-                                Image(systemName: "arrow.clockwise").foregroundStyle(
-                                    conductor.loopPlayAudio ? .blue : .gray
-                                )
-                            }
-                        }
-                        .font(.largeTitle)
-                    }
+                    AudioRecorderView(audioRecorder: audioRecorder, conductor: conductor)
                 }
                 
                 TempoIndicatorView(beat: $conductor.beat,
