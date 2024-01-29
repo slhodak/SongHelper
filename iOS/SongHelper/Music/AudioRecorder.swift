@@ -22,7 +22,7 @@ class AudioRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDelegate {
     
     private func configureAudioSession() {
         let audioSession = AVAudioSession.sharedInstance()
-        try? audioSession.setCategory(.playAndRecord, mode: .default)
+        try? audioSession.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker])
         try? audioSession.setActive(true)
     }
     
@@ -46,18 +46,26 @@ class AudioRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDelegate {
         return paths[0]
     }
     
+    // To-do make this wait until the next pattern start; "queueRecording"
+    // to-do after: show a countdown inside/over the metronome visual
     func startRecording() {
         print("To start recording audio")
+        stopPlaying()
         audioRecorder?.record()
     }
     
+    func stopPlaying() {
+        print("Stopping playing recording")
+        audioPlayer?.stop()
+    }
+    
     func stopRecording() {
-        print("Stopping audio")
+        print("Stopping recording audio")
         audioRecorder?.stop()
     }
     
     func playRecording() {
-        print("Playing audio")
+        print("Playing recorded audio")
         if let url = audioRecorder?.url {
             audioPlayer = try? AVAudioPlayer(contentsOf: url)
             audioPlayer?.delegate = self

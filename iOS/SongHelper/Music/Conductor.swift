@@ -136,4 +136,10 @@ class Conductor: ObservableObject {
         loopPlayAudio.toggle()
         print("loop play audio = \(loopPlayAudio)")
     }
+    
+    func stopAudioRecorder() {
+        loopPlayAudio = false
+        audioRecorder.stopPlaying()
+        audioRecorder.stopRecording()
+    }
 }

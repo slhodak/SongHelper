@@ -19,7 +19,7 @@ struct AudioRecorderView: View {
                 Button(action: audioRecorder.startRecording) {
                     Image(systemName: "circle.fill").foregroundStyle(.red)
                 }
-                Button(action: audioRecorder.stopRecording){
+                Button(action: conductor.stopAudioRecorder){
                     Image(systemName: "stop.fill").foregroundStyle(.black)
                 }
                 Button(action: audioRecorder.playRecording){
