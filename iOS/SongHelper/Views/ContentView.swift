@@ -82,7 +82,11 @@ struct ContentView: View {
                     AudioRecorderView(audioRecorder: audioRecorder, conductor: conductor)
                 }
                 
-                TempoIndicatorView(beat: $conductor.beat,
+                TempoIndicatorView(tick: $conductor.tick,
+                                   beat: $conductor.beat,
+                                   recordingIsQueued: $conductor.recordingIsQueued,
+                                   patternResolution: conductor.patternResolution,
+                                   patternLength: conductor.patternLength,
                                    beatsPerMeasure: conductor.beatsPerMeasure)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .frame(maxHeight: .infinity, alignment: .top)

@@ -20,6 +20,7 @@ class Conductor: ObservableObject {
     var timer: Timer?
     let handPoseMusicController: HandPoseMusicController
     let audioRecorder: AudioRecorder
+    @Published var recordingIsQueued: Bool = false
     @Published var loopPlayAudio: Bool = false
     var audioPlayerClick1: AVAudioPlayer?
     var audioPlayerClick234: AVAudioPlayer?
@@ -93,11 +94,16 @@ class Conductor: ObservableObject {
             playClick()
         }
         if pattern[tick] == true {
-            self.handPoseMusicController.stopCurrentChord()
-            self.handPoseMusicController.playCurrentChord()
+            handPoseMusicController.stopCurrentChord()
+            handPoseMusicController.playCurrentChord()
         }
-        if tick == 0 && loopPlayAudio {
-            self.audioRecorder.playRecording()
+        if tick == 0 {
+            if loopPlayAudio {
+                audioRecorder.playRecording()
+            } else if recordingIsQueued {
+                audioRecorder.startRecording()
+                recordingIsQueued = false
+            }
         }
     }
     
@@ -134,11 +140,20 @@ class Conductor: ObservableObject {
     
     func toggleLoopPlayAudio() {
         loopPlayAudio.toggle()
+        if loopPlayAudio == true { // when set to play audio, must stop planning to record
+            recordingIsQueued = false
+        }
         print("loop play audio = \(loopPlayAudio)")
+    }
+    
+    func queueRecording() {
+        loopPlayAudio = false // queuing recording must disable queuing playback
+        recordingIsQueued = true
     }
     
     func stopAudioRecorder() {
         loopPlayAudio = false
+        recordingIsQueued = false
         audioRecorder.stopPlaying()
         audioRecorder.stopRecording()
     }

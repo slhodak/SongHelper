@@ -16,7 +16,7 @@ struct AudioRecorderView: View {
     var body: some View {
         ZStack {
             HStack {
-                Button(action: audioRecorder.startRecording) {
+                Button(action: conductor.queueRecording) {
                     Image(systemName: "circle.fill").foregroundStyle(.red)
                 }
                 Button(action: conductor.stopAudioRecorder){
