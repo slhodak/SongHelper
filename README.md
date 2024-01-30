@@ -1,5 +1,5 @@
 ## Demo
-Latest demo: https://youtu.be/kLNE4fFQqu8
+Latest demo: https://youtu.be/q5FyHPM2y7Y
 
 ### Goals
 1. Make it feel like a natural device for playing accompaniment to an existing song
