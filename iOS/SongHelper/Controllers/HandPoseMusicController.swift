@@ -96,8 +96,12 @@ class HandPoseMusicController: ObservableObject {
         self.keyRoot = UInt8(21 + keyRootOffset) // 21 is A0
     }
     
-    func setMusicalMode(to musicalMode: MusicalMode) {
-        self.musicalMode = musicalMode
+    func toggleMusicalMode() {
+        if musicalMode == .major {
+            musicalMode = .minor
+        } else if musicalMode == .minor {
+            musicalMode = .major
+        }
     }
     
     func setCurrentChordType() {
@@ -134,7 +138,7 @@ class HandPoseMusicController: ObservableObject {
     
     func getCurrentChord() -> String {
         guard let chordRoot = chordRoot, let chordType = chordType else {
-            return "none"
+            return "no chord"
         }
         
         return "\(MU.midiToLetter(midiNote: chordRoot))\(chordType.string)"

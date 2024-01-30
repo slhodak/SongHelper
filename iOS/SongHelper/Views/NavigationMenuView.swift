@@ -16,7 +16,7 @@ struct NavigationMenuView: View {
     
     // To-Do: base the options locations on the location of the thumbs, like a pie menu
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             ZStack {
                 Rectangle()
                     .frame(maxWidth: frameSize.width / 4)
@@ -28,7 +28,7 @@ struct NavigationMenuView: View {
                     })
                     .opacity(0.2)
                 
-                Text("Pattern Editor")
+                Text("Pattern\nEditor")
             }
             
             VStack {
@@ -36,14 +36,14 @@ struct NavigationMenuView: View {
                     Rectangle()
                         .frame(maxHeight: frameSize.height / 4)
                         .background(GeometryReader { geo in
-                            Color.orange
+                            Color.green
                                 .onAppear() {
                                     handPoseNavigationController.setOptionSubviewFrame(for: .audio, to: geo.frame(in: .named(videoOverlaySpace)))
                                 }
                         })
                         .opacity(0.2)
                     
-                    Text("Audio Recorder")
+                    Text("Audio\nRecorder")
                 }
                 Spacer()
             }
@@ -59,8 +59,9 @@ struct NavigationMenuView: View {
                     })
                     .opacity(0.2)
                 
-                Text("Chord Progression")
+                Text("Chord\nPlayer")
             }
         }
+        .font(.title)
     }
 }

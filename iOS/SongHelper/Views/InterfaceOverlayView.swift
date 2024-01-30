@@ -10,7 +10,6 @@ import SwiftUI
 
 
 struct InterfaceOverlayView: View {
-    @State private var modeIsMajor: Bool = true
     @State private var selectedKey: String = "C"
     @ObservedObject var handPoseMusicController: HandPoseMusicController
     @ObservedObject var conductor: Conductor
@@ -23,15 +22,29 @@ struct InterfaceOverlayView: View {
     
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 0) {
-                VStack {
-                    Text("Current Cord")
-                    Text(handPoseMusicController.getCurrentChord())
-                }
-                .font(.title2)
+            VStack(alignment: .trailing, spacing: 0) {
+                Text(handPoseMusicController.getCurrentChord())
+                    .padding(.bottom, 6)
+                    .font(.title2)
+                
+                Toggle("Click", isOn: $conductor.clickIsOn)
+                    .frame(maxWidth: 120)
                 
                 HStack {
-                    Text("Key: ")
+                    Text("BPM")
+                    Picker("BPM", selection: $conductor.bpm) {
+                        ForEach((30...220).reversed(), id: \.self) { bpm in
+                            Text("\(bpm)")
+                                .foregroundColor(.black)
+                                .tag(bpm)
+                        }
+                    }
+                    .pickerStyle(WheelPickerStyle())
+                    .frame(width: 80, height: 50)
+                }
+                
+                HStack {
+                    Text("Key")
                     Picker("KeyRoot", selection: $selectedKey) {
                         ForEach(MU.noteNames, id: \.self) { noteName in
                             Text(noteName)
@@ -46,34 +59,13 @@ struct InterfaceOverlayView: View {
                     }
                 }
                 
-                HStack {
-                    Text("BPM: ")
-                    Picker("BPM", selection: $conductor.bpm) {
-                        ForEach((30...220).reversed(), id: \.self) { bpm in
-                            Text("\(bpm)")
-                                .foregroundColor(.black)
-                                .tag(bpm)
-                        }
-                    }
-                    .pickerStyle(WheelPickerStyle())
-                    .frame(width: 80, height: 50)
-                }
-                
-                HStack {
-                    Text("Mode: ")
-                    Toggle(modeIsMajor ? "Maj" : "min", isOn: $modeIsMajor)
-                        .onChange(of: modeIsMajor) { newValue in
-                            handPoseMusicController.setMusicalMode(to: newValue == true ? .major : .minor)
-                        }
-                        .frame(maxWidth: 100)
-                }
-                
-                HStack {
-                    Toggle("Click", isOn: $conductor.clickIsOn)
-                        .frame(maxWidth: 120)
-                }
+                Button(handPoseMusicController.musicalMode == .major ? "Major" : "minor", action: handPoseMusicController.toggleMusicalMode)
+                    .foregroundStyle(.blue)
             }
-            .background(Color.white.opacity(0.3))
+            .frame(maxWidth: 140, maxHeight: .infinity)
+            .padding([.leading, .trailing], 5)
+            .background(.white)
+            
             Spacer()
         }
         .font(.title3)

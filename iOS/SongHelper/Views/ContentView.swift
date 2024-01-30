@@ -88,9 +88,6 @@ struct ContentView: View {
                                    patternResolution: conductor.patternResolution,
                                    patternLength: conductor.patternLength,
                                    beatsPerMeasure: conductor.beatsPerMeasure)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .frame(maxHeight: .infinity, alignment: .top)
-                    .padding(.top, 5)
             }
         }
     }

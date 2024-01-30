@@ -44,6 +44,8 @@ struct TempoIndicatorView: View {
                 color = .yellow
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .padding(.top, 10)
     }
     
     private func calculateBeatsLeft() -> Int {
