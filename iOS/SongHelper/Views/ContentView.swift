@@ -47,6 +47,10 @@ struct ContentView: View {
             let frameSize = CGSize(width: geo.size.height * (1920/1080), height: geo.size.height)
             
             ZStack {
+                if handPoseNavigationController.currentView == .beat {
+                    BeatSequenceView(conductor: conductor)
+                }
+                
                 HStack {
                     Spacer()
                     ZStack {
@@ -69,13 +73,7 @@ struct ContentView: View {
                 }
                 
                 if handPoseNavigationController.currentView == .chord {
-                    // Eventually this view should show/hide things based on which view is present in the other part of the screen
-                    // and not be an "overlay" view, but a sidebar/panel view
                     InterfaceOverlayView(handPoseMusicController: handPoseMusicController, conductor: conductor)
-                }
-                
-                if handPoseNavigationController.currentView == .beat {
-                    BeatSequenceView(conductor: conductor)
                 }
                 
                 if handPoseNavigationController.currentView == .audio {
