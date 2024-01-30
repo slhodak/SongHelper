@@ -9,6 +9,13 @@ import Foundation
 import AVFoundation
 
 
+enum AudioRecorderState {
+    case recordingIsQueued
+    case recording
+    case loopPlayback
+    case off
+}
+
 class Conductor: ObservableObject {
     @Published var clickIsOn: Bool = false
     @Published var bpm: Int = 100 {
@@ -20,8 +27,7 @@ class Conductor: ObservableObject {
     var timer: Timer?
     let handPoseMusicController: HandPoseMusicController
     let audioRecorder: AudioRecorder
-    @Published var recordingIsQueued: Bool = false
-    @Published var loopPlayAudio: Bool = false
+    @Published var audioRecorderState: AudioRecorderState = .off
     var audioPlayerClick1: AVAudioPlayer?
     var audioPlayerClick234: AVAudioPlayer?
     let beatsPerMeasure: Int
@@ -98,11 +104,17 @@ class Conductor: ObservableObject {
             handPoseMusicController.playCurrentChord()
         }
         if tick == 0 {
-            if loopPlayAudio {
-                audioRecorder.playRecording()
-            } else if recordingIsQueued {
+            switch audioRecorderState {
+            case .recordingIsQueued:
                 audioRecorder.startRecording()
-                recordingIsQueued = false
+                audioRecorderState = .recording
+            case .loopPlayback:
+                audioRecorder.playRecording()
+            case .recording:
+                audioRecorder.stopRecording()
+                audioRecorderState = .off
+            case .off:
+                break
             }
         }
     }
@@ -138,22 +150,20 @@ class Conductor: ObservableObject {
         audioPlayer?.play()
     }
     
-    func toggleLoopPlayAudio() {
-        loopPlayAudio.toggle()
-        if loopPlayAudio == true { // when set to play audio, must stop planning to record
-            recordingIsQueued = false
+    func loopPlayAudio() {
+        if audioRecorderState != .loopPlayback {
+            audioRecorderState = .loopPlayback
+        } else {
+            audioRecorderState = .off
         }
-        print("loop play audio = \(loopPlayAudio)")
     }
     
     func queueRecording() {
-        loopPlayAudio = false // queuing recording must disable queuing playback
-        recordingIsQueued = true
+        audioRecorderState = .recordingIsQueued
     }
     
     func stopAudioRecorder() {
-        loopPlayAudio = false
-        recordingIsQueued = false
+        audioRecorderState = .off
         audioRecorder.stopPlaying()
         audioRecorder.stopRecording()
     }

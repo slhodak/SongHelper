@@ -48,8 +48,6 @@ class AudioRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDelegate {
         return paths[0]
     }
     
-    // To-do make this wait until the next pattern start; "queueRecording"
-    // to-do after: show a countdown inside/over the metronome visual
     func startRecording() {
         print("To start recording audio")
         stopPlaying()
@@ -68,6 +66,8 @@ class AudioRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDelegate {
     
     func playRecording() {
         print("Playing recorded audio")
+        stopRecording() // just in case
+        
         if let url = audioRecorder?.url {
             audioPlayer = try? AVAudioPlayer(contentsOf: url)
             audioPlayer?.delegate = self

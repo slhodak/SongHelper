@@ -84,7 +84,7 @@ struct ContentView: View {
                 
                 TempoIndicatorView(tick: $conductor.tick,
                                    beat: $conductor.beat,
-                                   recordingIsQueued: $conductor.recordingIsQueued,
+                                   audioRecorderState: $conductor.audioRecorderState,
                                    patternResolution: conductor.patternResolution,
                                    patternLength: conductor.patternLength,
                                    beatsPerMeasure: conductor.beatsPerMeasure)

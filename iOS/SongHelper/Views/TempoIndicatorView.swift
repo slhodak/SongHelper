@@ -14,7 +14,7 @@ struct TempoIndicatorView: View {
     @State private var color: Color = .blue
     @Binding var tick: Int
     @Binding var beat: Int
-    @Binding var recordingIsQueued: Bool
+    @Binding var audioRecorderState: AudioRecorderState
     let patternResolution: Int
     let patternLength: Int
     let beatsPerMeasure: Int
@@ -33,7 +33,7 @@ struct TempoIndicatorView: View {
                 .rotationEffect(.degrees(angle))
             
             Text(String(calculateBeatsLeft())).foregroundStyle(
-                recordingIsQueued ? Color.red : Color.black.opacity(0.25)
+                audioRecorderState == .recordingIsQueued ? Color.red : Color.black.opacity(0.25)
             )
         }
         .onChange(of: beat) { newBeat in

@@ -25,9 +25,9 @@ struct AudioRecorderView: View {
                 Button(action: audioRecorder.playRecording){
                     Image(systemName: "play.fill").foregroundStyle(.black)
                 }
-                Button(action: conductor.toggleLoopPlayAudio) {
+                Button(action: conductor.loopPlayAudio) {
                     Image(systemName: "arrow.clockwise").foregroundStyle(
-                        conductor.loopPlayAudio ? .blue : .gray
+                        conductor.audioRecorderState == .loopPlayback ? .blue : .gray
                     )
                 }
             }
