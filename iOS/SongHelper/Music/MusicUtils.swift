@@ -105,4 +105,23 @@ enum MusicUtils {
         let pitchClass = Int(normalizedMidiNote % 12)
         return noteNames[pitchClass]
     }
+    
+    static func mapFrequencyToMusicalNote(_ frequency: Float) -> String {
+        let A4 = 440.0
+        let A4NoteNumber = 69.0
+        let semitonesPerOctave = 12.0
+        
+        guard frequency > 0 else { return "n/a" }
+        
+        let frequencyRatio = Double(frequency) / A4
+        let log2FrequencyRatio = log2(frequencyRatio)
+        let rawPitchNumber = semitonesPerOctave * log2FrequencyRatio + A4NoteNumber
+        let pitchNumber = Int(round(rawPitchNumber))
+        
+        let octave = (pitchNumber / Int(semitonesPerOctave)) - 1
+        let noteIndex = pitchNumber % Int(semitonesPerOctave)
+        let noteName = noteNames[noteIndex]
+        
+        return "\(noteName)\(octave)"
+    }
 }
