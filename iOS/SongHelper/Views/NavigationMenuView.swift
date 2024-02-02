@@ -14,37 +14,40 @@ struct NavigationMenuView: View {
     var handPoseNavigationController: HandPoseNavigationController
     var frameSize: CGSize
     
-    // To-Do: base the options locations on the location of the thumbs, like a pie menu
     var body: some View {
         HStack(spacing: 0) {
             ZStack {
                 Rectangle()
                     .frame(maxWidth: frameSize.width / 4)
                     .background(GeometryReader { geo in
-                        Color.orange
+                        Color.black
                             .onAppear() {
                                 handPoseNavigationController.setOptionSubviewFrame(for: .beat, to: geo.frame(in: .named(videoOverlaySpace)))
                             }
                     })
-                    .opacity(0.2)
+                    .opacity(0)
+                    .border(.orange, width: 3)
                 
                 Text("Pattern\nEditor")
             }
+            .background(.white)
             
             VStack {
                 ZStack {
                     Rectangle()
                         .frame(maxHeight: frameSize.height / 4)
                         .background(GeometryReader { geo in
-                            Color.green
+                            Color.black
                                 .onAppear() {
                                     handPoseNavigationController.setOptionSubviewFrame(for: .audio, to: geo.frame(in: .named(videoOverlaySpace)))
                                 }
                         })
-                        .opacity(0.2)
+                        .opacity(0)
+                        .border(.green, width: 3)
                     
                     Text("Audio\nRecorder")
                 }
+                .background(.white)
                 Spacer()
             }
             
@@ -52,15 +55,17 @@ struct NavigationMenuView: View {
                 Rectangle()
                     .frame(maxWidth: frameSize.width / 4)
                     .background(GeometryReader { geo in
-                        Color.purple
+                        Color.black
                             .onAppear() {
                                 handPoseNavigationController.setOptionSubviewFrame(for: .chord, to: geo.frame(in: .named(videoOverlaySpace)))
                             }
                     })
-                    .opacity(0.2)
+                    .opacity(0.0)
+                    .border(.purple, width: 3)
                 
                 Text("Chord\nPlayer")
             }
+            .background(.white)
         }
         .font(.title)
     }

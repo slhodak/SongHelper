@@ -46,47 +46,42 @@ struct ContentView: View {
         GeometryReader { geo in
             let frameSize = CGSize(width: geo.size.height * (1920/1080), height: geo.size.height)
             
-            ZStack {
-                if handPoseNavigationController.currentView == .beat {
-                    BeatSequenceView(conductor: conductor)
-                }
+            HStack {
+                InterfaceSidebarView(handPoseMusicController: handPoseMusicController, conductor: conductor)
                 
-                HStack {
-                    Spacer()
-                    ZStack {
-                        if handPoseNavigationController.currentView == .chord {
-                            AVCameraUIView(captureSession: CameraManager.shared.session)
-                        }
-                        
-                        if handPoseNavigationController.navigationMenuIsOpen {
-                            NavigationMenuView(handPoseNavigationController: handPoseNavigationController, frameSize: frameSize)
-                        }
-                        
-                        HandPointsView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand, size: frameSize)
+                ZStack {
+                    switch handPoseNavigationController.currentView {
+                    case .chord:
+                        AVCameraUIView(captureSession: CameraManager.shared.session)
+                    case .beat:
+                        BeatSequenceView(conductor: conductor)
+                    case .audio:
+                        AudioRecorderView(audioRecorder: audioRecorder, conductor: conductor)
+                    case .none:
+                        EmptyView()
                     }
-                    .frame(width: frameSize.width, height: frameSize.height)
-                    .coordinateSpace(name: videoOverlaySpace)
-                    .onAppear() {
-                        leftHand.setViewBounds(to: frameSize)
-                        rightHand.setViewBounds(to: frameSize)
+                    
+                    if handPoseNavigationController.navigationMenuIsOpen {
+                        NavigationMenuView(handPoseNavigationController: handPoseNavigationController, frameSize: frameSize)
                     }
+                    
+                    HandPointsView(handTracker: handTracker, leftHand: leftHand, rightHand: rightHand, size: frameSize)
                 }
-                
-                if handPoseNavigationController.currentView == .chord {
-                    InterfaceOverlayView(handPoseMusicController: handPoseMusicController, conductor: conductor)
+                .frame(width: frameSize.width, height: frameSize.height)
+                .coordinateSpace(name: videoOverlaySpace)
+                .onAppear() {
+                    leftHand.setViewBounds(to: frameSize)
+                    rightHand.setViewBounds(to: frameSize)
                 }
-                
-                if handPoseNavigationController.currentView == .audio {
-                    AudioRecorderView(audioRecorder: audioRecorder, conductor: conductor)
-                }
-                
-                TempoIndicatorView(tick: $conductor.tick,
-                                   beat: $conductor.beat,
-                                   audioRecorderState: $conductor.audioRecorderState,
-                                   patternResolution: conductor.patternResolution,
-                                   patternLength: conductor.patternLength,
-                                   beatsPerMeasure: conductor.beatsPerMeasure)
             }
         }
+        .ignoresSafeArea(.all)
     }
 }
+
+
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ContentView()
+//    }
+//}

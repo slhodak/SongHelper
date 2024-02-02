@@ -14,6 +14,7 @@ struct TempoIndicatorView: View {
     @State private var color: Color = .blue
     @Binding var tick: Int
     @Binding var beat: Int
+    @Binding var clickIsOn: Bool
     @Binding var audioRecorderState: AudioRecorderState
     let patternResolution: Int
     let patternLength: Int
@@ -22,13 +23,13 @@ struct TempoIndicatorView: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(lineWidth: 1)
-                .opacity(0.2)
+                .stroke(lineWidth: 2)
+                .foregroundStyle(clickIsOn ? .blue.opacity(0.8) : .gray.opacity(0.2))
                 .frame(width: 50, height: 50)
             
             Circle()
                 .frame(width: 18, height: 18)
-                .foregroundStyle(color)
+                .foregroundStyle(clickIsOn ? color : .gray.opacity(0.2))
                 .offset(y: -17)
                 .rotationEffect(.degrees(angle))
             
@@ -44,8 +45,9 @@ struct TempoIndicatorView: View {
                 color = .yellow
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .padding(.top, 10)
+        .onTapGesture {
+            clickIsOn.toggle()
+        }
     }
     
     private func calculateBeatsLeft() -> Int {

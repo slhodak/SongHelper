@@ -23,7 +23,7 @@
 		17168E582B630E6200FEF910 /* TempoIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17168E572B630E6200FEF910 /* TempoIndicatorView.swift */; };
 		173393AA2B33C2BA00A8DE98 /* HandPointsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393A92B33C2BA00A8DE98 /* HandPointsView.swift */; };
 		173393AD2B33C2FE00A8DE98 /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AC2B33C2FE00A8DE98 /* Shapes.swift */; };
-		173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */; };
+		173393AF2B34F79800A8DE98 /* InterfaceSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173393AE2B34F79800A8DE98 /* InterfaceSidebarView.swift */; };
 		1757A6C42B643CE800584E3D /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1757A6C32B643CE800584E3D /* Messages.swift */; };
 		1757A6C62B648FD200584E3D /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1757A6C52B648FD200584E3D /* AudioRecorder.swift */; };
 		1757A6C82B64A5E500584E3D /* AudioRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1757A6C72B64A5E500584E3D /* AudioRecorderView.swift */; };
@@ -83,7 +83,7 @@
 		17168E572B630E6200FEF910 /* TempoIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempoIndicatorView.swift; sourceTree = "<group>"; };
 		173393A92B33C2BA00A8DE98 /* HandPointsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandPointsView.swift; sourceTree = "<group>"; };
 		173393AC2B33C2FE00A8DE98 /* Shapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shapes.swift; sourceTree = "<group>"; };
-		173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceOverlayView.swift; sourceTree = "<group>"; };
+		173393AE2B34F79800A8DE98 /* InterfaceSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceSidebarView.swift; sourceTree = "<group>"; };
 		1757A6C32B643CE800584E3D /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
 		1757A6C52B648FD200584E3D /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		1757A6C72B64A5E500584E3D /* AudioRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderView.swift; sourceTree = "<group>"; };
@@ -225,7 +225,7 @@
 				1757A6C72B64A5E500584E3D /* AudioRecorderView.swift */,
 				17C6887B2B636A7D00808BBB /* NavigationMenuView.swift */,
 				17168E572B630E6200FEF910 /* TempoIndicatorView.swift */,
-				173393AE2B34F79800A8DE98 /* InterfaceOverlayView.swift */,
+				173393AE2B34F79800A8DE98 /* InterfaceSidebarView.swift */,
 				17713D312B33662100E515C0 /* AVCameraView.swift */,
 				173393A92B33C2BA00A8DE98 /* HandPointsView.swift */,
 			);
@@ -419,7 +419,7 @@
 				170AC59B2B618A5F00CE92C8 /* VisionUtils.swift in Sources */,
 				17168E542B62E9B900FEF910 /* HandPoseNavigationController.swift in Sources */,
 				17713D2B2B334D5700E515C0 /* PolyphonicPlayer.swift in Sources */,
-				173393AF2B34F79800A8DE98 /* InterfaceOverlayView.swift in Sources */,
+				173393AF2B34F79800A8DE98 /* InterfaceSidebarView.swift in Sources */,
 				17713D362B33662F00E515C0 /* HandTracker.swift in Sources */,
 				176865D12B4F001F0054D276 /* HandPoseMusicController.swift in Sources */,
 				17B3F9B22B4F535600DD716B /* DebugView.swift in Sources */,
