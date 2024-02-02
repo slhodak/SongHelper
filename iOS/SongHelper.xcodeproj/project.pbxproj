@@ -41,6 +41,7 @@
 		17735C132B24C4AD00EA59E3 /* SoundpipeAudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 17735C122B24C4AD00EA59E3 /* SoundpipeAudioKit */; };
 		1787FBF82B50AF66004875F4 /* Keyboards.sf2 in Resources */ = {isa = PBXBuildFile; fileRef = 17B3FA402B505FB200DD716B /* Keyboards.sf2 */; };
 		1787FBFA2B50AFB4004875F4 /* PianoSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1787FBF92B50AFB4004875F4 /* PianoSampler.swift */; };
+		178E65E72B6CA10D0018EC96 /* YinAlgo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178E65E62B6CA10C0018EC96 /* YinAlgo.swift */; };
 		17B3F9B22B4F535600DD716B /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3F9B12B4F535600DD716B /* DebugView.swift */; };
 		17C6887C2B636A7D00808BBB /* NavigationMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C6887B2B636A7D00808BBB /* NavigationMenuView.swift */; };
 /* End PBXBuildFile section */
@@ -95,6 +96,8 @@
 		17713D352B33662F00E515C0 /* HandTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandTracker.swift; sourceTree = "<group>"; };
 		17713D3A2B3369DB00E515C0 /* Chord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chord.swift; sourceTree = "<group>"; };
 		1787FBF92B50AFB4004875F4 /* PianoSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianoSampler.swift; sourceTree = "<group>"; };
+		178E65E62B6CA10C0018EC96 /* YinAlgo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YinAlgo.swift; sourceTree = "<group>"; };
+		178E65EA2B6CADC10018EC96 /* Pitchy */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Pitchy; path = ../../Pitchy; sourceTree = "<group>"; };
 		17B3F9B12B4F535600DD716B /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		17B3FA402B505FB200DD716B /* Keyboards.sf2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Keyboards.sf2; sourceTree = "<group>"; };
 		17C6887B2B636A7D00808BBB /* NavigationMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMenuView.swift; sourceTree = "<group>"; };
@@ -138,6 +141,7 @@
 				170EFF782B24AE1500790708 /* SongHelperTests */,
 				170EFF822B24AE1600790708 /* SongHelperUITests */,
 				170EFF662B24AE1300790708 /* Products */,
+				178E65E92B6CADC10018EC96 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -232,6 +236,7 @@
 			isa = PBXGroup;
 			children = (
 				1757A6C52B648FD200584E3D /* AudioRecorder.swift */,
+				178E65E62B6CA10C0018EC96 /* YinAlgo.swift */,
 				17713D2A2B334D5700E515C0 /* PolyphonicPlayer.swift */,
 				1787FBF92B50AFB4004875F4 /* PianoSampler.swift */,
 				17713D2C2B334D9300E515C0 /* MusicUtils.swift */,
@@ -239,6 +244,14 @@
 				176B02022B589DB500ABD9EE /* Conductor.swift */,
 			);
 			path = Music;
+			sourceTree = "<group>";
+		};
+		178E65E92B6CADC10018EC96 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				178E65EA2B6CADC10018EC96 /* Pitchy */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		17B3FA3F2B505FA100DD716B /* Sounds */ = {
@@ -350,6 +363,7 @@
 				170EFF922B24B7C300790708 /* XCRemoteSwiftPackageReference "AudioKit" */,
 				17735C112B24C4AD00EA59E3 /* XCRemoteSwiftPackageReference "SoundpipeAudioKit" */,
 				176865D22B4F288B0054D276 /* XCRemoteSwiftPackageReference "swift-collections" */,
+				178E65E82B6CADA00018EC96 /* XCRemoteSwiftPackageReference "Pitchy" */,
 			);
 			productRefGroup = 170EFF662B24AE1300790708 /* Products */;
 			projectDirPath = "";
@@ -401,6 +415,7 @@
 				17713D322B33662100E515C0 /* AVCameraView.swift in Sources */,
 				17713D342B33662900E515C0 /* CameraManager.swift in Sources */,
 				1757A6C82B64A5E500584E3D /* AudioRecorderView.swift in Sources */,
+				178E65E72B6CA10D0018EC96 /* YinAlgo.swift in Sources */,
 				170AC59B2B618A5F00CE92C8 /* VisionUtils.swift in Sources */,
 				17168E542B62E9B900FEF910 /* HandPoseNavigationController.swift in Sources */,
 				17713D2B2B334D5700E515C0 /* PolyphonicPlayer.swift in Sources */,
@@ -786,6 +801,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.6.1;
+			};
+		};
+		178E65E82B6CADA00018EC96 /* XCRemoteSwiftPackageReference "Pitchy" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vadymmarkov/Pitchy";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
