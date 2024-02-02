@@ -28,11 +28,11 @@ struct BeatSequenceView: View {
     @ObservedObject var conductor: Conductor
     
     var body: some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: conductor.patternResolution)) {
+        LazyVGrid(columns: Array(repeating: GridItem(.fixed(50), alignment: .leading), count: conductor.patternResolution)) {
             ForEach(0..<conductor.patternLength) { index in
                 BeatSquare(position: index, isSelected: $conductor.pattern[index])
             }
         }
-        .navigationBarBackButtonHidden()
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

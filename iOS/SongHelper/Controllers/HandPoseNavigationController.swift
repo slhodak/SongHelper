@@ -10,14 +10,14 @@ import Combine
 
 
 enum AppView {
-    case chord
+    case camera
     case beat
     case audio
     case none
 }
 
 class HandPoseNavigationController: ObservableObject {
-    @Published var currentView: AppView = .chord
+    @Published var currentView: AppView = .camera
     @Published var navigationMenuIsOpen: Bool = false
     var optionSubviewFrames: [AppView: CGRect] = [:]
     private var selectingView: AppView = .none
@@ -113,10 +113,10 @@ class HandPoseNavigationController: ObservableObject {
         let now = Date().timeIntervalSince1970
         
         switch appView {
-        case .chord:
-            if selectingView != .chord {
+        case .camera:
+            if selectingView != .camera {
                 selectingViewSince = now
-                selectingView = .chord
+                selectingView = .camera
             }
         case .beat:
             if selectingView != .beat {

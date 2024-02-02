@@ -17,11 +17,11 @@ enum MusicUtils {
     static func getChord(root: UInt8, tones: [UInt8]) -> [UInt8] {
         return tones.map { root + $0 }
     }
-
+    
     static func findChordRoot(keyRoot: UInt8, octave: UInt8, midiInterval: UInt8) -> UInt8 {
         return keyRoot + (12 * (octave - 1)) + midiInterval
     }
-
+    
     // Converts a scale degree into a number of semitones given a musical mode
     // e.g. 3rd scale degree is 4 semitones above the root if the mode is major
     static func scaleDegreeToMidiInterval(musicalMode: MusicalMode, scaleDegree: UInt8) -> UInt8? {
@@ -62,7 +62,7 @@ enum MusicUtils {
         }
         return nil
     }
-
+    
     static func getRegularChordTypeFor(musicalMode: MusicalMode, scaleDegree: UInt8) -> Chord? {
         if musicalMode == .major {
             if scaleDegree == 1 {
@@ -99,7 +99,7 @@ enum MusicUtils {
         }
         return nil
     }
-
+    
     static func midiToLetter(midiNote: UInt8) -> String {
         let normalizedMidiNote = midiNote - 21      // A0 starts at 21
         let pitchClass = Int(normalizedMidiNote % 12)

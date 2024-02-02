@@ -12,12 +12,8 @@ import SwiftUI
 struct InterfaceSidebarView: View {
     @ObservedObject var handPoseMusicController: HandPoseMusicController
     @ObservedObject var conductor: Conductor
+    @ObservedObject var audioRecorder: AudioRecorder
     @FocusState private var isBPMInputActive: Bool
-    
-    init(handPoseMusicController: HandPoseMusicController, conductor: Conductor) {
-        self.handPoseMusicController = handPoseMusicController
-        self.conductor = conductor
-    }
     
     var body: some View {
         HStack(spacing: 0) {
@@ -28,6 +24,8 @@ struct InterfaceSidebarView: View {
                     .font(.title2)
                 
                 KeyView(handPoseMusicController: handPoseMusicController)
+                
+                PitchDetectorView(conductor: conductor, audioRecorder: audioRecorder)
             }
         }
         .padding([.leading], 6)
@@ -85,6 +83,21 @@ struct KeyView: View {
             }
             Button(handPoseMusicController.musicalMode == .major ? "Major" : "minor", action: handPoseMusicController.toggleMusicalMode)
                 .foregroundStyle(.blue)
+        }
+    }
+}
+
+
+struct PitchDetectorView: View {
+    @ObservedObject var conductor: Conductor
+    @ObservedObject var audioRecorder: AudioRecorder
+    
+    var body: some View {
+        HStack {
+            Button("Detect\nPitch", action: conductor.togglePitchDetection)
+                .foregroundStyle(conductor.audioRecorderState == .pitchDetection ? .blue : .gray)
+            Text("\u{266A}\(audioRecorder.detectedNote ?? "")")
+                .frame(minWidth: 50)
         }
     }
 }

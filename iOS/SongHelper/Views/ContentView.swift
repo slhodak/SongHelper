@@ -47,11 +47,13 @@ struct ContentView: View {
             let frameSize = CGSize(width: geo.size.height * (1920/1080), height: geo.size.height)
             
             HStack {
-                InterfaceSidebarView(handPoseMusicController: handPoseMusicController, conductor: conductor)
+                InterfaceSidebarView(handPoseMusicController: handPoseMusicController,
+                                     conductor: conductor,
+                                     audioRecorder: audioRecorder)
                 
                 ZStack {
                     switch handPoseNavigationController.currentView {
-                    case .chord:
+                    case .camera:
                         AVCameraUIView(captureSession: CameraManager.shared.session)
                     case .beat:
                         BeatSequenceView(conductor: conductor)

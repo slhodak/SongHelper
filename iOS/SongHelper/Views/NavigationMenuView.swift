@@ -15,57 +15,48 @@ struct NavigationMenuView: View {
     var frameSize: CGSize
     
     var body: some View {
-        HStack(spacing: 0) {
-            ZStack {
-                Rectangle()
-                    .frame(maxWidth: frameSize.width / 4)
-                    .background(GeometryReader { geo in
-                        Color.black
+        VStack {
+            HStack(spacing: 0) {
+                GeometryReader { geo in
+                    ZStack {
+                        Rectangle()
+                            .fill(.white)
+                            .border(.orange, width: 3)
                             .onAppear() {
                                 handPoseNavigationController.setOptionSubviewFrame(for: .beat, to: geo.frame(in: .named(videoOverlaySpace)))
                             }
-                    })
-                    .opacity(0)
-                    .border(.orange, width: 3)
-                
-                Text("Pattern\nEditor")
-            }
-            .background(.white)
-            
-            VStack {
-                ZStack {
-                    Rectangle()
-                        .frame(maxHeight: frameSize.height / 4)
-                        .background(GeometryReader { geo in
-                            Color.black
-                                .onAppear() {
-                                    handPoseNavigationController.setOptionSubviewFrame(for: .audio, to: geo.frame(in: .named(videoOverlaySpace)))
-                                }
-                        })
-                        .opacity(0)
-                        .border(.green, width: 3)
-                    
-                    Text("Audio\nRecorder")
+                        Text("Pattern\nEditor")
+                    }
                 }
-                .background(.white)
-                Spacer()
-            }
-            
-            ZStack {
-                Rectangle()
-                    .frame(maxWidth: frameSize.width / 4)
-                    .background(GeometryReader { geo in
-                        Color.black
-                            .onAppear() {
-                                handPoseNavigationController.setOptionSubviewFrame(for: .chord, to: geo.frame(in: .named(videoOverlaySpace)))
-                            }
-                    })
-                    .opacity(0.0)
-                    .border(.purple, width: 3)
                 
-                Text("Chord\nPlayer")
+                GeometryReader { geo in
+                    ZStack {
+                        Rectangle()
+                            .fill(.white)
+                            .border(.green, width: 3)
+                            .onAppear() {
+                                handPoseNavigationController.setOptionSubviewFrame(for: .audio, to: geo.frame(in: .named(videoOverlaySpace)))
+                            }
+                        Text("Audio\nRecorder")
+                    }
+                }
+                
+                GeometryReader { geo in
+                    ZStack {
+                        Rectangle()
+                            .fill(.white)
+                            .border(.purple, width: 3)
+                            .onAppear() {
+                                handPoseNavigationController.setOptionSubviewFrame(for: .camera, to: geo.frame(in: .named(videoOverlaySpace)))
+                            }
+                        Text("Camera")
+                    }
+                }
             }
+            .frame(maxHeight: frameSize.height / 4)
             .background(.white)
+            
+            Spacer()
         }
         .font(.title)
     }
