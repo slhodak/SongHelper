@@ -13,6 +13,7 @@ enum AudioRecorderState {
     case recordingIsQueued
     case recording
     case loopPlayback
+    case pitchDetection
     case off
 }
 
@@ -113,6 +114,8 @@ class Conductor: ObservableObject {
             case .recording:
                 audioRecorder.stopRecording()
                 audioRecorderState = .off
+            case .pitchDetection:
+                break
             case .off:
                 break
             }
@@ -159,12 +162,24 @@ class Conductor: ObservableObject {
     }
     
     func queueRecording() {
+        audioRecorder.enableRecording()
         audioRecorderState = .recordingIsQueued
+    }
+    
+    func togglePitchDetection() {
+        if audioRecorderState == .pitchDetection {
+            audioRecorderState = .off
+            audioRecorder.stopPitchDetection()
+        } else {
+            audioRecorderState = .pitchDetection
+            audioRecorder.startPitchDetection()
+        }
     }
     
     func stopAudioRecorder() {
         audioRecorderState = .off
         audioRecorder.stopPlaying()
         audioRecorder.stopRecording()
+        audioRecorder.stopPitchDetection()
     }
 }

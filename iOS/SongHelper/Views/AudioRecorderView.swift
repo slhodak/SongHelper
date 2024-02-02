@@ -10,25 +10,30 @@ import SwiftUI
 
 
 struct AudioRecorderView: View {
-    let audioRecorder: AudioRecorder
+    @ObservedObject var audioRecorder: AudioRecorder
     @ObservedObject var conductor: Conductor
     
     var body: some View {
         ZStack {
-            HStack {
-                Button(action: conductor.queueRecording) {
-                    Image(systemName: "circle.fill").foregroundStyle(.red)
-                }
-                Button(action: conductor.stopAudioRecorder){
-                    Image(systemName: "stop.fill").foregroundStyle(.black)
-                }
-                Button(action: audioRecorder.playRecording){
-                    Image(systemName: "play.fill").foregroundStyle(.black)
-                }
-                Button(action: conductor.loopPlayAudio) {
-                    Image(systemName: "arrow.clockwise").foregroundStyle(
-                        conductor.audioRecorderState == .loopPlayback ? .blue : .gray
-                    )
+            VStack {
+                Button("Detect Pitch", action: conductor.togglePitchDetection)
+                    .foregroundStyle(conductor.audioRecorderState == .pitchDetection ? .blue : .gray)
+                Text("\u{266A}\(audioRecorder.detectedNote ?? "")")
+                HStack {
+                    Button(action: conductor.queueRecording) {
+                        Image(systemName: "circle.fill").foregroundStyle(.red)
+                    }
+                    Button(action: conductor.stopAudioRecorder){
+                        Image(systemName: "stop.fill").foregroundStyle(.black)
+                    }
+                    Button(action: audioRecorder.playRecording){
+                        Image(systemName: "play.fill").foregroundStyle(.black)
+                    }
+                    Button(action: conductor.loopPlayAudio) {
+                        Image(systemName: "arrow.clockwise").foregroundStyle(
+                            conductor.audioRecorderState == .loopPlayback ? .blue : .gray
+                        )
+                    }
                 }
             }
             .font(.largeTitle)
