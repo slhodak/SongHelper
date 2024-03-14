@@ -1,5 +1,5 @@
 ## Demo
-Last full demo: https://youtu.be/q5FyHPM2y7Y
+### See the latest demo: https://youtu.be/q5FyHPM2y7Y
 v0.7 Demo (Pitch detection): https://youtu.be/4i56fL4DtMI
 
 ### Goals
