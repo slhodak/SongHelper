@@ -5,8 +5,8 @@ Use the iPhone's camera as an interface to control a MIDI instrument with hand p
 v0.7 Demo [Pitch detection](https://youtu.be/4i56fL4DtMI)  
 v0.6 Demo [Synchronize & Harmonize](https://youtu.be/q5FyHPM2y7Y)  
 
-<img src="./img/chord2.png" alt="make a chord with your finger pose" width="40%"/>
-<img src="./img/chord3.png" alt="make a chord with your finger pose 2" width="40%"/>
+<img src="./img/chord2.png" alt="make a chord with your finger pose" width="50%"/>
+<img src="./img/chord3.png" alt="make a chord with your finger pose 2" width="50%"/>
 
 ## Intentions
 1 Play along to an existing song  
